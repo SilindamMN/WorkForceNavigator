@@ -1,0 +1,13 @@
+﻿dotnet ef migrations add FixTeamsUsersmodels -s .\API -p .\Persistence
+
+dotnet ef migrations add InitialCreate -s .\API -p .\Persistence
+
+dotnet ef database update -s .\API -p .\Persistence
+
+{
+  "username": "super",
+  "firstName": "super",
+  "lastName": "admin",
+  "email": "admin@gmail.com",
+  "password": "Admin@2024"
+}
