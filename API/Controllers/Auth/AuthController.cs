@@ -52,9 +52,12 @@
     [Route("register")]
     public async Task<IActionResult> Register([FromBody] RegisterDto registerDto)
     {
-      var registerResult = await authService.RegisterAsync(registerDto);
-      return StatusCode(registerResult.StatusCode, registerResult.Message);
-    }
+      var registerResult = await authService.RegisterAsync(registerDto); 
+            return StatusCode(registerResult.StatusCode, new
+              {
+                  message = registerResult.Message
+              });
+        }
 
     [HttpPost]
     [Route("login")]

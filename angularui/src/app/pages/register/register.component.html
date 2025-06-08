@@ -1,1 +1,88 @@
-<p>register works!</p>
+<div class="container d-flex justify-content-center align-items-center vh-100">
+  <div class="card shadow p-4" style="width: 100%; max-width: 500px;">
+    <h3 class="text-center mb-4 text-primary">Create Account</h3>
+    <form (ngSubmit)="RegisterUser()" #registerForm="ngForm" novalidate>
+      
+      <div class="mb-3">
+        <label for="username" class="form-label">Username</label>
+        <input
+          type="text"
+          id="username"
+          name="username"
+          class="form-control"
+          placeholder="Enter your username"
+          [(ngModel)]="registerObj.username"
+          required
+        />
+      </div>
+
+      <div class="mb-3">
+        <label for="firstName" class="form-label">First Name</label>
+        <input
+          type="text"
+          id="firstName"
+          name="firstName"
+          class="form-control"
+          placeholder="Enter your first name"
+          [(ngModel)]="registerObj.firstName"
+          required
+        />
+      </div>
+
+      <div class="mb-3">
+        <label for="lastName" class="form-label">Last Name</label>
+        <input
+          type="text"
+          id="lastName"
+          name="lastName"
+          class="form-control"
+          placeholder="Enter your last name"
+          [(ngModel)]="registerObj.lastName"
+          required
+        />
+      </div>
+
+      <div class="mb-3">
+        <label for="email" class="form-label">Email Address</label>
+        <input
+          type="email"
+          id="email"
+          name="email"
+          class="form-control"
+          placeholder="Enter your email"
+          [(ngModel)]="registerObj.email"
+          required
+          email
+        />
+      </div>
+
+      <div class="mb-4">
+        <label for="password" class="form-label">Password</label>
+        <input
+          type="password"
+          id="password"
+          name="password"
+          class="form-control"
+          placeholder="Enter your password"
+          [(ngModel)]="registerObj.password"
+          required
+          minlength="6"
+        />
+      </div>
+
+      <button
+        type="submit"
+        class="btn btn-primary w-100"
+        [disabled]="registerForm.invalid"
+      >
+        Register
+      </button>
+
+      <div class="text-center mt-3">
+        <small>Already have an account? 
+          <a routerLink="/login" class="text-decoration-none">Login here</a>
+        </small>
+      </div>
+    </form>
+  </div>
+</div>
