@@ -1,61 +1,99 @@
-HOW TO RUN THE PROJECT
-Clone the project
-/**Backend**/
-Have .Net 9 (Visit Google for more) 
-All .csproj must have (net9.0)
-Open migration.txt in the Persistence project for instruction for migrations
-check appsettings.development for the database name, you might need to create it on your sql server
-run the project,on swagger run the seedrole end point to seed the roles
-now run the register endpoint to register
-now run the login end point to login
+🚀 Company Management Platform – Built with ASP.NET Core & React TypeScript
+A robust full-stack enterprise platform designed to streamline company operations, built using ASP.NET Core, React TypeScript, and modern software architecture practices such as Domain-Driven Design (DDD) and Object-Oriented Programming (OOP).
 
-/**Front End**/
-Visit the README.md file in visual studio code
+🎯 What This Project Solves
+This system enables organizations to manage their internal structure and employee lifecycle, offering a comprehensive solution for:
 
+Department and team management
 
+Timesheet tracking
 
-Welcome to the .NET API Registration and Login TemplateProject!
-Hello! 🌟 This guide will help you understand the .NET API Registration and Login TemplateProject, a powerful tool built using Domain-Driven Design (DDD) principles. This project not only facilitates user sign-up and login but also integrates a sophisticated feature called "Role-Based Access."
+Leave applications and approvals
 
-What Sets This Project Apart?
-Incorporating Domain-Driven Design means that this project aligns closely with how you envision and structure your business logic. It's like having a custom-built solution tailored to your unique requirements.
+Role-based system access and user experiences
 
-Exploring the Design:
+💡 Highlights & Key Features
+🔐 Role-Based Access Control (RBAC)
+Tailored user navigation and permissions (Admin, Manager, Employee)
+
+📅 Leave Management
+Apply for leave, view leave history and approval status
+
+📊 Timesheets
+Submit, track, and review working hours
+
+🏢 Company & Department Setup
+Create companies, departments, and assign teams
+
+🧠 Intelligent Architecture
+Structured using DDD, enabling scalability, testability, and clean separation of concerns
+
+🛠 Tech Stack
+Backend: ASP.NET Core (.NET 9), C#, Entity Framework Core, MySQL
+
+Frontend: React, TypeScript, Vite
+
+Tools & Practices: LINQ, REST APIs, OOP, DDD, Swagger, Git
+
+⚙️ How to Run the Project
+🔧 Backend Setup (/Backend)
+Clone the repository.
+
+Ensure .NET 9 SDK is installed.
+
+Make sure all .csproj files are targeting net9.0.
+
+Open the **migration.txt** file in the Persistence project for migration setup instructions.
+
+Check the appsettings.Development.json for the database name — you may need to create it manually in SQL Server.
+
+Run the project.
+
+In Swagger:
+
+First, run the **SeedRole** endpoint to seed default roles.
+
+Then use the **Register** endpoint to create a user.
+
+Finally, use the **Login** endpoint to authenticate.
+
+💻 Frontend Setup (/Frontend)
+Open the project in Visual Studio Code.
+
+Follow the steps in the README.md file to get started.
+
+📘 Welcome to the .NET API Registration and Login Template Project!
+Hello! 🌟 This guide will help you understand the architecture and purpose of the platform — a powerful tool built using Domain-Driven Design (DDD) principles. Beyond registration and login, this system features sophisticated role-based access and cleanly modeled business logic.
+
+🧩 What Sets This Project Apart?
+Domain-Driven Design (DDD) ensures that the project aligns closely with how real businesses operate.
+
+Bounded contexts represent different areas like user registration, leave management, and role assignment.
+
+Aggregates, Entities, and Services model real-world behavior in a maintainable way.
+
+🏗 Exploring the Design
 Bounded Contexts:
+Each feature (e.g., login, teams, timesheets) exists in its own logical domain.
 
-Imagine different areas of your project with specific rules. These are called bounded contexts. For example, user registration and login have their own "context."
-Aggregates and Entities:
+Aggregates & Entities:
+Represent real-world concepts (Users, Admins, Teams) with enforced consistency.
 
-Think of these as building blocks for your business logic. They represent real-world entities (like Users) and ensure the consistency of your data.
 Services:
+Handle key operations, such as assigning roles or managing teams.
 
-Services handle specific tasks within your project. For example, managing user roles is a service that ensures a smooth flow.
-Role-Based Access in a DDD Context:
-Aggregate Roots (Admins):
+Role-Based Access in Context:
 
-Admins are like the main controllers of a specific area. They have the authority to manage users and their roles.
-Entities (Regular Users):
+Aggregate Roots (Admins): Can manage users and assign roles.
 
-Regular users are entities within a bounded context. They have specific roles and access based on the domain's rules.
-How to Leverage DDD in Your Project:
+Entities (Regular Users): Access is scoped to their role and domain.
+
+🎯 Leveraging DDD in Your Project
 Getting Started:
+Set up the solution just like any modern .NET app — this becomes the foundation of your “user domain.”
 
-Just like before, set up the project on your computer. This serves as the foundation for your domain-centric "user house."
 Customizing Domains:
+Easily tailor registration, leave, or timesheet logic to your organization’s rules.
 
-Tailor each domain (like user registration and login) to match your business rules. DDD allows for a flexible and intuitive design.
-Role Assignment in Context:
-
-Admins can efficiently manage user roles within the context of your project's domains.
-Running Your Domain-Driven "House":
-
-Once everything is set up, your project follows the rules and structure you defined. It's like your very own online "user domain."
-What's Inside?
-Apart from the registration and login domains, there's a new layer:
-
-Domain Services (Role Management): This is where admins can control roles within the context of your project's domains.
-Let's Dive Into Your Domain!
-This project, with its Domain-Driven Design approach, is like having expert architects who understand the intricacies of your business. Are you ready to explore and shape your unique online "user domain"? 🚀🏰
-
-If you have questions or need guidance, the team is here to help. Happy exploring!
-# WorkForceNavigator
+Domain Services:
+Handle logic like role assignment and workflow transitions within clear domain boundaries.
