@@ -7,6 +7,7 @@ import { UserRegister } from '../../models/user-register';
 @Component({
   selector: 'app-register',
   imports: [FormsModule,RouterModule],
+  standalone: true,
   templateUrl: './register.component.html',
   styleUrl: './register.component.css'
 })
