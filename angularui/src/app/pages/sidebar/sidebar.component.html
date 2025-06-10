@@ -1,5 +1,6 @@
 <div class="sidebar bg-header vh-100 position-fixed" style="width: 250px; top: 72px; left: 0; overflow-y: auto;">
-  <ul class="nav flex-column pt-4 px-2">
+  <ul class="nav flex-column pt-4 px-2" id="sidebarAccordion">
+
     <!-- Core Modules -->
     <li class="nav-item mb-2">
       <a routerLink="/dashboard" class="nav-link sidebar-link" routerLinkActive="active">
@@ -9,10 +10,11 @@
 
     <!-- HR Management -->
     <li class="nav-item dropdown mb-2">
-      <a class="nav-link sidebar-link dropdown-toggle" data-bs-toggle="collapse" href="#hrCollapse">
+      <a class="nav-link sidebar-link dropdown-toggle" data-bs-toggle="collapse" href="#hrCollapse" role="button"
+         aria-expanded="false" aria-controls="hrCollapse">
         <i class="bi bi-people-fill me-3"></i> HR Management
       </a>
-      <div class="collapse" id="hrCollapse">
+      <div class="collapse" id="hrCollapse" data-bs-parent="#sidebarAccordion">
         <ul class="nav flex-column ps-4">
           <li class="nav-item">
             <a routerLink="/users" class="nav-link sidebar-link" routerLinkActive="active">Users</a>
@@ -32,10 +34,11 @@
 
     <!-- Project Management -->
     <li class="nav-item dropdown mb-2">
-      <a class="nav-link sidebar-link dropdown-toggle" data-bs-toggle="collapse" href="#projectCollapse">
+      <a class="nav-link sidebar-link dropdown-toggle" data-bs-toggle="collapse" href="#projectCollapse" role="button"
+         aria-expanded="false" aria-controls="projectCollapse">
         <i class="bi bi-kanban-fill me-3"></i> Projects
       </a>
-      <div class="collapse" id="projectCollapse">
+      <div class="collapse" id="projectCollapse" data-bs-parent="#sidebarAccordion">
         <ul class="nav flex-column ps-4">
           <li class="nav-item">
             <a routerLink="/projects" class="nav-link sidebar-link" routerLinkActive="active">All Projects</a>
@@ -52,10 +55,11 @@
 
     <!-- Facilities -->
     <li class="nav-item dropdown mb-2">
-      <a class="nav-link sidebar-link dropdown-toggle" data-bs-toggle="collapse" href="#facilitiesCollapse">
+      <a class="nav-link sidebar-link dropdown-toggle" data-bs-toggle="collapse" href="#facilitiesCollapse" role="button"
+         aria-expanded="false" aria-controls="facilitiesCollapse">
         <i class="bi bi-building me-3"></i> Facilities
       </a>
-      <div class="collapse" id="facilitiesCollapse">
+      <div class="collapse" id="facilitiesCollapse" data-bs-parent="#sidebarAccordion">
         <ul class="nav flex-column ps-4">
           <li class="nav-item">
             <a routerLink="/book-room" class="nav-link sidebar-link" routerLinkActive="active">Book Room</a>
@@ -76,15 +80,18 @@
         <i class="bi bi-clock me-3"></i> Timesheets
       </a>
     </li>
+
     <li class="nav-item mb-2">
       <a routerLink="/leave" class="nav-link sidebar-link" routerLinkActive="active">
         <i class="bi bi-calendar-check me-3"></i> Leave
       </a>
     </li>
+
     <li *ngIf="user?.roles.includes('Admin')" class="nav-item mb-2">
       <a routerLink="/admin" class="nav-link sidebar-link" routerLinkActive="active">
         <i class="bi bi-shield-lock me-3"></i> Admin Panel
       </a>
     </li>
+
   </ul>
 </div>
