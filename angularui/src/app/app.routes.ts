@@ -13,7 +13,7 @@ export const routes: Routes = [
     children: [
       { path: 'login', component: LoginComponent },
       { path: 'register', component: RegisterComponent },
-      { path: '', redirectTo: 'login', pathMatch: 'full' } // Always redirect to login
+      { path: '', redirectTo: 'dashboard', pathMatch: 'full' } // Always redirect to login
     ]
   },
   {
@@ -23,5 +23,5 @@ export const routes: Routes = [
       { path: '', component: DashboardComponent }
     ]
   },
-  { path: '**', redirectTo: 'login' } // Fallback to login
+  { path: '**', redirectTo: 'dashboard' } // Fallback to login
 ];
