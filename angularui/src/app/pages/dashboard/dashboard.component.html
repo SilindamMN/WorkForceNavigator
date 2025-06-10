@@ -1,23 +1,7 @@
-<div class="content-wrapper">
-  <h2>Welcome to WorkForceNavigator 👋</h2>
-  <p>Here's an overview of your team's activity today.</p>
+<div class="d-flex">
+  <nav> <!-- sidebar with routerLinks --> </nav>
 
-  <div class="row mt-4">
-    <div class="col-md-6 mb-4">
-      <div class="card border-0 shadow-sm">
-        <div class="card-body">
-          <h5 class="card-title text-accent">Timesheets</h5>
-          <p class="card-text fs-4">180</p>
-        </div>
-      </div>
-    </div>
-    <div class="col-md-6 mb-4">
-      <div class="card border-0 shadow-sm">
-        <div class="card-body">
-          <h5 class="card-title text-accent">Leaves Requested</h5>
-          <p class="card-text fs-4">587</p>
-        </div>
-      </div>
-    </div>
-  </div>
+  <main class="content-wrapper">
+    <router-outlet></router-outlet> <!-- This is where your views load -->
+  </main>
 </div>

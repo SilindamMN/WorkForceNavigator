@@ -1,3 +1,3 @@
 export const Constant={
-       ApiUrl :"https://localhost:7148/api/"
+       ApiUrl :"https://localhost:7148/api/Auth/"
 }
