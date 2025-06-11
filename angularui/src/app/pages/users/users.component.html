@@ -1,37 +1,42 @@
-<div class="container mt-0">
-  <p>Users</p>
+<div class="container mt-4">
+  <!-- Add User Button -->
+  <button class="btn btn-success mb-3" (click)="addModal.open()">
+    Add User
+  </button>
+
+  <!-- Users DataTable -->
   <table id="userTable" class="table table-striped">
     <thead>
       <tr>
-        <th>#</th>
-        <th>First Name</th>
-        <th>Last Name</th>
+        <th>Name</th>
         <th>Email</th>
-        <th>Username</th>
-        <th>Created At</th>
-        <th>Phone</th>
-        <th>Gender</th>
-        <th>Job Title</th>
-        <th>Line Manager</th>
-        <th>Salary</th>
-        <th>Seniority</th>
+        <th>Is Admin</th>
+        <th>Actions</th>
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let user of users; let i = index">
-        <td>{{ i + 1 }}</td>
-        <td>{{ user.firstName }}</td>
-        <td>{{ user.lastName }}</td>
+      <tr *ngFor="let user of users">
+        <td>{{ user.firstName }} {{ user.lastName }}</td>
         <td>{{ user.email }}</td>
-        <td>{{ user.userName }}</td>
-        <td>{{ user.createdAt | date:'medium' }}</td>
-        <td>{{ user.phoneNumber || 'N/A' }}</td>
-        <td>{{ user.gender || 'N/A' }}</td>
-        <td>{{ user.jobTitle || 'N/A' }}</td>
-        <td>{{ user.lineManager || 'N/A' }}</td>
-        <td>{{ user.salary || 'N/A' }}</td>
-        <td>{{ user.seniority || 'N/A' }}</td>
+        <td>
+        </td>
+        <td>
+          <button class="btn btn-sm btn-primary" (click)="openEditUserModal(user)">
+            Edit
+          </button><button class="btn btn-info" (click)="openViewModal(user)">View</button>
+        </td>
       </tr>
     </tbody>
   </table>
+
+  <!-- Modals -->
+  <app-add-modal #addModal [title]="'Add New User'" [fields]="userFields" (onSubmit)="handleAddUser($event)">
+  </app-add-modal>
+
+  <app-edit-modal #editModal [title]="editModalTitle" [fields]="userFields" [entity]="editUser"
+    (onSubmit)="handleUpdateUser($event)">
+  </app-edit-modal>
+
+  <app-details-modal #viewModal [title]="'User Details'" [fields]="userFields" [entity]="selectedUser">
+  </app-details-modal>
 </div>

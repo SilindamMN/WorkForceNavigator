@@ -1,0 +1,38 @@
+<!-- Modal -->
+<div class="modal fade" [class.show]="showModal" [style.display]="showModal ? 'block' : 'none'" tabindex="-1" role="dialog">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+
+      <!-- Header -->
+      <div class="modal-header bg-info text-white">
+        <h5 class="modal-title">{{ title }}</h5>
+        <button type="button" class="close text-white" (click)="close()">
+          <span>&times;</span>
+        </button>
+      </div>
+
+      <!-- Body -->
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-md-6" *ngFor="let field of fields">
+            <div class="mb-3">
+              <strong>{{ field.label }}:</strong>
+              <span class="d-block mt-1">
+                {{ entity?.[field.name] }}
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Footer -->
+      <div class="modal-footer">
+        <button class="btn btn-secondary" (click)="close()">Close</button>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- Backdrop -->
+<div class="modal-backdrop fade" [class.show]="showModal" [style.display]="showModal ? 'block' : 'none'"></div>
