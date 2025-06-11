@@ -1,40 +1,43 @@
-
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, AfterViewInit } from '@angular/core';
 import { UsersService } from '../../services/Users/users.service';
 import { User } from '../../models/Users/User';
 import { CommonModule } from '@angular/common';
 
-
 @Component({
   selector: 'app-users',
-  imports: [CommonModule],
   standalone: true,
+  imports: [CommonModule],
   templateUrl: './users.component.html',
   styleUrl: './users.component.css'
 })
-export class UsersComponent implements OnInit {
+export class UsersComponent implements OnInit, AfterViewInit {
 
   userService = inject(UsersService);
-  users:User[] = [];
+  users: User[] = [];
+  isDataLoaded = false;
 
   ngOnInit(): void {
     this.GetUserList();
   }
-  
-  GetUserList() {
-  this.userService.GetAllUsers().subscribe({
-    next: (response) => {
-      this.users = response;
 
-      setTimeout(() => {
-        if ($('#userTable').length) {
-          ($('#userTable') as any).DataTable();
-        }
-      }, 0);
-    },
-    error: (err) => {
-      console.error('Error fetching users:', err);
-    }
-  });
-}
+  ngAfterViewInit(): void {
+    const interval = setInterval(() => {
+      if (this.isDataLoaded && $('#userTable').length) {
+        ($('#userTable') as any).DataTable();
+        clearInterval(interval);
+      }
+    }, 100);
+  }
+
+  GetUserList() {
+    this.userService.GetAllUsers().subscribe({
+      next: (response) => {
+        this.users = response;
+        this.isDataLoaded = true;
+      },
+      error: (err) => {
+        console.error('Error fetching users:', err);
+      }
+    });
+  }
 }

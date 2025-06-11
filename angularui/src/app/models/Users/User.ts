@@ -1,6 +1,15 @@
 export interface User {
-  id: number;
-  name: string;
+  id: string;
+  firstName: string;
+  lastName: string;
   email: string;
-  role: string;
+  userName: string;
+  normalizedUserName: string;
+  createdAt: string;
+  phoneNumber: string | null;
+  gender: string | null;
+  jobTitle: string | null;
+  lineManager: string | null;
+  salary: number | null;
+  seniority: string | null;
 }

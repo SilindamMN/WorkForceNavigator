@@ -1,20 +1,36 @@
-<!-- user-list.component.html -->
-<div class="container mt-4">
-  <h3>Users</h3>
+<div class="container mt-0">
+  <p>Users</p>
   <table id="userTable" class="table table-striped">
     <thead>
       <tr>
         <th>#</th>
-        <th>Name</th>
+        <th>First Name</th>
+        <th>Last Name</th>
         <th>Email</th>
-        <th>Role</th>
+        <th>Username</th>
+        <th>Created At</th>
+        <th>Phone</th>
+        <th>Gender</th>
+        <th>Job Title</th>
+        <th>Line Manager</th>
+        <th>Salary</th>
+        <th>Seniority</th>
       </tr>
     </thead>
     <tbody>
       <tr *ngFor="let user of users; let i = index">
-        <td>{{ user.name }}</td>
+        <td>{{ i + 1 }}</td>
+        <td>{{ user.firstName }}</td>
+        <td>{{ user.lastName }}</td>
         <td>{{ user.email }}</td>
-        <td>{{ user.role }}</td>
+        <td>{{ user.userName }}</td>
+        <td>{{ user.createdAt | date:'medium' }}</td>
+        <td>{{ user.phoneNumber || 'N/A' }}</td>
+        <td>{{ user.gender || 'N/A' }}</td>
+        <td>{{ user.jobTitle || 'N/A' }}</td>
+        <td>{{ user.lineManager || 'N/A' }}</td>
+        <td>{{ user.salary || 'N/A' }}</td>
+        <td>{{ user.seniority || 'N/A' }}</td>
       </tr>
     </tbody>
   </table>
