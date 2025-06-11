@@ -1,0 +1,19 @@
+/* Add to your styles.css */
+#userTable tbody tr:hover {
+  background-color: rgba(13, 110, 253, 0.1) !important;
+  cursor: pointer;
+}
+
+.avatar {
+  width: 36px;
+  height: 36px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.dataTables_wrapper .dataTables_filter input {
+  border: 1px solid #dee2e6;
+  border-radius: 4px;
+  padding: 4px 10px;
+}

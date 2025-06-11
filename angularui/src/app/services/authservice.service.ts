@@ -21,11 +21,11 @@ export class AuthserviceService {
   constructor(private http: HttpClient) {}
 
   Register(user: UserRegister): Observable<any> {
-    return this.http.post(`${Constant.ApiUrl}Auth/register`, user, { observe: 'response' });
+    return this.http.post(`${Constant.ApiUrl}register`, user, { observe: 'response' });
   }
 
   Login(user: UserLogin): Observable<LoginServiceResponseDto> {
-    return this.http.post<LoginServiceResponseDto>(`${Constant.ApiUrl}Auth/login`, user);
+    return this.http.post<LoginServiceResponseDto>(`${Constant.ApiUrl}login`, user);
   }
 
   saveAuthData(loginResponse: LoginServiceResponseDto): void {
