@@ -9,9 +9,11 @@ import { Constant } from '../../constant';
 })
 export class UsersService {
 
+  private Url = Constant.ApiUrl + 'Auth/users';
+
   constructor(private http: HttpClient) { }
 
   GetAllUsers():Observable<User[]> {
-    return this.http.get<User[]>(Constant.ApiUrl + 'users');
+    return this.http.get<User[]>(this.Url);
   }
 }

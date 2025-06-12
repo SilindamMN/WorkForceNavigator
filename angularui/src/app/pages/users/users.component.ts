@@ -61,7 +61,7 @@ export class UsersComponent implements OnInit, AfterViewInit {
   }
 
   openEditUserModal(user: User) {
-    this.editUser = { ...user }; // Pass a copy
+    this.editUser = { ...user }; 
     this.editModalTitle = `Edit User: ${user.firstName} ${user.lastName}`;
     this.editModal.open();
   }
@@ -88,6 +88,6 @@ export class UsersComponent implements OnInit, AfterViewInit {
 
 openViewModal(user: any) {
   this.selectedUser = user;
-  this.viewModal.open();  // You need to @ViewChild('viewModal') viewModal!: ViewModalComponent;
+  this.viewModal.open(); 
 }
 }

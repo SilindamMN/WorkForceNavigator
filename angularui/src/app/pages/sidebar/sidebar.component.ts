@@ -12,11 +12,19 @@ import { Router } from '@angular/router';
 export class SidebarComponent {
   router = inject(Router);
 
-LoadUsers(){
-   this.router.navigate(['/dashboard/users']);
- }
+  LoadDepartments() {
+    this.router.navigate(['/dashboard/departments']);
+  }
+  LoadJobTitles() {
+    this.router.navigate(['/dashboard/jobtitles']);
+  }
 
- LoadDashboard(){
-   this.router.navigate(['/dashboard']);
- }
+  LoadUsers() {
+    this.router.navigate(['/dashboard/users']);
+  }
+
+
+  LoadDashboard() {
+    this.router.navigate(['/dashboard']);
+  }
 }

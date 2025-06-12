@@ -13,6 +13,8 @@ export class AuthserviceService {
 
   private tokenKey = 'token';
   private userInfoKey = 'userInfo';
+  private Url = Constant.ApiUrl+'Auth/';
+
 
   // Observable to track user state
   private userSubject = new BehaviorSubject<any>(this.getUserFromStorage());
@@ -21,11 +23,11 @@ export class AuthserviceService {
   constructor(private http: HttpClient) {}
 
   Register(user: UserRegister): Observable<any> {
-    return this.http.post(`${Constant.ApiUrl}register`, user, { observe: 'response' });
+    return this.http.post(`${this.Url}register`, user, { observe: 'response' });
   }
 
   Login(user: UserLogin): Observable<LoginServiceResponseDto> {
-    return this.http.post<LoginServiceResponseDto>(`${Constant.ApiUrl}login`, user);
+    return this.http.post<LoginServiceResponseDto>(`${this.Url}login`, user);
   }
 
   saveAuthData(loginResponse: LoginServiceResponseDto): void {
