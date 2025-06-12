@@ -1,0 +1,18 @@
+<h2>departments</h2>
+<button (click)="addModal.open()">Add department</button>
+<app-generic-table [data]="departments" [columns]="columns" [showEdit]="true" [showView]="true"
+  (onEdit)="editModal.open()" (onView)="viewModal.open()">
+</app-generic-table>
+
+
+  <!-- Modals -->
+  <app-add-modal #addModal [title]="'Add Department'" [fields]="departmentFields" (onSubmit)="addDepartment(department)">
+  </app-add-modal>
+
+  <app-edit-modal #editModal [title]="'Edit Department'" [fields]="departmentFields" [entity]="department"
+    (onSubmit)="editDepartment(department)">
+  </app-edit-modal>
+
+  <app-details-modal #viewModal [title]="'User Details'" [fields]="departmentFields" [entity]="selectedUser">
+  </app-details-modal>
+

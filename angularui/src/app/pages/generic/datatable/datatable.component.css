@@ -1,0 +1,14 @@
+table.display {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+table.display th,
+table.display td {
+  padding: 8px 12px;
+  border: 1px solid #ccc;
+}
+
+button {
+  margin-right: 4px;
+}

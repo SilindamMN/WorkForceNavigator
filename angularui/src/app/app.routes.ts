@@ -7,6 +7,8 @@ import { DashboardComponent } from './pages/dashboard/dashboard.component';
 import { LoginComponent } from './pages/login/login.component';
 import { RegisterComponent } from './pages/register/register.component';
 import { UsersComponent } from './pages/users/users.component';
+import { DepartmentComponent } from './pages/department/department.component';
+import { JobtitleComponent } from './pages/jobtitle/jobtitle.component';
 
 export const routes: Routes = [
   {
@@ -24,7 +26,9 @@ export const routes: Routes = [
     canActivate: [AuthGuard],
     children: [
       { path: '', component: DashboardComponent },
-      {path:'users',component:UsersComponent}
+      { path: 'departments', component: DepartmentComponent },
+      { path: 'jobtitles', component: JobtitleComponent },
+      { path: 'users', component: UsersComponent }
     ]
   },
   { path: '**', redirectTo: 'dashboard' }

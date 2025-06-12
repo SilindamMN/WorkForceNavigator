@@ -1,0 +1,17 @@
+<table id="genericTable" class="display">
+  <thead>
+    <tr>
+      <th *ngFor="let col of columns">{{ col.label }}</th>
+      <th *ngIf="showEdit || showView">Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let row of data">
+      <td *ngFor="let col of columns">{{ row[col.field] }}</td>
+      <td *ngIf="showEdit || showView">
+        <button *ngIf="showEdit" (click)="handleEdit(row)">Edit</button>
+        <button *ngIf="showView" (click)="handleView(row)">View</button>
+      </td>
+    </tr>
+  </tbody>
+</table>

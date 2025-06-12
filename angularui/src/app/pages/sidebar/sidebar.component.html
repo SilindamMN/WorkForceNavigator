@@ -17,13 +17,13 @@
       <div class="collapse" id="hrCollapse" data-bs-parent="#sidebarAccordion">
         <ul class="nav flex-column ps-4">
           <li class="nav-item">
+            <a  (click)="LoadDepartments()" class="nav-link sidebar-link" >Departments</a>
+          </li>
+          <li class="nav-item">
             <a (click)="LoadUsers()" class="nav-link sidebar-link" >Users</a>
           </li>
           <li class="nav-item">
-            <a routerLink="/departments" class="nav-link sidebar-link" routerLinkActive="active">Departments</a>
-          </li>
-          <li class="nav-item">
-            <a routerLink="/job-titles" class="nav-link sidebar-link" routerLinkActive="active">Job Titles</a>
+            <a (click)="LoadJobTitles()" class="nav-link sidebar-link" >Job Titles</a>
           </li>
           <li class="nav-item">
             <a routerLink="/teams" class="nav-link sidebar-link" routerLinkActive="active">Teams</a>
