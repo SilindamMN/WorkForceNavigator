@@ -16,7 +16,7 @@ export interface ModalField {
   selector: 'app-base-modal',
   standalone: true,
   imports: [CommonModule, FormsModule],
-  template: ''
+  template: '' // This is intended to be inherited; actual HTML should be in child components
 })
 export class BaseModalComponent {
   @Input() title: string = '';
@@ -26,6 +26,17 @@ export class BaseModalComponent {
 
   showModal: boolean = false;
   model: any = {};
+
+  private _entity: any;
+
+  @Input()
+  set entity(value: any) {
+    this._entity = value;
+  }
+
+  get entity(): any {
+    return this._entity;
+  }
 
   open() {
     this.initializeModel();

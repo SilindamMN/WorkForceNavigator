@@ -12,10 +12,12 @@ import { FormsModule } from '@angular/forms';
   styleUrls: ['./editmodal.component.css']
 })
 export class EditModalComponent extends BaseModalComponent {
-  @Input() set entity(value: any) {
+  @Input()
+  override set entity(value: any) {
     if (value) {
       this.model = { ...value };
     }
+    super.entity = value;
   }
 
   constructor() {
@@ -24,7 +26,6 @@ export class EditModalComponent extends BaseModalComponent {
   }
 
   protected override initializeModel() {
-    // Don't reinitialize for edit modals
     if (!this.model || Object.keys(this.model).length === 0) {
       super.initializeModel();
     }

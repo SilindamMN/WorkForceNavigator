@@ -10,26 +10,38 @@ export class GenericCrudService<T extends BaseEntity> {
     this.baseUrl = Constant.ApiUrl + endpoint;
   }
 
-  getAll(): Observable<T[]> {
-    return this.http.get<T[]>(this.baseUrl);
+  // Get all entities, optionally with an action path
+  getAll(action?: string): Observable<T[]> {
+    const url = action ? `${this.baseUrl}${action}` : this.baseUrl;
+    return this.http.get<T[]>(url);
   }
 
-  getById(id: string): Observable<T> {
-    return this.http.get<T>(`${this.baseUrl}/${id}`);
+  // Get entity by ID, optionally with an action path before the ID
+  getById(id: string, action?: string): Observable<T> {
+    const url = action ? `${this.baseUrl}${action}/${id}` : `${this.baseUrl}/${id}`;
+    return this.http.get<T>(url);
   }
 
-  create(entity: T): Observable<T> {
-    return this.http.post<T>(this.baseUrl, entity);
+  // Create entity, optionally with an action path
+  create(entity: T, action?: string): Observable<T> {
+    const url = action ? `${this.baseUrl}${action}` : this.baseUrl;
+    return this.http.post<T>(url, entity);
   }
 
-  update(entity: T): Observable<T> {
+  // Update entity, requires id, optionally with an action path before the id
+  update(entity: T, action?: string): Observable<T> {
     if (!entity.id) {
       throw new Error('Entity must have an ID for update operation.');
     }
-    return this.http.put<T>(`${this.baseUrl}/${entity.id}`, entity);
+    const url = action
+      ? `${this.baseUrl}${action}/${entity.id}`
+      : `${this.baseUrl}/${entity.id}`;
+    return this.http.put<T>(url, entity);
   }
 
-  delete(id: number): Observable<any> {
-    return this.http.delete<any>(`${this.baseUrl}/${id}`);
+  // Delete entity by id, optionally with an action path before the id
+  delete(id: number | string, action?: string): Observable<any> {
+    const url = action ? `${this.baseUrl}${action}` : `${this.baseUrl}/${id}`;
+    return this.http.delete<any>(url);
   }
 }
