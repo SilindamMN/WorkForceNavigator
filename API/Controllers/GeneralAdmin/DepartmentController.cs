@@ -77,9 +77,8 @@ namespace API.Controllers.GeneralAdmin
       return StatusCode(result.StatusCode, result.Message);
     }
 
-    [HttpPost]
-    [Route("UpdateDepartment")]
-    public async Task<IActionResult> UpdateDepartment(int id, [FromBody] UpdateDepartmentDto updateDepartmentDto)
+        [HttpPut("UpdateDepartment/{id}")]
+        public async Task<IActionResult> UpdateDepartment(int id, [FromBody] UpdateDepartmentDto updateDepartmentDto)
     {
       var result = await updateDepartmentService.UpdateAsync(id, updateDepartmentDto);
       if (result.IsSucceed)

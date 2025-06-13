@@ -36,8 +36,6 @@ departmentFields: ModalField []= [
   { name: 'description', label: 'Description', type: 'text', required: true }
 ];
 
-
-
   constructor() {
     this.departmentService = this.genericCrudService.create<Department>('Department');
   }
@@ -55,9 +53,10 @@ departmentFields: ModalField []= [
   }
 
   addDepartment(newDepartment:Department): void {
-    this.departmentService.create(this.department).subscribe(
+    this.departmentService.create(newDepartment,'/CreateDepartment').subscribe(
       (data) => {
         this.loadDepartments();
+        console.log("User Created", data);
       },
       (error) => {
         console.log("Error Creating User", error);
@@ -65,7 +64,7 @@ departmentFields: ModalField []= [
   }
 
   editDepartment(department: Department): void {
-    this.departmentService.update(department).subscribe(
+    this.departmentService.update(department,'/UpdateDepartment').subscribe(
       (data) => {
         this.loadDepartments();
       },
@@ -74,16 +73,21 @@ departmentFields: ModalField []= [
       })
   }
   
-  selectedUser: any;
+  selectedDepartment: any;
 
   viewDepartment(department: Department): void {
     // Show a modal or log to console
     console.log('Viewing department:', department);
   }
+  openModal(modal: any, entity?: any) {
+  this.department = entity;
+  modal.open();
+}
+
 
   deleteDepartment(id: number): void {
     if (confirm("Are you sure you want to delete")) {
-      this.departmentService.delete(id).subscribe(
+      this.departmentService.delete(id, `/DeleteDepartment?id=${id}`).subscribe(
         () => {
           console.log("User Deleted");
           this.loadDepartments();

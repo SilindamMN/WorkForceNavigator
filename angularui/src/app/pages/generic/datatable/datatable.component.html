@@ -8,9 +8,10 @@
   <tbody>
     <tr *ngFor="let row of data">
       <td *ngFor="let col of columns">{{ row[col.field] }}</td>
-      <td *ngIf="showEdit || showView">
+      <td *ngIf="showEdit || showView || showDelete">
         <button *ngIf="showEdit" (click)="handleEdit(row)">Edit</button>
         <button *ngIf="showView" (click)="handleView(row)">View</button>
+        <button *ngIf="showDelete" (click)="handleDelete(row)">Delete</button>
       </td>
     </tr>
   </tbody>

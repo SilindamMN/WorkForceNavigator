@@ -19,9 +19,13 @@ export class DatatableComponent implements OnChanges {
 
   @Input() showEdit: boolean = false;
   @Input() showView: boolean = false;
+  @Input() showDelete: boolean = false;
+
 
   @Output() onEdit = new EventEmitter<any>();
   @Output() onView = new EventEmitter<any>();
+  @Output() onDelete = new EventEmitter<any>();
+
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['data']) {
@@ -45,5 +49,9 @@ export class DatatableComponent implements OnChanges {
 
   handleView(row: any) {
     this.onView.emit(row);
+  }
+
+  handleDelete(id:number){
+    this.onDelete.emit(id);
   }
 }

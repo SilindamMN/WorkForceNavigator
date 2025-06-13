@@ -1,18 +1,23 @@
 <h2>departments</h2>
 <button (click)="addModal.open()">Add department</button>
-<app-generic-table [data]="departments" [columns]="columns" [showEdit]="true" [showView]="true"
-  (onEdit)="editModal.open()" (onView)="viewModal.open()">
+<app-generic-table [data]="departments" [columns]="columns" [showEdit]="true" [showView]="true" [showDelete]="true"
+  (onEdit)="openModal(editModal, $event)" (onView)="openModal(viewModal, $event)" (onDelete)="deleteDepartment($event.id)"
+>(department.id)">
 </app-generic-table>
 
+<!-- Modals -->
+<app-add-modal 
+  #addModal 
+  [title]="'Add Department'" 
+  [fields]="departmentFields" 
+  [model]="department"
+  (submitted)="addDepartment($event)">
+</app-add-modal>
 
-  <!-- Modals -->
-  <app-add-modal #addModal [title]="'Add Department'" [fields]="departmentFields" (onSubmit)="addDepartment(department)">
-  </app-add-modal>
+<app-edit-modal #editModal [title]="'Edit Department'" [fields]="departmentFields" [entity]="department"
+  (onSubmit)="editDepartment($event)">
+</app-edit-modal>
 
-  <app-edit-modal #editModal [title]="'Edit Department'" [fields]="departmentFields" [entity]="department"
-    (onSubmit)="editDepartment(department)">
-  </app-edit-modal>
 
-  <app-details-modal #viewModal [title]="'User Details'" [fields]="departmentFields" [entity]="selectedUser">
-  </app-details-modal>
-
+<app-details-modal #viewModal [title]="'Department Details'" [fields]="departmentFields" [entity]="department">
+</app-details-modal>
