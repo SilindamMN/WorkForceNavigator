@@ -10,9 +10,9 @@
     (submitted)="addJobTitles($event)">
 </app-add-modal>
 
-<app-edit-modal #editModal title="Edit Job Title" [fields]="jobTitlesFields" [entity]="jobtitleDto"
+<app-edit-modal #editModal title="Edit Job Title" [fields]="jobTitlesFields" [entity]="jobtitle"
     (onSubmit)="editJobTitles($event)">
 </app-edit-modal>
 
-<app-details-modal #detailsModal title="Job Title Details" [fields]="jobTitlesFields" [entity]="jobTitles">
+<app-details-modal #viewModal title="Job Title Details" [fields]="jobTitlesFields" [entity]="jobtitle">
 </app-details-modal>

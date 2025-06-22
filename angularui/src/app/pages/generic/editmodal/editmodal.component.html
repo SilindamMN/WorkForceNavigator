@@ -1,4 +1,4 @@
-<!-- Modal -->
+<!-- Edit Modal -->
 <div class="modal fade" [class.show]="showModal" [style.display]="showModal ? 'block' : 'none'" tabindex="-1" role="dialog">
   <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
@@ -19,24 +19,47 @@
               <div class="form-group mb-3">
                 <label [for]="field.name">{{ field.label }}</label>
 
-               <!-- Text / Email / Number -->
-<input *ngIf="field.type !== 'checkbox'"
-       [type]="field.type"
-       class="form-control"
-       [(ngModel)]="model[field.name]"
-       [name]="field.name">
+                <!-- Text / Email / Number / Password -->
+                <input *ngIf="field.type === 'text' || field.type === 'email' || field.type === 'password' || field.type === 'number'"
+                       [type]="field.type"
+                       class="form-control"
+                       [(ngModel)]="model[field.name]"
+                       [name]="field.name" />
 
-<!-- Checkbox -->
-<div class="form-check mt-2" *ngIf="field.type === 'checkbox'">
-  <input type="checkbox"
-         class="form-check-input"
-         [(ngModel)]="model[field.name]"
-         [name]="field.name"
-         [id]="field.name">
-  <label class="form-check-label" [for]="field.name">{{ field.label }}</label>
-</div>
+                <!-- Textarea -->
+                <textarea *ngIf="field.type === 'textarea'"
+                          class="form-control"
+                          [(ngModel)]="model[field.name]"
+                          [name]="field.name"
+                          rows="3"></textarea>
 
+                <!-- Date Picker -->
+                <input *ngIf="field.type === 'date'"
+                       type="date"
+                       class="form-control"
+                       [(ngModel)]="model[field.name]"
+                       [name]="field.name" />
 
+                <!-- Select Dropdown -->
+                <select *ngIf="field.type === 'select'"
+                        class="form-control"
+                        [(ngModel)]="model[field.name]"
+                        [name]="field.name">
+                  <option value="">Select {{ field.label }}</option>
+                  <option *ngFor="let option of field.options" [value]="option.value">
+                    {{ option.label }}
+                  </option>
+                </select>
+
+                <!-- Checkbox -->
+                <div *ngIf="field.type === 'checkbox'" class="form-check mt-2">
+                  <input type="checkbox"
+                         class="form-check-input"
+                         [(ngModel)]="model[field.name]"
+                         [name]="field.name"
+                         [id]="field.name" />
+                  <label class="form-check-label" [for]="field.name">{{ field.label }}</label>
+                </div>
               </div>
             </div>
           </div>
@@ -53,5 +76,5 @@
   </div>
 </div>
 
-<!-- Backdrop -->
+<!-- Modal Backdrop -->
 <div class="modal-backdrop fade" [class.show]="showModal" [style.display]="showModal ? 'block' : 'none'"></div>

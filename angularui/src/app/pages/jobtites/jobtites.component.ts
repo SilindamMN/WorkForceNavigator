@@ -15,7 +15,7 @@ import { Department } from '../../models/Department';
 
 @Component({
   selector: 'app-jobtites',
-  imports: [AddModalComponent, EditModalComponent, DetaisModalComponent, DatatableComponent, FormsModule, CommonModule],
+  imports: [FormsModule, CommonModule, DatatableComponent, AddModalComponent, EditModalComponent, DetaisModalComponent],
   standalone: true,
   templateUrl: './jobtites.component.html',
   styleUrl: './jobtites.component.css'
@@ -42,35 +42,44 @@ export class JobtitesComponent implements OnInit {
     { field: 'seniority', label: 'Seniority' },
     { field: 'departmentName', label: 'Department Name' },
   ]
+  jobTitlesFields: ModalField[] = [];
 
-get jobTitlesFields(): ModalField[] {
-  return [
-    { name: 'title', label: 'Title', type: 'text', required: true },
-    { name: 'description', label: 'Description', type: 'text', required: true },
-    {
-      name: 'seniority',
-      label: 'Seniority',
-      type: 'select',
-      required: true,
-      options: Object.values(Seniority).map(value => ({
-        value,
-        label: value
-      }))
-    },
-    {
-      name: 'departmentId', 
-      label: 'Department',
-      type: 'select',
-      required: true,
-      options: this.departments.map(department => ({
-        value: department.id,
-        label: department.departmentName
-      }))
-    }
-  ];
-}
-
-
+  buildJobTitlesFields(): void {
+    this.jobTitlesFields = [
+      {
+        name: 'title',
+        label: 'Title',
+        type: 'text',
+        required: true
+      },
+      {
+        name: 'description',
+        label: 'Description',
+        type: 'text',
+        required: true
+      },
+      {
+        name: 'seniority',
+        label: 'Seniority',
+        type: 'select',
+        required: true,
+        options: Object.values(Seniority).map(value => ({
+          value,
+          label: value
+        }))
+      },
+      {
+        name: 'departmentId',
+        label: 'Department',
+        type: 'select',
+        required: true,
+        options: (this.departments ?? []).map(department => ({
+          value: department.id,
+          label: department.departmentName
+        }))
+      }
+    ];
+  }
   constructor() {
     this.jobtitleService = this.genericCrudService.create<JobTitleDto>('JobTitle');
     this.departmentService = this.genericCrudService.create<Department>('Department');
@@ -90,13 +99,15 @@ get jobTitlesFields(): ModalField[] {
       })
   }
 
- loadDepartments(): void {
+  loadDepartments(): void {
     this.departmentService.getAll().subscribe(
       (data) => {
         this.departments = data;
-      }, (error) => {
-        console.log('Error Loading Users', error);
-      })
+        this.buildJobTitlesFields();
+      },
+      (error) => {
+        console.error('Error Loading Departments', error);
+      });
   }
 
   addJobTitles(newJobTitle: JobTitle): void {
@@ -132,8 +143,9 @@ get jobTitlesFields(): ModalField[] {
         })
     }
   }
-openModal(modal: any, entity?: JobTitleDto): void {
-  this.jobtitleDto = entity ?? new JobTitleDto();
-  modal.open();
-}
+  openModal(modal: any, entity?: JobTitleDto): void {
+    this.jobtitle = entity ? JobTitle.fromDto(entity) : new JobTitle();
+    modal.open();
+     console.log('departmentId before modal open:', this.jobtitle.departmentId, this.jobtitle.departmentName);
+  }
 }
