@@ -8,7 +8,7 @@ import { LoginComponent } from './pages/login/login.component';
 import { RegisterComponent } from './pages/register/register.component';
 import { UsersComponent } from './pages/users/users.component';
 import { DepartmentComponent } from './pages/department/department.component';
-import { JobtitleComponent } from './pages/jobtitle/jobtitle.component';
+import { JobtitesComponent } from './pages/jobtites/jobtites.component';
 
 export const routes: Routes = [
   {
@@ -27,7 +27,7 @@ export const routes: Routes = [
     children: [
       { path: '', component: DashboardComponent },
       { path: 'departments', component: DepartmentComponent },
-      { path: 'jobtitles', component: JobtitleComponent },
+      { path: 'jobtites', component: JobtitesComponent },
       { path: 'users', component: UsersComponent }
     ]
   },

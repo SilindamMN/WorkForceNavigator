@@ -1,0 +1,18 @@
+<button (click)="addModal.open()">New Job Title</button>
+<app-generic-table [data]="jobTitles" [columns]="columns"
+ [showEdit]="true" [showView]="true" [showDelete]="true"
+  (onEdit)="openModal(editModal,$event)"
+    (onView)="openModal(viewModal,$event)"
+     (onDelete)="deleteJobTitle($event.id)">
+</app-generic-table>
+
+<app-add-modal #addModal title="Add Job Title" [fields]="jobTitlesFields" [entity]="jobtitle"
+    (submitted)="addJobTitles($event)">
+</app-add-modal>
+
+<app-edit-modal #editModal title="Edit Job Title" [fields]="jobTitlesFields" [entity]="jobtitle"
+    (onSubmit)="editJobTitles($event)">
+</app-edit-modal>
+
+<app-details-modal #viewModal title="Job Title Details" [fields]="jobTitlesFields" [entity]="jobtitle">
+</app-details-modal>

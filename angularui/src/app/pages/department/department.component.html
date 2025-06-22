@@ -1,16 +1,14 @@
 <h2>departments</h2>
 <button (click)="addModal.open()">Add department</button>
-<app-generic-table [data]="departments" [columns]="columns" [showEdit]="true" [showView]="true" [showDelete]="true"
-  (onEdit)="openModal(editModal, $event)" (onView)="openModal(viewModal, $event)" (onDelete)="deleteDepartment($event.id)"
->(department.id)">
+<app-generic-table [data]="departments" [columns]="columns" 
+[showEdit]="true" [showView]="true" [showDelete]="true"
+  (onEdit)="openModal(editModal, $event)"
+   (onView)="openModal(viewModal, $event)"
+  (onDelete)="deleteDepartment($event.id)">(department.id)">
 </app-generic-table>
 
 <!-- Modals -->
-<app-add-modal 
-  #addModal 
-  [title]="'Add Department'" 
-  [fields]="departmentFields" 
-  [model]="department"
+<app-add-modal #addModal [title]="'Add Department'" [fields]="departmentFields" [model]="department"
   (submitted)="addDepartment($event)">
 </app-add-modal>
 

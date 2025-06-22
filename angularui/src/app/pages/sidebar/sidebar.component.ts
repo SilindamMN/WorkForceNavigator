@@ -16,13 +16,16 @@ export class SidebarComponent {
     this.router.navigate(['/dashboard/departments']);
   }
   LoadJobTitles() {
-    this.router.navigate(['/dashboard/jobtitles']);
+    this.router.navigate(['/dashboard/jobtites']);
   }
 
   LoadUsers() {
     this.router.navigate(['/dashboard/users']);
   }
 
+  LoadJobTitlesa() {
+    this.router.navigate(['/dashboard/jobtitles']);
+  }
 
   LoadDashboard() {
     this.router.navigate(['/dashboard']);
