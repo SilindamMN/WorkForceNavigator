@@ -1,0 +1,71 @@
+﻿@model Viewing.Models.Auth.LoginViewModel
+@{
+    ViewData["Title"] = "Login";
+}
+
+<div class="login-card">
+    <h2>Welcome Back</h2>
+    <form method="post" asp-action="Login">
+        <div class="mb-3">
+            <input asp-for="Username" class="form-control" placeholder="Username" required />
+        </div>
+        <div class="mb-3">
+            <input asp-for="Password" type="password" class="form-control" placeholder="Password" required />
+        </div>
+        <button type="submit" class="btn btn-primary mb-3">Login</button>
+
+        @if (!string.IsNullOrEmpty(Model.ErrorMessage))
+        {
+            <div class="error-message">@Model.ErrorMessage</div>
+        }
+    </form>
+    <div class="text-center">
+        <small>Don't have an account? <a href="#">Sign Up</a></small>
+    </div>
+</div>
+
+<style>
+    .login-card {
+        background: #ffffff;
+        padding: 40px 30px;
+        border-radius: 16px;
+        width: 100%;
+        max-width: 400px;
+        box-shadow: 0 16px 40px rgba(0,0,0,0.2);
+        text-align: center;
+    }
+
+        .login-card h2 {
+            font-weight: 700;
+            margin-bottom: 30px;
+            color: #333;
+        }
+
+    .form-control {
+        border-radius: 50px;
+        padding: 12px 20px;
+        box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);
+    }
+
+    .btn-primary {
+        border-radius: 50px;
+        padding: 12px;
+        font-weight: 500;
+        background: #000DFF;
+        border: none;
+        width: 100%;
+    }
+
+        .btn-primary:hover {
+            background: #6B73FF;
+        }
+
+    .text-center small {
+        color: #666;
+    }
+
+    .error-message {
+        color: #ff4d4f;
+        margin-top: 10px;
+    }
+</style>

@@ -13,6 +13,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Application", "Application\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WorkForceNavigator.Tests", "WorkForceNavigator.Tests\WorkForceNavigator.Tests.csproj", "{3344DADF-B5BA-4B98-8F99-24C210D77B12}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Viewing", "Viewing\Viewing.csproj", "{3E537421-A0F0-4502-AD3A-502A8BC1BF79}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{3344DADF-B5BA-4B98-8F99-24C210D77B12}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3344DADF-B5BA-4B98-8F99-24C210D77B12}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3344DADF-B5BA-4B98-8F99-24C210D77B12}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3E537421-A0F0-4502-AD3A-502A8BC1BF79}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3E537421-A0F0-4502-AD3A-502A8BC1BF79}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3E537421-A0F0-4502-AD3A-502A8BC1BF79}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3E537421-A0F0-4502-AD3A-502A8BC1BF79}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
