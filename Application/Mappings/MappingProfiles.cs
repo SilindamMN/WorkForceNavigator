@@ -8,18 +8,23 @@
   using Domain.Dtos.JobTitles;
   using Domain.Dtos.LeaveAllocation;
   using Domain.Dtos.LeaveRequest;
-  using Domain.Dtos.Timesheet;
-  using Domain.Enties;
+    using Domain.Dtos.Shop;
+    using Domain.Dtos.Timesheet;
+    using Domain.Enties;
   using Domain.Enties.Leaves;
-  using Domain.Enties.TimeSheets;
-  using Domain.Entities;
+    using Domain.Enties.Shop;
+    using Domain.Enties.TimeSheets;
+    using Domain.Entities;
   using Domain.Entities.TimeSheets;
 
   public class MappingProfiles : Profile
   {
     public MappingProfiles()
     {
-      CreateMap<Department, DepartmentDto>().ReverseMap();
+            CreateMap<ProductDto, Product>()
+    .ForMember(dest => dest.Id, opt => opt.Ignore()); 
+            CreateMap<Product, ProductDto>();
+            CreateMap<Department, DepartmentDto>().ReverseMap();
       CreateMap<Department, UpdateDepartmentDto>().ReverseMap();
       CreateMap<Log, GetLogDto>().ReverseMap();
       CreateMap<Message, GetMessageDto>().ReverseMap();

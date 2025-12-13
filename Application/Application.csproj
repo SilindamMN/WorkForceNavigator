@@ -7,6 +7,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Include="Interfaces\Shop\IProductService.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="AutoMapper" Version="13.0.1" />
     <PackageReference Include="FluentResults" Version="3.16.0" />
     <PackageReference Include="FluentResults.Extensions.FluentAssertions" Version="2.1.2" />
