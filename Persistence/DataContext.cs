@@ -3,7 +3,8 @@ namespace Persistence
   using Domain.Account;
   using Domain.Enties;
   using Domain.Enties.Leaves;
-  using Domain.Enties.TimeSheets;
+    using Domain.Enties.Shop;
+    using Domain.Enties.TimeSheets;
   using Domain.Entities;
   using Domain.Entities.TimeSheets;
   using Microsoft.AspNetCore.Identity;
@@ -18,8 +19,9 @@ namespace Persistence
         public DataContext(DbContextOptions options) : base(options)
         {
         }
-    public DbSet<Log> Logs { get; set; }
-    public DbSet<Message> Messages { get; set; }
+        public DbSet<Log> Logs { get; set; }
+        public DbSet<Product> Products { get; set; }
+        public DbSet<Message> Messages { get; set; }
     public DbSet<Team> Teams { get; set; }
     public DbSet<Client> Clients { get; set; }
     public DbSet<Project> Projects { get; set; }

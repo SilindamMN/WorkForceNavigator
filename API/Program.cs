@@ -1,10 +1,12 @@
 using Application.Interfaces;
 using Application.Interfaces.Auth;
 using Application.Interfaces.GenericInterfaces;
+using Application.Interfaces.Shop;
 using Application.Mappings;
 using Application.Services;
 using Application.Services.Auth;
 using Application.Services.GenericServices;
+using Application.Services.Shop;
 using Domain.Account;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
@@ -30,6 +32,7 @@ builder.Services.AddDbContext<DataContext>(options =>
 });
 builder.Services.AddScoped<ILogService, LogService>();
 builder.Services.AddScoped<IProjectService, ProjectService>();
+builder.Services.AddScoped<IProductService, ProductService>();
 builder.Services.AddScoped<IMessageService, MessageService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<ILeaveRequestService, LeaveRequestService>();
@@ -40,6 +43,8 @@ builder.Services.AddScoped<IUserJobTitleService, UserJobTitleService>();
 builder.Services.AddScoped<ITimesheetService, TimesheetService>();
 builder.Services.AddScoped<IClientService, ClientService>();
 builder.Services.AddScoped(typeof(IGenericService<,>), typeof(GenericService<,>));
+builder.Services.AddHttpClient();
+
 builder.Services.AddControllers()
     .AddJsonOptions(options =>
     {
