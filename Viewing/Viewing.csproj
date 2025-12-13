@@ -15,6 +15,7 @@
     <Folder Include="Controllers\Departments\" />
     <Folder Include="Services\" />
     <Folder Include="Views\Home\" />
+    <Folder Include="Views\Generic\" />
   </ItemGroup>
 
   <ItemGroup>
