@@ -16,83 +16,56 @@ namespace Application.Services.Shop
 {
     public class ProductService : IProductService
     {
-        private readonly IGenericService<Product, ProductDto> _genericService;
-        private readonly IHttpClientFactory _httpClientFactory;
-        private readonly IMapper _mapper;
+        private readonly HttpClient _client;
 
-        public ProductService(
-            IGenericService<Product, ProductDto> genericService,
-            IHttpClientFactory httpClientFactory,
-            IMapper mapper)
+        public ProductService()
         {
-            _genericService = genericService;
-            _httpClientFactory = httpClientFactory;
-            _mapper = mapper;
-        }
-
-        private HttpClient CreateClient()
-        {
-            var client = _httpClientFactory.CreateClient();
-            client.BaseAddress = new Uri("https://fakestoreapi.com/");
-            return client;
-        }
-
-        public async Task<IEnumerable<ProductDto>> GetProductsAsync()
-            => await _genericService.GetAllAsync();
-
-        public async Task<ProductDto?> GetProductByIdAsync(int id)
-            => await _genericService.GetByIdAsync(id);
-        public async Task<GeneralServiceResponseDto> SyncFromExternalApiAsync()
-        {
-            var client = CreateClient();
-            var externalProducts = await client.GetFromJsonAsync<List<FakeStoreProductDto>>("products");
-
-            if (externalProducts == null || !externalProducts.Any())
-                return ResponseHelper.CreateResponse(false, 400, "No products found in external API");
-
-            // Get all existing products from DB
-            var allProducts = (await _genericService.GetAllAsync())
-                .ToDictionary(p => p.ExternalProductId, p => p);
-
-            foreach (var ext in externalProducts)
+            _client = new HttpClient
             {
-                // Map external id -> ExternalProductId
-                var extId = ext.id;
-
-                if (allProducts.TryGetValue(extId, out var existing))
-                {
-                    // Update existing product if changed
-                    if (existing.Name != ext.Title ||
-                        existing.Price != ext.Price ||
-                        existing.Category != ext.Category ||
-                        existing.ImageUrl != ext.Image)
-                    {
-                        existing.Name = ext.Title;
-                        existing.Price = ext.Price;
-                        existing.Category = ext.Category;
-                        existing.ImageUrl = ext.Image;
-
-                        await _genericService.UpdateAsync(existing.Id, existing);
-                    }
-                }
-                else
-                {
-                    // Insert new product
-                    var dto = new ProductDto
-                    {
-                        Name = ext.Title,
-                        Price = ext.Price,
-                        Category = ext.Category,
-                        ImageUrl = ext.Image,
-                        ExternalProductId = extId
-                    };
-
-                    await _genericService.CreateAsync(dto);
-                }
-            }
-
-            return ResponseHelper.CreateResponse(true, 200, "Products synced successfully");
+                BaseAddress = new Uri("https://fakestoreapi.com/")
+            };
         }
 
+        public async Task<GeneralServiceResponseDto> CreateExternalProductAsync(FakeStoreProductDto dto)
+        {
+            var response = await _client.PostAsJsonAsync("products", dto);
+            return response.IsSuccessStatusCode ?
+                ResponseHelper.CreateResponse(true, 200, "Created Successfully") :
+                ResponseHelper.CreateResponse(false, 400, "Failed to create external product");
+        }
+
+        public async Task<GeneralServiceResponseDto> UpdateExternalProductAsync(int externalProductId, FakeStoreProductDto dto)
+        {
+            var response = await _client.PutAsJsonAsync($"products/{externalProductId}", dto);
+            return response.IsSuccessStatusCode
+                ? ResponseHelper.CreateResponse(true, 200, "Product updated")
+                : ResponseHelper.CreateResponse(false, 400, "Failed to update product");
+        }
+
+        public async Task<IEnumerable<FakeStoreProductDto>> GetAllExternalProductsAsync()
+        {
+            return await _client.GetFromJsonAsync<List<FakeStoreProductDto>>("products")
+                   ?? new List<FakeStoreProductDto>();
+        }
+
+        public async Task<FakeStoreProductDto?> GetExternalProductByIdAsync(int id)
+        {
+            try
+            {
+                return await _client.GetFromJsonAsync<FakeStoreProductDto>($"products/{id}");
+            }
+            catch
+            {
+                return null;
+            }
+        }
+
+        public async Task<GeneralServiceResponseDto> DeleteExternalProductAsync(int externalProductId)
+        {
+            var response = await _client.GetFromJsonAsync<GeneralServiceResponseDto>($"products/{externalProductId}");
+            return response.IsSucceed ?
+                ResponseHelper.CreateResponse(true, 200, "Deleted Successfully") :
+                ResponseHelper.CreateResponse(false, 400, "Failed to delete external product");
+        }
     }
 }

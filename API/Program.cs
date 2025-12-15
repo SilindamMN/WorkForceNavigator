@@ -30,6 +30,10 @@ builder.Services.AddDbContext<DataContext>(options =>
         sqlOptions.EnableRetryOnFailure();
       });
 });
+builder.Services.AddHttpClient("FakeStoreApi", client =>
+{
+    client.BaseAddress = new Uri("https://fakestoreapi.com/");
+});
 builder.Services.AddScoped<ILogService, LogService>();
 builder.Services.AddScoped<IProjectService, ProjectService>();
 builder.Services.AddScoped<IProductService, ProductService>();
