@@ -23,7 +23,7 @@
 
     public int NumberOfDays { get; set; }
     public ApplicationUser ApplicationUser { get; set; }
-    public string UserName { get; set; }
+    public string Email { get; set; }
     // Constructor that accepts UserName
   }
 }

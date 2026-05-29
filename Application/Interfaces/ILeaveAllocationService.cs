@@ -13,7 +13,7 @@ namespace Application.Interfaces
 
   public interface ILeaveAllocationService
   {
-    Task<IEnumerable<EmployeeLeaveAllocationDto>> GetLeaveAllocationsByUsername(string username);
+    Task<IEnumerable<EmployeeLeaveAllocationDto>> GetLeaveAllocationsByEmail(string username);
     Task<IEnumerable<EmployeeLeaveAllocationDto>> GetMyLeavesAllocations(ClaimsPrincipal User);
     Task<IEnumerable<LeaveAllocationDto>> GetLeaveAllocations();
     Task<IEnumerable<LeaveAllocationDto>> GetLeaveAllocationsByLeaveType(string LeaveName);

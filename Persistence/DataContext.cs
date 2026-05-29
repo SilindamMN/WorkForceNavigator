@@ -37,7 +37,7 @@ namespace Persistence
     protected override void OnModelCreating(ModelBuilder builder)
     {
 
-      builder.SeedData();
+      //builder.SeedData();
       base.OnModelCreating(builder);
 
       builder.Entity<JobTitle>()

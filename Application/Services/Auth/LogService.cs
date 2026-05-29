@@ -32,7 +32,7 @@
 
     public async Task<IEnumerable<GetLogDto>> getMyLogsAsync(ClaimsPrincipal User)
     {
-      var logs = await dataContext.Logs.Where(u=>u.Username==User.Identity.Name).OrderByDescending(x => x.CreatedAt).ToListAsync();
+      var logs = await dataContext.Logs.Where(u=>u.Email == User.Identity.Name).OrderByDescending(x => x.CreatedAt).ToListAsync();
       return mapper.Map<IEnumerable<GetLogDto>>(logs);
     }
 
@@ -40,7 +40,7 @@
     {
       var newLog = new Log()
       {
-        Username = UserName,
+        Email = UserName,
         Description = Description
       };
       await dataContext.Logs.AddAsync(newLog);
