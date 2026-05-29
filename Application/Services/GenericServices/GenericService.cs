@@ -170,9 +170,9 @@ namespace Application.Services.GenericServices
       }
       catch (Exception ex)
       {
-        // Log or handle the exception appropriately
-        return (IEnumerable<TDto>)ResponseHelper.CreateResponse(false, 400, "Failed to get all entities");
-      }
+                // Log or handle the exception appropriately
+                return new List<TDto>();
+            }
     }
 
     public async Task<IEnumerable<TEntity>> GetPagedAsync(int pageNumber, int pageSize)
