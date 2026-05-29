@@ -91,16 +91,16 @@
     }
 
     [HttpPost("add-member")]
-    public async Task<IActionResult> AddTeamMember(string username, int teamId)
+    public async Task<IActionResult> AddTeamMember(string Email, int teamId)
     {
-      var response = await teamInterface.UpdateTeamMembership(username, teamId);
+      var response = await teamInterface.UpdateTeamMembership(Email, teamId);
       return StatusCode(response.StatusCode, response);
     }
 
     [HttpPost("remove-member")]
-    public async Task<IActionResult> RemoveTeamMember(string username)
+    public async Task<IActionResult> RemoveTeamMember(string Email)
     {
-      var response = await teamInterface.UpdateTeamMembership(username);
+      var response = await teamInterface.UpdateTeamMembership(Email);
       return StatusCode(response.StatusCode, response);
     }
 

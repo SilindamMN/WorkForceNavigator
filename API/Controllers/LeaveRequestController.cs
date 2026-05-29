@@ -58,9 +58,9 @@ namespace API.Controllers
 
     [HttpGet]
     [Route("LeaveRequestsByUsereName")]
-    public async Task<ActionResult<IEnumerable<EmployeeLeaveAllocationDto>>> GetUserAllocationByUserNamesync(string userName)
+    public async Task<ActionResult<IEnumerable<EmployeeLeaveAllocationDto>>> GetUserAllocationByEmailsync(string Email)
     {
-      var leaveRequests = await leaveRequestService.GetLeaveRequestsByUser(userName);
+      var leaveRequests = await leaveRequestService.GetLeaveRequestsByUser(Email);
 
       if (leaveRequests == null)
       {

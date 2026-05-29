@@ -19,7 +19,7 @@
   {
     public string DayName { get; set; }
     public DateTime TimesheetDate { get; set; }
-    public string Username { get; set; }
+    public string Email { get; set; }
 
     public List<TimesheetDetailDto> TimesheetDetails { get; set; }
   }

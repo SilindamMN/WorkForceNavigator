@@ -22,9 +22,9 @@
 
     [HttpGet]
     [Route("LeaveAllocationByUsereName")]
-    public async Task<ActionResult<IEnumerable<EmployeeLeaveAllocationDto>>> GetUserAllocationByUserNamesync(string userName)
+    public async Task<ActionResult<IEnumerable<EmployeeLeaveAllocationDto>>> GetUserAllocationByEmailsync(string Email)
     {
-      var allocations = await leaveAllocationService.GetLeaveAllocationsByUsername(userName);
+      var allocations = await leaveAllocationService.GetLeaveAllocationsByEmail(Email);
 
       if (allocations == null)
       {
