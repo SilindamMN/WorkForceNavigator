@@ -25,7 +25,8 @@ app.UseSession(); // optional
 // 3️⃣ Configure routing
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Account}/{action=Login}/{id?}");  // start at Login
+   // pattern: "{controller=Account}/{action=Login}/{id?}");  // start at Login
+pattern: "{controller=Dashboard}/{action=Dashboard}/{id?}");  // start at Login
 // app.MapControllerRoute(
 //     name: "default2",
 //     pattern: "{controller=Home}/{action=Index}/{id?}"); // remove duplicate

@@ -1,0 +1,188 @@
+@{
+    Layout = null; // Remove this if you have a layout, or set: Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewData["Title"] = "Tables";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <title>@ViewData["Title"] - Pluto Admin Panel</title>
+
+    <!-- site icon -->
+    <link rel="icon" href="~/Content/images/fevicon.png" type="image/png" />
+
+    <!-- bootstrap css -->
+    <link rel="stylesheet" href="~/Content/css/bootstrap.min.css" />
+
+    <!-- site css -->
+    <link rel="stylesheet" href="~/Content/style.css" />
+
+    <!-- responsive css -->
+    <link rel="stylesheet" href="~/Content/css/responsive.css" />
+
+    <!-- color css -->
+    <link rel="stylesheet" href="~/Content/css/colors.css" />
+
+    <!-- select bootstrap -->
+    <link rel="stylesheet" href="~/Content/css/bootstrap-select.css" />
+
+    <!-- scrollbar css -->
+    <link rel="stylesheet" href="~/Content/css/perfect-scrollbar.css" />
+
+    <!-- custom css -->
+    <link rel="stylesheet" href="~/Content/css/custom.css" />
+
+    <!-- calendar file css -->
+    <link rel="stylesheet" href="~/Content/js/semantic.min.css" />
+
+    <!-- fancy box -->
+    <link rel="stylesheet" href="~/Content/css/jquery.fancybox.css" />
+</head>
+
+<body class="inner_page tables_page">
+    <div class="full_container">
+        <div class="inner_container">
+            <div class="card">
+                <h5 class="card-header">Responsive Table</h5>
+                <!-- Vertically Centered Modal -->
+                <div class="col-lg-4 col-md-6">
+                    <small class="text-light fw-semibold">Vertically centered</small>
+                    <div class="mt-3">
+                        <!-- Button trigger modal -->
+                        <button type="button"
+                                class="btn btn-primary"
+                                data-bs-toggle="modal"
+                                data-bs-target="#modalCenter">
+                            Launch modal
+                        </button>
+
+                        <!-- Modal -->
+                        <div class="modal fade" id="modalCenter" tabindex="-1" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="modalCenterTitle">Modal title</h5>
+                                        <button type="button"
+                                                class="btn-close"
+                                                data-bs-dismiss="modal"
+                                                aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div class="row">
+                                            <div class="col mb-3">
+                                                <label for="nameWithTitle" class="form-label">Name</label>
+                                                <input type="text"
+                                                       id="nameWithTitle"
+                                                       class="form-control"
+                                                       placeholder="Enter Name" />
+                                            </div>
+                                        </div>
+                                        <div class="row g-2">
+                                            <div class="col mb-0">
+                                                <label for="emailWithTitle" class="form-label">Email</label>
+                                                <input type="text"
+                                                       id="emailWithTitle"
+                                                       class="form-control"
+                                                       placeholder="xxxx@xxx.xx" />
+                                            </div>
+                                            <div class="col mb-0">
+                                                <label for="dobWithTitle" class="form-label">DOB</label>
+                                                <input type="text"
+                                                       id="dobWithTitle"
+                                                       class="form-control"
+                                                       placeholder="DD / MM / YY" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+                                            Close
+                                        </button>
+                                        <button type="button" class="btn btn-primary">Save changes</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="table-responsive text-nowrap">
+                    <table class="table">
+                        <thead>
+                            <tr class="text-nowrap">
+                                <th>#</th>
+                                <th>Table heading</th>
+                                <th>Table heading</th>
+                                <th>Table heading</th>
+                                <th>Table heading</th>
+                                <th>Table heading</th>
+                                <th>Table heading</th>
+                                <th>Table heading</th>
+                                <th>Table heading</th>
+                                <th>Table heading</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <th scope="row">1</th>
+                                <td>Table cell</td>
+                                <td>Table cell</td>
+                                <td>Table cell</td>
+                                <td>Table cell</td>
+                                <td>Table cell</td>
+                                <td>Table cell</td>
+                                <td>Table cell</td>
+                                <td>Table cell</td>
+                                <td>Table cell</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">2</th>
+                                <td>Table cell</td>
+                                <td>Table cell</td>
+                                <td>Table cell</td>
+                                <td>Table cell</td>
+                                <td>Table cell</td>
+                                <td>Table cell</td>
+                                <td>Table cell</td>
+                                <td>Table cell</td>
+                                <td>Table cell</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">3</th>
+                                <td>Table cell</td>
+                                <td>Table cell</td>
+                                <td>Table cell</td>
+                                <td>Table cell</td>
+                                <td>Table cell</td>
+                                <td>Table cell</td>
+                                <td>Table cell</td>
+                                <td>Table cell</td>
+                                <td>Table cell</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- JS Scripts -->
+    <script src="~/Content/js/jquery.min.js"></script>
+    <script src="~/Content/js/popper.min.js"></script>
+    <script src="~/Content/js/bootstrap.min.js"></script>
+    <script src="~/Content/js/animate.js"></script>
+    <script src="~/Content/js/bootstrap-select.js"></script>
+    <script src="~/Content/js/owl.carousel.js"></script>
+    <script src="~/Content/js/Chart.min.js"></script>
+    <script src="~/Content/js/utils.js"></script>
+    <script src="~/Content/js/perfect-scrollbar.min.js"></script>
+    <script>
+        var ps = new PerfectScrollbar('#sidebar');
+    </script>
+    <script src="~/Content/js/jquery.fancybox.min.js"></script>
+    <script src="~/Content/js/custom.js"></script>
+    <script src="~/Content/js/semantic.min.js"></script>
+</body>
+</html>
