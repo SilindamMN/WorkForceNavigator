@@ -73,7 +73,7 @@
         if (assignee.LineManager == null)
         {
           var lineManager = teamId.HasValue ? await AssignLineManager(teamId.Value) : null;
-          assignee.LineManager = lineManager;
+         // assignee.LineManager = lineManager;
         }
         await dataContext.SaveChangesAsync();
 

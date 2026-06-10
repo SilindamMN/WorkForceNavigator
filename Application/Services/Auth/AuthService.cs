@@ -278,7 +278,6 @@
         FirstName = user.FirstName,
         LastName = user.LastName,
         Roles = roles,
-        LineManager = user.LineManager,
         Salary = user.Salary,
         Department = details.DepartmentName,
         JobTitle = details.Title,

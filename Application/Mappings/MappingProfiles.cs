@@ -12,7 +12,6 @@
     using Domain.Dtos.Timesheet;
     using Domain.Enties;
   using Domain.Enties.Leaves;
-    using Domain.Enties.Shop;
     using Domain.Enties.TimeSheets;
     using Domain.Entities;
   using Domain.Entities.TimeSheets;
@@ -21,9 +20,6 @@
   {
     public MappingProfiles()
     {
-            CreateMap<ProductDto, Product>()
-    .ForMember(dest => dest.Id, opt => opt.Ignore()); 
-            CreateMap<Product, ProductDto>();
             CreateMap<Department, DepartmentDto>().ReverseMap();
       CreateMap<Department, UpdateDepartmentDto>().ReverseMap();
       CreateMap<Log, GetLogDto>().ReverseMap();
@@ -42,7 +38,7 @@
       CreateMap<TimesheetEntry,TimesheetCreateModifyDto>().ReverseMap();
       CreateMap<TimesheetCreateModifyDto, TimesheetEntry>()
            .ForMember(dest => dest.TimesheetDate, opt => opt.MapFrom(src => src.TimesheetDate))
-           .ForMember(dest => dest.Email, opt => opt.Ignore()).ReverseMap(); 
+           .ForMember(dest => dest.EmployeeId, opt => opt.Ignore()).ReverseMap(); 
     }
   }
 }

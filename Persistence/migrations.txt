@@ -1,6 +1,5 @@
-﻿dotnet ef migrations add AddProducts -s .\API -p .\Persistence
+﻿dotnet ef migrations add initial -s .\API -p .\Persistence
 
-dotnet ef migrations add InitialCreate -s .\API -p .\Persistence
 
 dotnet ef database update -s .\API -p .\Persistence
 
