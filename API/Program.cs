@@ -6,7 +6,6 @@ using Application.Mappings;
 using Application.Services;
 using Application.Services.Auth;
 using Application.Services.GenericServices;
-using Application.Services.Shop;
 using Domain.Account;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
@@ -36,7 +35,6 @@ builder.Services.AddHttpClient("FakeStoreApi", client =>
 });
 builder.Services.AddScoped<ILogService, LogService>();
 builder.Services.AddScoped<IProjectService, ProjectService>();
-builder.Services.AddScoped<IProductService, ProductService>();
 builder.Services.AddScoped<IMessageService, MessageService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<ILeaveRequestService, LeaveRequestService>();

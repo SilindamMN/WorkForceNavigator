@@ -37,7 +37,7 @@
     public async Task<IEnumerable<LeaveAllocationDto>> GetLeaveAllocations()
     {
       var leaveAllocations = await (from la in dataContext.LeaveAllocations
-                                    join u in dataContext.Users on la.Email equals u.UserName
+                                    join u in dataContext.Users on la.EmployeeId equals u.UserName
                                     select new LeaveAllocationDto
                                     {
                                        email = u.UserName,
@@ -66,7 +66,7 @@
       // Create leave allocations for each leave type for the user
       var newAllocations = leaveTypes.Select(leaveType => new LeaveAllocation
       {
-        Email = email, // Assuming there's an EmployeeId property in the User entity
+        EmployeeId = user.Id, // Assuming there's an EmployeeId property in the User entity
         LeaveTypeId = leaveType.Id,
         NumberOfDays = leaveType.DefaultDays, // You may adjust this based on your leave type properties
                                               // ... other properties
@@ -81,14 +81,16 @@
 
     public async Task<IEnumerable<EmployeeLeaveAllocationDto>> GetLeaveAllocationsByEmail(string username)
     {
+
       var employee = await dataContext.Users.FirstOrDefaultAsync(x => x.UserName == username);
+
       if (employee == null)
       {
         return (IEnumerable<EmployeeLeaveAllocationDto>)ResponseHelper.CreateResponse(false, 400, "User not found");
       }
       var leaveAllocations = await dataContext.LeaveAllocations
           .Include(x => x.LeaveType) // Include related LeaveType entity
-          .Where(x => x.Email == username) // Filter by username
+          .Where(x => x.EmployeeId == employee.Id) // Filter by username
           .Select(x => new EmployeeLeaveAllocationDto
           {
             NumberOfDays = x.NumberOfDays,
@@ -105,9 +107,11 @@
       {
         return (IEnumerable<EmployeeLeaveAllocationDto>)ResponseHelper.CreateResponse(false, 400, "User not found");
       }
-      var leaveAllocations = await dataContext.LeaveAllocations
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            var leaveAllocations = await dataContext.LeaveAllocations
           .Include(x => x.LeaveType) // Include related LeaveType entity
-          .Where(x => x.Email == User.Identity.Name) // Filter by username
+          .Where(x => x.EmployeeId == userId) // Filter by username
           .Select(x => new EmployeeLeaveAllocationDto
           {
             Id = x.Id,
@@ -132,7 +136,7 @@
 
       var leaveAllocations = await (from la in dataContext.LeaveAllocations
                                     join u in dataContext.LeaveTypes on la.LeaveTypeId equals u.Id
-                                    join user in dataContext.Users on la.Email equals user.UserName
+                                    join user in dataContext.Users on la.EmployeeId equals user.UserName
                                     where (la.LeaveType.Name).Equals(LeaveName)
                                     select new LeaveAllocationDto
                                     {

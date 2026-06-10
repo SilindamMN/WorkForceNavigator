@@ -35,7 +35,7 @@
     public async Task<IEnumerable<LeaveRequestDto>> GetAllLeaveRequests()
     {
       var leaveRequests = await (from request in dataContext.LeaveRequests
-                                 join user in dataContext.Users on request.Email equals user.Email
+                                 join user in dataContext.Users on request.EmployeeId equals user.Email
                                  join leaveType in dataContext.LeaveTypes on request.LeaveTypeId equals leaveType.Id
                                  where !request.IsDeleted && request.Status==Status.Pending
                                  select new LeaveRequestDto
@@ -76,7 +76,7 @@
       }
 
       var allocation = await dataContext.LeaveAllocations
-           .Where(x => x.Email == user.Identity.Name && x.Id == createLeaveRequestDto.LeaveTypeId)
+           .Where(x => x.EmployeeId == user.Identity.Name && x.Id == createLeaveRequestDto.LeaveTypeId)
            .FirstOrDefaultAsync();
 
 
@@ -105,7 +105,6 @@
         StartDate = createLeaveRequestDto.StartDate,
         EndDate = createLeaveRequestDto.EndDate,
         NumberOfDays = requestedDays,
-        Email = user.Identity.Name,
         Status=Status.Pending,
         DateRequested = DateTime.Now,
         RequestComments =""
@@ -140,7 +139,7 @@
         dataContext.LeaveRequests.Remove(leaveRequest);
         // Save changes to the database
         await dataContext.SaveChangesAsync();
-        await AddLeaveDays(leaveRequest.Email, leaveRequest.LeaveTypeId, leaveRequest.NumberOfDays);
+        await AddLeaveDays(leaveRequest.EmployeeId, leaveRequest.LeaveTypeId, leaveRequest.NumberOfDays);
         // Return success result
         return ResponseHelper.CreateResponse(false, 400, "Delete Successfully");
       }
@@ -154,7 +153,7 @@
     public async Task<LeaveRequestDto> GetLeaveRequestsById(int requestId)
     {
       var leaveRequests = await (from request in dataContext.LeaveRequests
-                                 join user in dataContext.Users on request.Email equals user.Email
+                                 join user in dataContext.Users on request.EmployeeId equals user.Email
                                  join leaveType in dataContext.LeaveTypes on request.LeaveTypeId equals leaveType.Id
                                  where request.Id == requestId // Filter by requestId
                                  select new LeaveRequestDto
@@ -163,7 +162,6 @@
                                    LastName = user.LastName,
                                    LeaveName = leaveType.Name,
                                    NumberOfDays = request.NumberOfDays,
-                                   Email = user.Email,
                                    EndDate = request.EndDate,
                                    RequestedDate = request.StartDate,
                                    StartDate = request.StartDate,
@@ -179,7 +177,7 @@
       var leaveRequestEntity = await dataContext.LeaveRequests.FindAsync(leaveRequestId);
 
       //user cannot approve their own leave 
-      if (leaveRequestEntity.Email == User.Identity.Name)
+      if (leaveRequestEntity.EmployeeId == leaveRequestEntity.EmployeeId)
       {
         return ResponseHelper.CreateResponse(false, 400, "You cannot process your own leave request");
       }
@@ -202,11 +200,11 @@
 
       if (status == Status.Declined)
       {
-        await AddLeaveDays(leaveRequestDetails.Email, leaveRequestDetails.Id, leaveRequestEntity.NumberOfDays);
+        await AddLeaveDays(leaveRequestDetails.EmployeeId, leaveRequestDetails.Id, leaveRequestEntity.NumberOfDays);
       }
       else if (status == Status.Approved)
       {
-        await DeductLeaveDays(leaveRequestDetails.Email, leaveRequestDetails.Id, leaveRequestEntity.NumberOfDays);
+        await DeductLeaveDays(leaveRequestDetails.EmployeeId, leaveRequestDetails.Id, leaveRequestEntity.NumberOfDays);
       }
       // Save the updated entity to the database
       await dataContext.SaveChangesAsync();
@@ -241,7 +239,7 @@
       }
 
       // Subtract number of days from allocation
-      await AddLeaveDays(leaveRequest.Email, leaveRequest.LeaveTypeId, leaveRequest.NumberOfDays);
+      await AddLeaveDays(leaveRequest.EmployeeId, leaveRequest.LeaveTypeId, leaveRequest.NumberOfDays);
       // Update the leave request
       leaveRequest.StartDate = updateLeaveRequestDto.StartDate;
       leaveRequest.EndDate = updateLeaveRequestDto.EndDate;
@@ -255,7 +253,7 @@
     private async Task<Result> CheckAvailableDays(ClaimsPrincipal User, DateTime startDate, DateTime endDate)
     {
       var allocation = await dataContext.LeaveAllocations
-          .Where(x => x.Email == User.Identity.Name)
+          .Where(x => x.EmployeeId == x.EmployeeId)
           .FirstOrDefaultAsync();
 
       if (allocation == null)
@@ -276,7 +274,7 @@
     {
       // Check for overlapping leave requests within the specified range
       var overlaps = await this.dataContext.LeaveRequests
-          .Where(x => x.Email.Equals(user.Identity.Name)  &&
+          .Where(x => x.EmployeeId.Equals(user.Identity)  &&
                       ((x.StartDate <= StartDate && x.EndDate >= StartDate) ||
                        (x.StartDate <=  EndDate && x.EndDate >= EndDate)))
           .FirstOrDefaultAsync();
@@ -285,7 +283,7 @@
     private async Task<Result> DeductLeaveDays(string username, int leaveTypeId, int days)
     {
       var allocation = await dataContext.LeaveAllocations
-          .Where(x => x.Email == username && x.LeaveType.Id == leaveTypeId)
+          .Where(x => x.EmployeeId == username && x.LeaveType.Id == leaveTypeId)
           .FirstOrDefaultAsync();
 
       if (allocation == null)
@@ -309,13 +307,12 @@
       }
       var leaveAllocations = await dataContext.LeaveRequests
           .Include(x => x.LeaveType) // Include related LeaveType entity
-          .Where(x => x.Email == username) // Filter by username
+          .Where(x => x.EmployeeId == username) // Filter by username
           .Select(x => new LeaveRequestDto
           {
             Id = x.Id,
             NumberOfDays = x.NumberOfDays,
             LeaveName = x.LeaveType.Name,
-            Email = x.Email,
             EndDate = x.EndDate,
             RequestedDate= x.DateRequested,
             StartDate = x.StartDate,
@@ -327,7 +324,7 @@
     private async Task<Result<int>> AddLeaveDays(string username, int leaveTypeId, int days)
     {
       var allocation = await dataContext.LeaveAllocations
-          .Where(x => x.Email == username && x.LeaveType.Id == leaveTypeId)
+          .Where(x => x.EmployeeId == username && x.LeaveType.Id == leaveTypeId)
           .FirstOrDefaultAsync();
 
       if (allocation == null)
@@ -345,7 +342,7 @@
     public async Task<IEnumerable<LeaveRequestDto>> GetUpComingLeaves()
     {
       var leaveRequests = await(from request in dataContext.LeaveRequests
-                                join user in dataContext.Users on request.Email equals user.Email
+                                join user in dataContext.Users on request.EmployeeId equals user.Email
                                 join leaveType in dataContext.LeaveTypes on request.LeaveTypeId equals leaveType.Id
                                 where !request.IsDeleted && request.Status == Status.Approved && request.StartDate > DateTime.Today
                                 select new LeaveRequestDto

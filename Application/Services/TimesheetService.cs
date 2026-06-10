@@ -42,11 +42,10 @@
       var timesheetEntries = (from ts in dataContext.TimesheetEntries
                               join p in dataContext.Projects
                               on ts.ProjectId equals p.Id
-                              where (ts.TimesheetDate.Date == date.Date) && (ts.Email == User.Identity.Name)
+                              where (ts.TimesheetDate.Date == date.Date) && (ts.EmployeeId == User.Identity.Name)
                               select new
                               {
                                 TimesheetDate = ts.TimesheetDate.Date,  // Normalize date
-                                Email = ts.Email,
                                 Detail = new TimesheetDetailDto
                                 {
                                   Description = ts.Description,
@@ -61,11 +60,10 @@
       }
 
       // Grouping by Email and normalized TimesheetDate
-      var groupedEntries = timesheetEntries.GroupBy(x => new { x.Email, x.TimesheetDate })
+      var groupedEntries = timesheetEntries.GroupBy(x => new { x.Detail, x.TimesheetDate })
                                            .Select(g => new GroupedTimesheetDetailDto
                                            {
                                              TimesheetDate = g.Key.TimesheetDate,
-                                             Email = g.Key.Email,
                                              DayName = g.Key.TimesheetDate.DayOfWeek.ToString(),
                                              TimesheetDetails = g.Select(x => x.Detail).Where(d => d.TimeSpent > 0).ToList()  // Filter out zero time entries
                                            });
@@ -77,7 +75,7 @@
     {
       var username = user.Identity.Name;
       var timeSpent = dataContext.TimesheetEntries
-                             .Where(t => t.TimesheetDate.Date == date.Date && t.Email == username)
+                             .Where(t => t.TimesheetDate.Date == date.Date && t.EmployeeId == username)
                              .Sum(t => t.TimeSpent);
       return timeSpent;
     }
@@ -134,7 +132,7 @@
           };
 
           var map = mapper.Map<TimesheetEntry>(timesheetEntry);
-          map.Email = username;
+          map.EmployeeId = username;
           dataContext.TimesheetEntries.Add(map);
           await dataContext.SaveChangesAsync();
 
@@ -154,7 +152,7 @@
       var username = user.Identity.Name;
 
       var timesheetEntries = dataContext.TimesheetEntries
-          .Where(t => t.TimesheetDate.Date == date.Date && t.Email == username)
+          .Where(t => t.TimesheetDate.Date == date.Date && t.EmployeeId == username)
           .Select(t => new
           {
             t.TimeSpent,

@@ -5,9 +5,10 @@
   using Domain.Enums;
   using System;
   using System.Collections.Generic;
-  using System.Linq;
-  using System.Text;
-  using System.Threading.Tasks;
+    using System.ComponentModel.DataAnnotations.Schema;
+    using System.Linq;
+    using System.Text;
+    using System.Threading.Tasks;
 
   public class LeaveRequest : BaseEntity<int>
   {
@@ -22,8 +23,8 @@
     public Status Status { get; set; }
 
     public int NumberOfDays { get; set; }
-    public ApplicationUser ApplicationUser { get; set; }
-    public string Email { get; set; }
-    // Constructor that accepts UserName
-  }
+        public string EmployeeId { get; set; }
+        [ForeignKey("EmployeeId")]
+        public ApplicationUser Employee { get; set; }
+    }
 }
