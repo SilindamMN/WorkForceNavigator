@@ -16,8 +16,9 @@ namespace Viewing.Controllers
         [HttpGet]
         public IActionResult Dashboard()
         {
-            return View(); 
+            return View();
         }
+
 
         // POST example (optional)
         [HttpPost]
