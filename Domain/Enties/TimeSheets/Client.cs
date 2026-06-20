@@ -12,7 +12,9 @@
     public string ClientName { get; set; }
     public string Phone { get; set; }
     public string Fax { get; set; }
-    public string Email { get; set; }
-    public IEnumerable<Project> Projects { get; set; }
-  }
+        public string Email { get; set; }
+        public int? DepartmentId { get; set; }
+        public Department Department { get; set; }
+        public ICollection<Project> Projects { get; set; }
+    }
 }

@@ -1,7 +1,8 @@
 ﻿namespace Domain.Enties
 {
-  using Domain.Entities;
-  using System;
+    using Domain.Enties.TimeSheets;
+    using Domain.Entities;
+    using System;
   using System.Collections.Generic;
   using System.Linq;
   using System.Text;
@@ -13,5 +14,6 @@
     public string Description { get; set; }
     // Navigation property to access the associated job titles
     public ICollection<JobTitle> JobTitles { get; set; }
-  }
+        public ICollection<Client> Clients { get; set; }
+    }
 }
