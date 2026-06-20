@@ -29,7 +29,7 @@
 
     public async Task<GeneralServiceResponseDto> AssignJobTitleToUser(AssignJobTitleDto assignJobTitle)
     {
-      var user = await dataContext.Users.FirstOrDefaultAsync(x => x.UserName == assignJobTitle.email);
+      var user = await dataContext.Users.FirstOrDefaultAsync(x => x.UserName == assignJobTitle.username);
       //assign the jobTitle id
       user.JobTitleId = assignJobTitle.jobTitleId;
       await dataContext.SaveChangesAsync();

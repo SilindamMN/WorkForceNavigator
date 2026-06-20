@@ -98,9 +98,9 @@ namespace API.Controllers.GeneralAdmin
     }
 
     [HttpGet("JobTitleUse")]
-    public async Task<JobTitleDto> GetUserJobTitle(string Email)
+    public async Task<JobTitleDto> GetUserJobTitle(string userName)
     {
-      var jobTitle = await userJobTitleService.GetJobTitleForUser(Email);
+      var jobTitle = await userJobTitleService.GetJobTitleForUser(userName);
       return (JobTitleDto)jobTitle;
     }
  

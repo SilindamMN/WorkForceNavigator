@@ -34,9 +34,11 @@ namespace Persistence
             public DbSet<TimesheetEntry> TimesheetEntries { get; set; }
             public DbSet<UserTeam> UserTeams { get; set; }
 
-            protected override void OnModelCreating(ModelBuilder builder)
-            {
-                base.OnModelCreating(builder);
+    protected override void OnModelCreating(ModelBuilder builder)
+    {
+
+      builder.SeedData();
+      base.OnModelCreating(builder);
 
                 builder.Entity<JobTitle>()
                     .HasOne(x => x.Department)

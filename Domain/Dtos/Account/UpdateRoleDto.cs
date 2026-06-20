@@ -10,8 +10,8 @@
 
   public class UpdateRoleDto
   {
-    [Required(ErrorMessage = "Email Required")]
-    public string Email { get; set; }
+    [Required(ErrorMessage = "Username Required")]
+    public string Username { get; set; }
     public RoleType NewRole { get; set; }
   }
 }

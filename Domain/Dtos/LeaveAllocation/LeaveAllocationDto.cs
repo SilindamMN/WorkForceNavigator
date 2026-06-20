@@ -13,7 +13,7 @@
   public class LeaveAllocationDto
   {
     public int NumberOfDays { get; set; }
-    public string email { get; set; }
+    public string Username { get; set; }
     public string LeaveName { get; set; }
     public string FirstName { get; set; }
     public string LastName { get; set; }

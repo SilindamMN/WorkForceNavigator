@@ -38,7 +38,7 @@
       CreateMap<TimesheetEntry,TimesheetCreateModifyDto>().ReverseMap();
       CreateMap<TimesheetCreateModifyDto, TimesheetEntry>()
            .ForMember(dest => dest.TimesheetDate, opt => opt.MapFrom(src => src.TimesheetDate))
-           .ForMember(dest => dest.EmployeeId, opt => opt.Ignore()).ReverseMap(); 
+           .ForMember(dest => dest.Username, opt => opt.Ignore()).ReverseMap(); 
     }
   }
 }

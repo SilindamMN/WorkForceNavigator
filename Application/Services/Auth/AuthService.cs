@@ -43,9 +43,9 @@
       this.leaveAllocationService = leaveAllocationService;
     }
 
-    public async Task<UserInfoResult> GetUserDetailsByEmailsync(string Email)
+    public async Task<UserInfoResult> GetUserDetailsByUserNamesync(string userName)
     {
-      var user = await userManager.FindByNameAsync(Email);
+      var user = await userManager.FindByNameAsync(userName);
       if (user is null) { return null; }
 
       var roles = await userManager.GetRolesAsync(user);
@@ -67,14 +67,14 @@
       return userInfoResults;
     }
 
-    public async Task<IEnumerable<string>> GetUEmailListAsync()
+    public async Task<IEnumerable<string>> GetUsernamesListAsync()
     {
-      return await userManager.Users.Select(u => u.Email).ToListAsync();
+      return await userManager.Users.Select(u => u.UserName).ToListAsync();
     }
 
     public async Task<LoginServiceResponseDto> LoginAsync(LoginDto loginDto)
     {
-      var user = await userManager.FindByNameAsync(loginDto.Email);
+      var user = await userManager.FindByNameAsync(loginDto.Username);
       if (user is null)
       {
         return null;
@@ -88,7 +88,7 @@
       var roles = await userManager.GetRolesAsync(user);
       var userInfo = GenerateUserInfoObject(user, roles);
 
-      await logService.SaveNewLog(user.Email, "New Login");
+      await logService.SaveNewLog(user.UserName, "New Login");
       return new LoginServiceResponseDto { NewToken = newToken, UserInfo = (UserInfoResult)userInfo };
     }
 
@@ -103,16 +103,16 @@
         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["JWT:Secret"]))
       }, out SecurityToken securityToken);
 
-      string decodeEmail = handler.Claims.First(x => x.Type == ClaimTypes.Name).Value;
-      if (decodeEmail is null) { return null; }
+      string decodeUsername = handler.Claims.First(x => x.Type == ClaimTypes.Name).Value;
+      if (decodeUsername is null) { return null; }
 
-      var user = await userManager.FindByNameAsync(decodeEmail);
+      var user = await userManager.FindByNameAsync(decodeUsername);
       if (user is null) { return null; }
 
       var newToken = await GenerateJWTTokenAsync(user);
       var roles = await userManager.GetRolesAsync(user);
       var userInfo = GenerateUserInfoObject(user, roles);
-      await logService.SaveNewLog(user.Email, "New Token Generated");
+      await logService.SaveNewLog(user.UserName, "New Token Generated");
 
       return new LoginServiceResponseDto { NewToken = newToken, UserInfo = (UserInfoResult)userInfo };
     }
@@ -129,6 +129,7 @@
         Email = registerDto.Email,
         FirstName = registerDto.FirstName,
         LastName = registerDto.LastName,
+        UserName = registerDto.Username,
         SecurityStamp = Guid.NewGuid().ToString(),
       };
       var createUserResult = await userManager.CreateAsync(user, registerDto.Password);
@@ -142,8 +143,8 @@
         return ResponseHelper.CreateResponse(false, 400, errorString);
       }
       await userManager.AddToRoleAsync(user, StaticUserRoles.USER);
-      await logService.SaveNewLog(user.Email, "Registed");
-      await leaveAllocationService.CreateLeaveAllocation(registerDto.Email);
+      await logService.SaveNewLog(user.UserName, "Registed");
+      await leaveAllocationService.CreateLeaveAllocation(registerDto.Username);
       return ResponseHelper.CreateResponse(true, 201, "User Registed Successfully");
     }
 
@@ -169,10 +170,10 @@
 
     public async Task<GeneralServiceResponseDto> UpdateRoleAsync(ClaimsPrincipal User, UpdateRoleDto updateRoleDto)
     {
-      var user = await userManager.FindByNameAsync(updateRoleDto.Email);
+      var user = await userManager.FindByNameAsync(updateRoleDto.Username);
       if (user is null)
       {
-        return ResponseHelper.CreateResponse(false, 404, "Invalid Email");
+        return ResponseHelper.CreateResponse(false, 404, "Invalid UserName");
       }
       var userRoles = await userManager.GetRolesAsync(user);
       //admin and owner can change
@@ -190,7 +191,7 @@
           {
             await userManager.RemoveFromRolesAsync(user, userRoles);
             await userManager.AddToRoleAsync(user, updateRoleDto.NewRole.ToString());
-            await logService.SaveNewLog(user.Email, "Role update");
+            await logService.SaveNewLog(user.UserName, "Role update");
             return ResponseHelper.CreateResponse(true, 200, "Role Updated Successfully");
           }
         }
@@ -207,7 +208,7 @@
         {
           await userManager.RemoveFromRolesAsync(user, userRoles);
           await userManager.AddToRoleAsync(user, updateRoleDto.NewRole.ToString());
-          await logService.SaveNewLog(user.Email, "Role update");
+          await logService.SaveNewLog(user.UserName, "Role update");
           return ResponseHelper.CreateResponse(true, 200, "Role Updated Successfully");
         }
       }
@@ -223,6 +224,7 @@
         FirstName = user.FirstName,
         LastName = user.LastName,
         Roles = roles,
+        Username = user.UserName,
         PhoneNumber = user.PhoneNumber,
         Gender = (Gender?)user.Gender
       };
@@ -233,10 +235,10 @@
       var userRoles = await userManager.GetRolesAsync(applicationUser);
       var authClaims = new List<Claim>()
       {
-        new Claim(ClaimTypes.Name,applicationUser.Email),
+        new Claim(ClaimTypes.Name,applicationUser.UserName),
         new Claim(ClaimTypes.NameIdentifier,applicationUser.Id),
-        new Claim("FirstName",applicationUser.Email),
-        new Claim("LastName",applicationUser.Email),
+        new Claim("FirstName",applicationUser.UserName),
+        new Claim("LastName",applicationUser.UserName),
       };
       foreach (var role in userRoles)
       {
@@ -257,9 +259,9 @@
       return token;
     }
 
-    public async Task<UserDetailsDto> GetUserExtraDetailsByEmailAsync(string Email)
+    public async Task<UserDetailsDto> GetUserExtraDetailsByUserNameAsync(string userName)
     {
-      var user = await userManager.FindByNameAsync(Email);
+      var user = await userManager.FindByNameAsync(userName);
       if (user is null) { return null; }
 
       var roles = await userManager.GetRolesAsync(user);
@@ -269,7 +271,7 @@
 
     private async Task<UserDetailsDto> GenerateUserInfo(ApplicationUser user, IList<string> roles, IUserJobTitleService userJobTitleService)
     {
-      var details = await userJobTitleService.GetJobTitleForUser(user.Email);
+      var details = await userJobTitleService.GetJobTitleForUser(user.UserName);
       var userInfo = new UserDetailsDto
       {
         Id = user.Id,
@@ -278,6 +280,8 @@
         FirstName = user.FirstName,
         LastName = user.LastName,
         Roles = roles,
+        Username = user.UserName,
+        LineManager = user.LineManager,
         Salary = user.Salary,
         Department = details.DepartmentName,
         JobTitle = details.Title,
@@ -287,12 +291,12 @@
       return userInfo;
     }
 
-    public async Task<GeneralServiceResponseDto> UpdateUserDetails(string Email, UpdateUserDetailsDto userDetailsDto)
+    public async Task<GeneralServiceResponseDto> UpdateUserDetails(string username, UpdateUserDetailsDto userDetailsDto)
     {
       // Step 1: Retrieve the user from the database
       var user = await dataContext.Users
           .Include(u => u.JobTitle)
-          .Where(x => x.Email == Email)
+          .Where(x => x.UserName == username)
           .FirstOrDefaultAsync();
 
       if (user == null)

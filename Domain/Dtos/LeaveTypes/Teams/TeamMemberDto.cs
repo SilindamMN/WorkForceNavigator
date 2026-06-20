@@ -9,6 +9,6 @@
   public class TeamMemberDto
   {
     public int teamId { get; set; }
-    public string Email { get; set; }
+    public string username { get; set; }
   }
 }

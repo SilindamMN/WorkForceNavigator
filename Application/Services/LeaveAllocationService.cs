@@ -37,10 +37,10 @@
     public async Task<IEnumerable<LeaveAllocationDto>> GetLeaveAllocations()
     {
       var leaveAllocations = await (from la in dataContext.LeaveAllocations
-                                    join u in dataContext.Users on la.EmployeeId equals u.UserName
+                                    join u in dataContext.Users on la.Username equals u.UserName
                                     select new LeaveAllocationDto
                                     {
-                                       email = u.UserName,
+                                       Username = u.UserName,
                                       FirstName = u.FirstName,
                                       LastName = u.LastName,
                                       NumberOfDays = la.NumberOfDays,
@@ -50,10 +50,10 @@
       return leaveAllocations;
     }
 
-    public async Task<GeneralServiceResponseDto> CreateLeaveAllocation(string email)
+    public async Task<GeneralServiceResponseDto> CreateLeaveAllocation(string username)
     {
       // Retrieve the user based on the username
-      var user = await dataContext.Users.FirstOrDefaultAsync(u => u.UserName == email);
+      var user = await dataContext.Users.FirstOrDefaultAsync(u => u.UserName == username);
 
       if (user == null)
       {
@@ -66,20 +66,20 @@
       // Create leave allocations for each leave type for the user
       var newAllocations = leaveTypes.Select(leaveType => new LeaveAllocation
       {
-        EmployeeId = user.Id, // Assuming there's an EmployeeId property in the User entity
+        Username =username, // Assuming there's an EmployeeId property in the User entity
         LeaveTypeId = leaveType.Id,
         NumberOfDays = leaveType.DefaultDays, // You may adjust this based on your leave type properties
                                               // ... other properties
       }).ToList();
 
       dataContext.LeaveAllocations.AddRange(newAllocations);
-      await logService.SaveNewLog(email, "Leaves Allocated");
+      await logService.SaveNewLog(username, "Leaves Allocated");
       await dataContext.SaveChangesAsync();
 
        return ResponseHelper.CreateResponse(true, 200, "LeaveAllocated Successfully");
     }
 
-    public async Task<IEnumerable<EmployeeLeaveAllocationDto>> GetLeaveAllocationsByEmail(string username)
+    public async Task<IEnumerable<EmployeeLeaveAllocationDto>> GetLeaveAllocationsByUsername(string username)
     {
 
       var employee = await dataContext.Users.FirstOrDefaultAsync(x => x.UserName == username);
@@ -90,7 +90,7 @@
       }
       var leaveAllocations = await dataContext.LeaveAllocations
           .Include(x => x.LeaveType) // Include related LeaveType entity
-          .Where(x => x.EmployeeId == employee.Id) // Filter by username
+          .Where(x => x.Username == username) // Filter by username
           .Select(x => new EmployeeLeaveAllocationDto
           {
             NumberOfDays = x.NumberOfDays,
@@ -111,7 +111,7 @@
 
             var leaveAllocations = await dataContext.LeaveAllocations
           .Include(x => x.LeaveType) // Include related LeaveType entity
-          .Where(x => x.EmployeeId == userId) // Filter by username
+          .Where(x => x.Username == User.Identity.Name) // Filter by username
           .Select(x => new EmployeeLeaveAllocationDto
           {
             Id = x.Id,
@@ -136,11 +136,11 @@
 
       var leaveAllocations = await (from la in dataContext.LeaveAllocations
                                     join u in dataContext.LeaveTypes on la.LeaveTypeId equals u.Id
-                                    join user in dataContext.Users on la.EmployeeId equals user.UserName
+                                    join user in dataContext.Users on la.Username equals user.UserName
                                     where (la.LeaveType.Name).Equals(LeaveName)
                                     select new LeaveAllocationDto
                                     {
-                                      email = user.Email,
+                                      Username = user.UserName,
                                       FirstName = user.FirstName,
                                       LastName = user.LastName,
                                       NumberOfDays = la.NumberOfDays,

@@ -8,7 +8,7 @@
 
   public class AssignJobTitleDto
   {
-    public string email { get; set; }
+    public string username { get; set; }
     public int jobTitleId { get; set; }
   }
 }

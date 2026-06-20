@@ -18,9 +18,9 @@ namespace Application.Interfaces.Auth
     Task<GeneralServiceResponseDto> UpdateRoleAsync(ClaimsPrincipal User,UpdateRoleDto roleDto);
     Task<LoginServiceResponseDto?> MeAsync(MeDto meDto);
     Task<IEnumerable<UserInfoResult>> GetUserListAsync();
-    Task<UserInfoResult?> GetUserDetailsByEmailsync(string email);
-    Task<UserDetailsDto> GetUserExtraDetailsByEmailAsync(string email);
-    Task<IEnumerable<string>> GetUEmailListAsync();
-    Task<GeneralServiceResponseDto> UpdateUserDetails(string email, UpdateUserDetailsDto userDetailsDto);
+    Task<UserInfoResult?> GetUserDetailsByUserNamesync(string userName);
+    Task<UserDetailsDto> GetUserExtraDetailsByUserNameAsync(string userName);
+    Task<IEnumerable<string>> GetUsernamesListAsync();
+    Task<GeneralServiceResponseDto> UpdateUserDetails(string username, UpdateUserDetailsDto userDetailsDto);
   }
 }

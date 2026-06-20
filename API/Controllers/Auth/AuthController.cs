@@ -27,16 +27,16 @@
 
     [HttpGet]
     [Route("jobtitle/{username}")]
-    public async Task<ActionResult<JobTitleDto>> GetJobTitleByEmail([FromRoute] string email)
+    public async Task<ActionResult<JobTitleDto>> GetJobTitleByUsername([FromRoute] string username)
     {
-      var user = await userJobTitleService.GetJobTitleForUser(email);
+      var user = await userJobTitleService.GetJobTitleForUser(username);
       if (user is not null)
       {
         return Ok(user);
       }
       else
       {
-        return NotFound("Email not found");
+        return NotFound("Username not found");
       }
     }
 
@@ -113,13 +113,13 @@
     [Route("users")]
     public async Task<ActionResult<IEnumerable<UserInfoResult>>> GetUsersList()
     {
-      var userList = await authService.GetUEmailListAsync();
+      var userList = await authService.GetUserListAsync();
       return Ok(userList);
     }
 
     //[HttpGet]
     //[Route("users/{username}")]
-    //public async Task<ActionResult<UserDetailsDto>> GetUserDetailsByEmails([FromRoute] string username)
+    //public async Task<ActionResult<UserDetailsDto>> GetUserDetailsByUsernames([FromRoute] string username)
     //{
     //  var user = await authService.GetUserDetailsByUserNamesync(username);
     //  if (user is not null)
@@ -128,40 +128,40 @@
     //  }
     //  else
     //  {
-    //    return NotFound("Email not found");
+    //    return NotFound("Username not found");
     //  }
     //}
 
     [HttpGet]
     [Route("userDetails/{username}")]
-    public async Task<ActionResult<UserDetailsDto>> GetUserExtraDetailsByEmail([FromRoute] string username)
+    public async Task<ActionResult<UserDetailsDto>> GetUserExtraDetailsByUsername([FromRoute] string username)
     {
-      var user = await authService.GetUserExtraDetailsByEmailAsync(username);
+      var user = await authService.GetUserExtraDetailsByUserNameAsync(username);
       if (user is not null)
       {
         return Ok(user);
       }
       else
       {
-        return NotFound("Email not found");
+        return NotFound("Username not found");
       }
     }
     [HttpGet]
-    [Route("emails")]
-    public async Task<ActionResult<IEnumerable<string>>> GetEmailList()
+    [Route("usernames")]
+    public async Task<ActionResult<IEnumerable<string>>> GetUsernameList()
     {
-      var usernames = await authService.GetUEmailListAsync();
+      var usernames = await authService.GetUsernamesListAsync();
       return Ok(usernames);
     }
 
     [HttpPost]
     [Route("update")]
-    public async Task<ActionResult<GeneralServiceResponseDto>> UpdateUserDetails(string updateEmail, [FromBody] UpdateUserDetailsDto userDetailsDto)
+    public async Task<ActionResult<GeneralServiceResponseDto>> UpdateUserDetails(string updateUsername, [FromBody] UpdateUserDetailsDto userDetailsDto)
     {
       try
       {
         // Assuming you have a service class that contains the UpdateUserDetails method
-        var response = await authService.UpdateUserDetails(updateEmail, userDetailsDto);
+        var response = await authService.UpdateUserDetails(updateUsername, userDetailsDto);
         return Ok(response);
       }
       catch (Exception ex)
