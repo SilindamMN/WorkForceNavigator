@@ -16,8 +16,8 @@
         [ForeignKey("EmployeeId")]
         public ApplicationUser Employee { get; set; }
         public int NumberOfDays { get; set; }
-    public LeaveType? LeaveType { get; set; }
-    public int LeaveTypeId { get; set; }
-    public string Username { get; set; } 
+        public int LeaveTypeId { get; set; }
+        [ForeignKey(nameof(LeaveTypeId))]
+        public LeaveType? LeaveType { get; set; }
   }
 }
