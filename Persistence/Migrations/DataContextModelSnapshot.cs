@@ -85,7 +85,7 @@ namespace Persistence.Migrations
                         .HasColumnType("bit");
 
                     b.Property<decimal?>("Salary")
-                        .HasColumnType("decimal(18, 2)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("nvarchar(max)");
@@ -221,8 +221,9 @@ namespace Persistence.Migrations
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("Date");
 
-                    b.Property<int>("Year")
-                        .HasColumnType("int");
+                    b.Property<string>("Username")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
@@ -241,15 +242,14 @@ namespace Persistence.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<string>("ApplicationUserId")
+                        .HasColumnType("nvarchar(450)");
+
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("Date");
 
                     b.Property<DateTime>("DateRequested")
                         .HasColumnType("datetime2");
-
-                    b.Property<string>("EmployeeId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTime>("EndDate")
                         .HasColumnType("datetime2");
@@ -278,9 +278,13 @@ namespace Persistence.Migrations
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("Date");
 
+                    b.Property<string>("UserName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("Id");
 
-                    b.HasIndex("EmployeeId");
+                    b.HasIndex("ApplicationUserId");
 
                     b.HasIndex("LeaveTypeId");
 
@@ -514,9 +518,6 @@ namespace Persistence.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Email")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<bool>("IsActive")
                         .HasColumnType("bit");
 
@@ -525,6 +526,9 @@ namespace Persistence.Migrations
 
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("Date");
+
+                    b.Property<string>("Username")
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
@@ -548,11 +552,11 @@ namespace Persistence.Migrations
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
-                    b.Property<string>("ReceiverEmail")
+                    b.Property<string>("ReceiverUserName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("SenderEmail")
+                    b.Property<string>("SenderUsername")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -583,10 +587,6 @@ namespace Persistence.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("EmployeeId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
                     b.Property<bool>("IsActive")
                         .HasColumnType("bit");
 
@@ -605,9 +605,11 @@ namespace Persistence.Migrations
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("Date");
 
-                    b.HasKey("Id");
+                    b.Property<string>("Username")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
-                    b.HasIndex("EmployeeId");
+                    b.HasKey("Id");
 
                     b.HasIndex("ProjectId");
 
@@ -813,11 +815,9 @@ namespace Persistence.Migrations
 
             modelBuilder.Entity("Domain.Enties.Leaves.LeaveRequest", b =>
                 {
-                    b.HasOne("Domain.Account.ApplicationUser", "Employee")
+                    b.HasOne("Domain.Account.ApplicationUser", "ApplicationUser")
                         .WithMany("LeaveRequests")
-                        .HasForeignKey("EmployeeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("ApplicationUserId");
 
                     b.HasOne("Domain.Enties.Leaves.LeaveType", "LeaveType")
                         .WithMany()
@@ -825,7 +825,7 @@ namespace Persistence.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Employee");
+                    b.Navigation("ApplicationUser");
 
                     b.Navigation("LeaveType");
                 });
@@ -870,19 +870,11 @@ namespace Persistence.Migrations
 
             modelBuilder.Entity("Domain.Entities.TimeSheets.TimesheetEntry", b =>
                 {
-                    b.HasOne("Domain.Account.ApplicationUser", "Employee")
-                        .WithMany()
-                        .HasForeignKey("EmployeeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("Domain.Enties.Project", "Project")
                         .WithMany("TimesheetEntries")
                         .HasForeignKey("ProjectId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("Employee");
 
                     b.Navigation("Project");
                 });
