@@ -387,6 +387,9 @@ namespace Persistence.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("Date");
 
+                    b.Property<int?>("DepartmentId")
+                        .HasColumnType("int");
+
                     b.Property<string>("Email")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -409,6 +412,8 @@ namespace Persistence.Migrations
                         .HasColumnType("Date");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("DepartmentId");
 
                     b.ToTable("Clients");
                 });
@@ -849,6 +854,15 @@ namespace Persistence.Migrations
                     b.Navigation("Team");
                 });
 
+            modelBuilder.Entity("Domain.Enties.TimeSheets.Client", b =>
+                {
+                    b.HasOne("Domain.Enties.Department", "Department")
+                        .WithMany("Clients")
+                        .HasForeignKey("DepartmentId");
+
+                    b.Navigation("Department");
+                });
+
             modelBuilder.Entity("Domain.Enties.TimeSheets.UserTeam", b =>
                 {
                     b.HasOne("Domain.Enties.TimeSheets.Team", "Team")
@@ -941,6 +955,8 @@ namespace Persistence.Migrations
 
             modelBuilder.Entity("Domain.Enties.Department", b =>
                 {
+                    b.Navigation("Clients");
+
                     b.Navigation("JobTitles");
                 });
 
