@@ -462,6 +462,9 @@ namespace Persistence.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("Date");
 
+                    b.Property<int>("DepartmentId")
+                        .HasColumnType("int");
+
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -484,6 +487,8 @@ namespace Persistence.Migrations
                         .HasColumnType("Date");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("DepartmentId");
 
                     b.HasIndex("TeamLeaderId");
 
@@ -881,11 +886,19 @@ namespace Persistence.Migrations
 
             modelBuilder.Entity("Domain.Enties.TimeSheets.Team", b =>
                 {
+                    b.HasOne("Domain.Enties.Department", "Department")
+                        .WithMany()
+                        .HasForeignKey("DepartmentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("Domain.Account.ApplicationUser", "TeamLeader")
                         .WithMany()
                         .HasForeignKey("TeamLeaderId")
-                        .OnDelete(DeleteBehavior.NoAction)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
+
+                    b.Navigation("Department");
 
                     b.Navigation("TeamLeader");
                 });
@@ -895,13 +908,13 @@ namespace Persistence.Migrations
                     b.HasOne("Domain.Enties.TimeSheets.Team", "Team")
                         .WithMany("UserTeams")
                         .HasForeignKey("TeamId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("Domain.Account.ApplicationUser", "User")
                         .WithMany("UserTeams")
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("Team");
@@ -914,7 +927,7 @@ namespace Persistence.Migrations
                     b.HasOne("Domain.Enties.Project", "Project")
                         .WithMany("TimesheetEntries")
                         .HasForeignKey("ProjectId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Project");

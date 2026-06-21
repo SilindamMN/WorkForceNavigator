@@ -13,6 +13,9 @@
     {
         public string TeamName { get; set; }
         public string Description { get; set; }
+        public int DepartmentId { get; set; }
+
+        public virtual Department Department { get; set; }
 
         // FK
         public string TeamLeaderId { get; set; }
