@@ -319,6 +319,43 @@ namespace Persistence.Migrations
                     b.ToTable("LeaveTypes");
                 });
 
+            modelBuilder.Entity("Domain.Enties.Manager", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("Date");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("ManagerId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)")
+                        .HasColumnName("ManagerId");
+
+                    b.Property<int?>("TeamId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("Date");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ManagerId");
+
+                    b.HasIndex("TeamId");
+
+                    b.ToTable("Managers");
+                });
+
             modelBuilder.Entity("Domain.Enties.Project", b =>
                 {
                     b.Property<int>("Id")
@@ -475,10 +512,6 @@ namespace Persistence.Migrations
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
-                    b.Property<string>("TeamLeaderId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
                     b.Property<string>("TeamName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -489,8 +522,6 @@ namespace Persistence.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("DepartmentId");
-
-                    b.HasIndex("TeamLeaderId");
 
                     b.ToTable("Teams");
                 });
@@ -852,6 +883,24 @@ namespace Persistence.Migrations
                     b.Navigation("LeaveType");
                 });
 
+            modelBuilder.Entity("Domain.Enties.Manager", b =>
+                {
+                    b.HasOne("Domain.Account.ApplicationUser", "ManagerUser")
+                        .WithMany()
+                        .HasForeignKey("ManagerId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Domain.Enties.TimeSheets.Team", "Team")
+                        .WithMany("Managers")
+                        .HasForeignKey("TeamId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.Navigation("ManagerUser");
+
+                    b.Navigation("Team");
+                });
+
             modelBuilder.Entity("Domain.Enties.Project", b =>
                 {
                     b.HasOne("Domain.Enties.TimeSheets.Client", "Client")
@@ -892,15 +941,7 @@ namespace Persistence.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Domain.Account.ApplicationUser", "TeamLeader")
-                        .WithMany()
-                        .HasForeignKey("TeamLeaderId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
                     b.Navigation("Department");
-
-                    b.Navigation("TeamLeader");
                 });
 
             modelBuilder.Entity("Domain.Enties.TimeSheets.UserTeam", b =>
@@ -1022,6 +1063,8 @@ namespace Persistence.Migrations
 
             modelBuilder.Entity("Domain.Enties.TimeSheets.Team", b =>
                 {
+                    b.Navigation("Managers");
+
                     b.Navigation("Projects");
 
                     b.Navigation("UserTeams");

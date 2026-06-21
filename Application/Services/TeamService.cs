@@ -69,12 +69,12 @@
           dataContext.UserTeams.RemoveRange(userTeams);
         }
 
-        // Assign the line manager
-        if (assignee.LineManager == null)
-        {
-          var lineManager = teamId.HasValue ? await AssignLineManager(teamId.Value) : null;
-         // assignee.LineManager = lineManager;
-        }
+        //// Assign the line manager
+        //if (assignee.LineManager == null)
+        //{
+        //  var lineManager = teamId.HasValue ? await AssignLineManager(teamId.Value) : null;
+        // // assignee.LineManager = lineManager;
+        //}
         await dataContext.SaveChangesAsync();
 
         // Determine the action based on teamId: added or removed
@@ -101,7 +101,6 @@
                                       select new
                                       {
                                         TeamName = t.TeamName,
-                                        TeamLeader = t.TeamLeader,
                                         Member = new MemberDetails
                                         {
                                           FirstName = u.FirstName,
@@ -110,7 +109,7 @@
                                         }
                                       }).ToListAsync();
 
-        var teams = teamsWithMembers.GroupBy(t => new { t.TeamName, t.TeamLeader })
+        var teams = teamsWithMembers.GroupBy(t => new { t.TeamName,  })
                                     .Select(g => new TeamMemberDetailsDto
                                     {
                                       TeamLeader = g.Key.TeamName,
@@ -234,26 +233,26 @@
     }
 
         // Fix for CS0029 and CS8603 in the AssignLineManager method
-        private async Task<string?> AssignLineManager(int teamId)
-        {
-            try
-            {
-                // Retrieve the TeamLeader's username for the specified team
-                var teamLeader = await dataContext.Teams
-                    .Where(t => t.Id == teamId)
-                    .Select(t => t.TeamLeader)
-                    .FirstOrDefaultAsync();
+        //private async Task<string?> AssignLineManager(int teamId)
+        //{
+        //    try
+        //    {
+        //        // Retrieve the TeamLeader's username for the specified team
+        //        var teamLeader = await dataContext.Teams
+        //            .Where(t => t.Id == teamId)
+        //            .Select(t => t.UserTeams)
+        //            .FirstOrDefaultAsync();
 
-                // Ensure the teamLeader is not null and return the UserName
-                return teamLeader?.UserName;
-            }
-            catch (Exception ex)
-            {
-                // Log or handle the exception as needed
-                // For simplicity, returning null if any exception occurs
-                return null;
-            }
-        }
+        //        // Ensure the teamLeader is not null and return the UserName
+        //        return teamLeader;
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        // Log or handle the exception as needed
+        //        // For simplicity, returning null if any exception occurs
+        //        return null;
+        //    }
+        //}
 
     // Private method to check if the user is already a member of the maximum allowed teams
     private async Task<bool> IsUserInMaxTeams(string username)

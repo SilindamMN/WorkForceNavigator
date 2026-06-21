@@ -21,6 +21,7 @@
 
         public DbSet<Log> Logs { get; set; }
         public DbSet<Message> Messages { get; set; }
+        public DbSet<Manager> Managers { get; set; }
         public DbSet<Team> Teams { get; set; }
         public DbSet<Client> Clients { get; set; }
         public DbSet<Project> Projects { get; set; }
@@ -36,7 +37,26 @@
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
+            // ---------------- Managers ----------------
+            builder.Entity<Manager>(entity =>
+            {
+                entity.HasKey(m => m.Id);
 
+                // IMPORTANT: Map ManagerId to ApplicationUser FK
+                entity.Property(m => m.ManagerId)
+                    .HasColumnName("ManagerId")
+                    .IsRequired();
+
+                entity.HasOne(m => m.ManagerUser)
+                    .WithMany()
+                    .HasForeignKey(m => m.ManagerId)
+                    .OnDelete(DeleteBehavior.Restrict);
+
+                entity.HasOne(m => m.Team)
+                    .WithMany(t => t.Managers)
+                    .HasForeignKey(m => m.TeamId)
+                    .OnDelete(DeleteBehavior.SetNull);
+            });
             // ---------------- Identity Mapping ----------------
             builder.Entity<ApplicationUser>().ToTable("Users");
             builder.Entity<IdentityUserClaim<string>>().ToTable("UserClaims");
@@ -52,12 +72,6 @@
                 .HasForeignKey(x => x.DepartmentId)
                 .OnDelete(DeleteBehavior.Restrict);
 
-            // ---------------- Team Leader (FIXED FK ISSUE) ----------------
-            builder.Entity<Team>()
-     .HasOne(t => t.TeamLeader)
-     .WithMany()
-     .HasForeignKey(t => t.TeamLeaderId)
-     .OnDelete(DeleteBehavior.Restrict); // better than NoAction in SQL Server
 
             // ---------------- UserTeam (Many-to-Many) ----------------
             builder.Entity<UserTeam>()
@@ -99,6 +113,8 @@
             builder.Entity<ApplicationUser>()
                 .Property(e => e.Salary)
                 .HasColumnType("decimal(18,2)");
+
+
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
