@@ -37,7 +37,7 @@
     public async Task<IEnumerable<LeaveAllocationDto>> GetLeaveAllocations()
     {
       var leaveAllocations = await (from la in dataContext.LeaveAllocations
-                                    join u in dataContext.Users on la.Username equals u.UserName
+                                    join u in dataContext.Users on la.EmployeeId equals u.UserName
                                     select new LeaveAllocationDto
                                     {
                                        Username = u.UserName,
@@ -66,8 +66,8 @@
       // Create leave allocations for each leave type for the user
       var newAllocations = leaveTypes.Select(leaveType => new LeaveAllocation
       {
-        Username =username, // Assuming there's an EmployeeId property in the User entity
-        LeaveTypeId = leaveType.Id,
+          EmployeeId = user.Id,
+          LeaveTypeId = leaveType.Id,
         NumberOfDays = leaveType.DefaultDays, // You may adjust this based on your leave type properties
                                               // ... other properties
       }).ToList();
@@ -90,7 +90,7 @@
       }
       var leaveAllocations = await dataContext.LeaveAllocations
           .Include(x => x.LeaveType) // Include related LeaveType entity
-          .Where(x => x.Username == username) // Filter by username
+          .Where(x => x.Employee.FirstName == username) // Filter by username
           .Select(x => new EmployeeLeaveAllocationDto
           {
             NumberOfDays = x.NumberOfDays,
@@ -111,7 +111,7 @@
 
             var leaveAllocations = await dataContext.LeaveAllocations
           .Include(x => x.LeaveType) // Include related LeaveType entity
-          .Where(x => x.Username == User.Identity.Name) // Filter by username
+          .Where(x => x.Employee.UserName == User.Identity.Name) // Filter by username
           .Select(x => new EmployeeLeaveAllocationDto
           {
             Id = x.Id,
@@ -136,7 +136,7 @@
 
       var leaveAllocations = await (from la in dataContext.LeaveAllocations
                                     join u in dataContext.LeaveTypes on la.LeaveTypeId equals u.Id
-                                    join user in dataContext.Users on la.Username equals user.UserName
+                                    join user in dataContext.Users on la.Employee.UserName equals user.UserName
                                     where (la.LeaveType.Name).Equals(LeaveName)
                                     select new LeaveAllocationDto
                                     {

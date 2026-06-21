@@ -9,15 +9,19 @@
     using System.Text;
     using System.Threading.Tasks;
 
-  public class Team : BaseEntity<int>
-  {
-    public string TeamName { get; set; }
-    public string Description { get; set; }
-        [ForeignKey("TeamLeaderId")]
+    public class Team : BaseEntity<int>
+    {
+        public string TeamName { get; set; }
+        public string Description { get; set; }
 
-        public string TeamLeader { get; set; }
-        public ICollection<Project> Projects { get; set; }   
-        // Navigation property for many-to-many relationship with ApplicationUser
-        public ICollection<UserTeam> UserTeams { get; set; }
-  }
+        // FK
+        public string TeamLeaderId { get; set; }
+
+        // Navigation
+        public ApplicationUser TeamLeader { get; set; }
+
+        public ICollection<Project> Projects { get; set; } = new List<Project>();
+
+        public ICollection<UserTeam> UserTeams { get; set; } = new List<UserTeam>();
+    }
 }

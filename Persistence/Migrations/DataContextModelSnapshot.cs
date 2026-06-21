@@ -221,10 +221,6 @@ namespace Persistence.Migrations
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("Date");
 
-                    b.Property<string>("Username")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.HasKey("Id");
 
                     b.HasIndex("EmployeeId");
@@ -334,6 +330,9 @@ namespace Persistence.Migrations
                     b.Property<int>("ClientId")
                         .HasColumnType("int");
 
+                    b.Property<int?>("ClientId1")
+                        .HasColumnType("int");
+
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("Date");
 
@@ -366,6 +365,8 @@ namespace Persistence.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("ClientId");
+
+                    b.HasIndex("ClientId1");
 
                     b.HasIndex("TeamId");
 
@@ -471,9 +472,9 @@ namespace Persistence.Migrations
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
-                    b.Property<string>("TeamLeader")
+                    b.Property<string>("TeamLeaderId")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("TeamName")
                         .IsRequired()
@@ -483,6 +484,8 @@ namespace Persistence.Migrations
                         .HasColumnType("Date");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("TeamLeaderId");
 
                     b.ToTable("Teams");
                 });
@@ -495,11 +498,20 @@ namespace Persistence.Migrations
                     b.Property<int>("TeamId")
                         .HasColumnType("int");
 
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("Date");
+
                     b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("Date");
 
                     b.HasKey("UserId", "TeamId");
 
@@ -808,7 +820,7 @@ namespace Persistence.Migrations
                         .IsRequired();
 
                     b.HasOne("Domain.Enties.Leaves.LeaveType", "LeaveType")
-                        .WithMany()
+                        .WithMany("LeaveAllocations")
                         .HasForeignKey("LeaveTypeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -838,15 +850,19 @@ namespace Persistence.Migrations
             modelBuilder.Entity("Domain.Enties.Project", b =>
                 {
                     b.HasOne("Domain.Enties.TimeSheets.Client", "Client")
-                        .WithMany("Projects")
+                        .WithMany()
                         .HasForeignKey("ClientId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
+
+                    b.HasOne("Domain.Enties.TimeSheets.Client", null)
+                        .WithMany("Projects")
+                        .HasForeignKey("ClientId1");
 
                     b.HasOne("Domain.Enties.TimeSheets.Team", "Team")
                         .WithMany("Projects")
                         .HasForeignKey("TeamId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Client");
@@ -861,6 +877,17 @@ namespace Persistence.Migrations
                         .HasForeignKey("DepartmentId");
 
                     b.Navigation("Department");
+                });
+
+            modelBuilder.Entity("Domain.Enties.TimeSheets.Team", b =>
+                {
+                    b.HasOne("Domain.Account.ApplicationUser", "TeamLeader")
+                        .WithMany()
+                        .HasForeignKey("TeamLeaderId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.Navigation("TeamLeader");
                 });
 
             modelBuilder.Entity("Domain.Enties.TimeSheets.UserTeam", b =>
@@ -963,6 +990,11 @@ namespace Persistence.Migrations
             modelBuilder.Entity("Domain.Enties.JobTitle", b =>
                 {
                     b.Navigation("Users");
+                });
+
+            modelBuilder.Entity("Domain.Enties.Leaves.LeaveType", b =>
+                {
+                    b.Navigation("LeaveAllocations");
                 });
 
             modelBuilder.Entity("Domain.Enties.Project", b =>

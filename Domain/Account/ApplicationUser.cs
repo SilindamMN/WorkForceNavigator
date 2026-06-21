@@ -27,8 +27,8 @@
         public decimal? Salary { get; set; }
         public Seniority? Seniority { get; set; }
 
-        public ICollection<UserTeam> UserTeams { get; set; }
-        public ICollection<LeaveRequest> LeaveRequests { get; set; }
-        public ICollection<LeaveAllocation> LeaveAllocations { get; set; }
+        public ICollection<UserTeam> UserTeams { get; set; } = new List<UserTeam>();
+        public ICollection<LeaveRequest> LeaveRequests { get; set; } = new List<LeaveRequest>();
+        public ICollection<LeaveAllocation> LeaveAllocations { get; set; } = new List<LeaveAllocation>();
     }
 }

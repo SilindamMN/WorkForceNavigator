@@ -113,7 +113,7 @@
         var teams = teamsWithMembers.GroupBy(t => new { t.TeamName, t.TeamLeader })
                                     .Select(g => new TeamMemberDetailsDto
                                     {
-                                      TeamLeader = g.Key.TeamLeader,
+                                      TeamLeader = g.Key.TeamName,
                                       TeamName = g.Key.TeamName,
                                       MemberDetails = g.Select(m => m.Member).ToList()
                                     }).ToList();
@@ -162,7 +162,6 @@
         var newTeam = new Team
         {
           TeamName = teamDto.TeamName,
-          TeamLeader = teamDto.TeamLeader,
           Description = teamDto.Description
         };
 
@@ -234,26 +233,27 @@
       }
     }
 
-    // Private method to assign Line Manager when adding a new member to a team
-    private async Task<string> AssignLineManager(int teamId)
-    {
-      try
-      {
-        // Retrieve the TeamLeader's username for the specified team
-        var teamLeaderUsername = dataContext.Teams
-            .Where(t => t.Id == teamId)
-            .Select(t => t.TeamLeader)
-            .FirstOrDefault();
+        // Fix for CS0029 and CS8603 in the AssignLineManager method
+        private async Task<string?> AssignLineManager(int teamId)
+        {
+            try
+            {
+                // Retrieve the TeamLeader's username for the specified team
+                var teamLeader = await dataContext.Teams
+                    .Where(t => t.Id == teamId)
+                    .Select(t => t.TeamLeader)
+                    .FirstOrDefaultAsync();
 
-        return teamLeaderUsername;
-      }
-      catch (Exception ex)
-      {
-        // Log or handle the exception as needed
-        // For simplicity, returning null if any exception occurs
-        return null;
-      }
-    }
+                // Ensure the teamLeader is not null and return the UserName
+                return teamLeader?.UserName;
+            }
+            catch (Exception ex)
+            {
+                // Log or handle the exception as needed
+                // For simplicity, returning null if any exception occurs
+                return null;
+            }
+        }
 
     // Private method to check if the user is already a member of the maximum allowed teams
     private async Task<bool> IsUserInMaxTeams(string username)
@@ -281,7 +281,7 @@
     private async Task<bool> IsUserTeamLeaderInAnyTeam(string username)
     {
       // Count the number of teams the user is a team leader of
-      var teamLeaderCount = await dataContext.Teams.CountAsync(t => t.TeamLeader == username);
+      var teamLeaderCount = await dataContext.Teams.CountAsync(t => t.TeamName == username);
       return teamLeaderCount > 0;
     }
 

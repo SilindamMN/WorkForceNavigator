@@ -3,6 +3,7 @@
 
 dotnet ef database update -s .\API -p .\Persistence
 
+dotnet ef database remove -s .\API -p .\Persistence
 {
   "username": "super",
   "firstName": "super",

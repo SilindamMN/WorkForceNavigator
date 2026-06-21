@@ -76,7 +76,7 @@
       }
 
       var allocation = await dataContext.LeaveAllocations
-           .Where(x => x.Username == user.Identity.Name && x.Id == createLeaveRequestDto.LeaveTypeId)
+           .Where(x => x.Employee.UserName == user.Identity.Name && x.Id == createLeaveRequestDto.LeaveTypeId)
            .FirstOrDefaultAsync();
 
 
@@ -255,7 +255,7 @@
     private async Task<Result> CheckAvailableDays(ClaimsPrincipal User, DateTime startDate, DateTime endDate)
     {
       var allocation = await dataContext.LeaveAllocations
-          .Where(x => x.Username == User.Identity.Name)
+          .Where(x => x.Employee.UserName == User.Identity.Name)
           .FirstOrDefaultAsync();
 
       if (allocation == null)
@@ -285,7 +285,7 @@
     private async Task<Result> DeductLeaveDays(string username, int leaveTypeId, int days)
     {
       var allocation = await dataContext.LeaveAllocations
-          .Where(x => x.Username == username && x.LeaveType.Id == leaveTypeId)
+          .Where(x => x.Employee.UserName == username && x.LeaveType.Id == leaveTypeId)
           .FirstOrDefaultAsync();
 
       if (allocation == null)
@@ -327,7 +327,7 @@
     private async Task<Result<int>> AddLeaveDays(string username, int leaveTypeId, int days)
     {
       var allocation = await dataContext.LeaveAllocations
-          .Where(x => x.Username == username && x.LeaveType.Id == leaveTypeId)
+          .Where(x => x.Employee.UserName == username && x.LeaveType.Id == leaveTypeId)
           .FirstOrDefaultAsync();
 
       if (allocation == null)
