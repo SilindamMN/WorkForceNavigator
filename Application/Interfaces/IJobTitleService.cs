@@ -6,8 +6,9 @@
   public interface IJobTitleService
     {
     Task<IEnumerable<JobTitleDto>> GetAllJobTitlesAsync();
-    Task<JobTitleDto> GetJobTitleByIdAsync(int id);
-    Task<int> CreateJobTitleAsync(UpdateCreateJobTitleDto jobTitleDto);
+        Task<JobTitleDto> GetJobTitleByIdAsync(int id);
+        Task<List<JobTitleDto>> GetJobTitleByDepartmentAsync(int departmentId);
+        Task<int> CreateJobTitleAsync(UpdateCreateJobTitleDto jobTitleDto);
     Task UpdateJobTitleAsync(int id, UpdateCreateJobTitleDto jobTitleDto);
     Task DeleteJobTitleAsync(int id);
     Task  AssignJobTitle(AssignJobTitleDto jobTitleDto);

@@ -88,5 +88,19 @@
       .ToListAsync();
       return jobTitlesWithDepartments;
     }
-  }
+
+        public async Task<List<JobTitleDto>> GetJobTitleByDepartmentAsync(int departmentId)
+        {
+            return await dataContext.JobTitles
+                .AsNoTracking()
+                .Where(jt => jt.DepartmentId == departmentId)
+                .Select(jt =>new JobTitleDto
+                {
+                    JobTitleId = jt.Id,
+                    Title = jt.Title,
+                    Seniority = jt.Seniority.ToString()
+                })
+                .ToListAsync();
+        }
+    }
 }
