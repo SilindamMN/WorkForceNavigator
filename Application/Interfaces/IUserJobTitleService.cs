@@ -11,9 +11,10 @@
   using System.Threading.Tasks;
 
   public interface IUserJobTitleService
-  {
-    Task<GeneralServiceResponseDto> AssignJobTitleToUser(AssignJobTitleDto assignJobTitle);
-    Task<JobTitleDto> GetJobTitleForUser(string username);
+    {
+        Task<GeneralServiceResponseDto> AssignJobTitleToUser(AssignJobTitleDto assignJobTitle);
+        Task<GeneralServiceResponseDto> AssignSeniorityToUser(int jobtitleId);
+        Task<JobTitleDto> GetJobTitleForUser(string username);
     Task<IEnumerable<ApplicationUser>> GetUsersByJobTitle(string title);
     Task<IEnumerable<JobTitleDto>> GetJobTitles();
     Task<List<JobTitleDto>> GetJobTitleByDepartmentAsync(int departmentId);
