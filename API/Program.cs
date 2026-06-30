@@ -120,11 +120,13 @@ builder.Services
 
 builder.Services.AddAutoMapper(typeof(MappingProfiles));
 var app = builder.Build();
+// Force HTTP only
+
 
 // Configure the HTTP request pipeline.
 //if (app.Environment.IsDevelopment())
 //{
-  app.UseSwagger();
+app.UseSwagger();
   app.UseSwaggerUI();
 //}
 app.UseCors(options =>
@@ -134,7 +136,7 @@ app.UseCors(options =>
   .AllowAnyMethod()
   .AllowAnyOrigin();
 });
-app.UseHttpsRedirection();
+//app.UseHttpsRedirection();
 
 app.UseAuthentication();
 app.UseAuthorization();
