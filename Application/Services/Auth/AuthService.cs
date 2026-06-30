@@ -319,10 +319,11 @@
       user.Gender = userDetailsDto.Gender;
       user.Salary = userDetailsDto.Salary;
       user.PhoneNumber = userDetailsDto.Phonenumber;
-      user.JobTitleId = userDetailsDto.JobTitleId; // Assuming JobTitle has a Title property
-
-      // Step 3: Save the changes to the database
-      await dataContext.SaveChangesAsync();
+            user.JobTitleId = userDetailsDto.JobTitleId; // Assuming JobTitle has a Title property
+            user.Seniority = Enum.Parse<Seniority>(
+    jobTitles.First(x => x.JobTitleId == userDetailsDto.JobTitleId).Seniority);
+            // Step 3: Save the changes to the database
+            await dataContext.SaveChangesAsync();
 
       // Return a response indicating success
       return new GeneralServiceResponseDto { };

@@ -102,5 +102,10 @@
                 })
                 .ToListAsync();
         }
+
+        public Task<GeneralServiceResponseDto> AssignSeniorityToUser(int jobtitleId)
+        {
+            throw new Exception("JobTitleId is null for the user.");
+        }
     }
 }
