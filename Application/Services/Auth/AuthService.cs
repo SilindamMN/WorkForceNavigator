@@ -291,7 +291,7 @@
       return userInfo;
     }
 
-    public async Task<GeneralServiceResponseDto> UpdateUserDetails(string username, UpdateUserDetailsDto userDetailsDto)
+    public async Task<GeneralServiceResponseDto> UpdateUserDetails(string username,int departmentId, UpdateUserDetailsDto userDetailsDto)
     {
       // Step 1: Retrieve the user from the database
       var user = await dataContext.Users
@@ -304,14 +304,22 @@
         // Handle the case where the user is not found
         throw new Exception("User not found");
       }
+            var jobTitles = await userJobTitleService.GetJobTitleByDepartmentAsync(departmentId);
 
-      // Step 2: Update the user entity with the new values
-      user.FirstName = userDetailsDto.FirstName;
+            var validJobTitle = jobTitles.Any(j => j.JobTitleId == userDetailsDto.JobTitleId);
+
+            if (!validJobTitle)
+            {
+                throw new Exception("Invalid Job Title for this department");
+            }
+
+            // Step 2: Update the user entity with the new values
+            user.FirstName = userDetailsDto.FirstName;
       user.LastName = userDetailsDto.LastName;
       user.Gender = userDetailsDto.Gender;
       user.Salary = userDetailsDto.Salary;
       user.PhoneNumber = userDetailsDto.Phonenumber;
-      user.JobTitle.Title = userDetailsDto.JobTitle; // Assuming JobTitle has a Title property
+      user.JobTitleId = userDetailsDto.JobTitleId; // Assuming JobTitle has a Title property
 
       // Step 3: Save the changes to the database
       await dataContext.SaveChangesAsync();

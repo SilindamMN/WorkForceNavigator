@@ -8,9 +8,9 @@
 
   public enum Seniority
   {
-    Junior,
-    Mid,
-    Senior,
-    Lead
+    Junior = 0,
+    Mid =1 ,
+    Senior =2,
+    Lead =3
   }
 }
