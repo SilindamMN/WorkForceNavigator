@@ -1,4 +1,4 @@
-﻿dotnet ef migrations add initial -s .\API -p .\Persistence
+﻿dotnet ef migrations add managers -s .\API -p .\Persistence
 
 
 dotnet ef database update -s .\API -p .\Persistence

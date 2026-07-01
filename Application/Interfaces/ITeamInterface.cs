@@ -13,7 +13,7 @@
 
   public interface ITeamInterface
   {
-    Task<GeneralServiceResponseDto> UpdateTeamMembership(string username, int? teamId = null);
+    Task<GeneralServiceResponseDto> UpdateTeamMembership(CreateUserTeamDto  createUserTeamDto);
     Task<IEnumerable<TeamMemberDetailsDto>> GetAllTeamsWithMembersAsync();
     Task<GeneralServiceResponseDto> CreateTeam(TeamDto team);
   }
