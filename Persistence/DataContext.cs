@@ -1,6 +1,7 @@
 ﻿namespace Persistence
 {
     using Domain.Account;
+    using Domain.Dtos.GeneralAdmin;
     using Domain.Enties;
     using Domain.Enties.Leaves;
     using Domain.Enties.TimeSheets;

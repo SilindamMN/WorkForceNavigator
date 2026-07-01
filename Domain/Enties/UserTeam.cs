@@ -3,7 +3,7 @@
   using Domain.Account;
   using Domain.Entities;
 
-  public class UserTeam : BaseEntity<int>
+  public class UserTeam
     {
     public string UserId { get; set; }
     public ApplicationUser User { get; set; }

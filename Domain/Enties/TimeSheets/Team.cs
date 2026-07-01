@@ -1,7 +1,8 @@
 ﻿namespace Domain.Enties.TimeSheets
 {
   using Domain.Account;
-  using Domain.Entities;
+    using Domain.Dtos.GeneralAdmin;
+    using Domain.Entities;
   using System;
   using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations.Schema;
