@@ -23,7 +23,6 @@ namespace API.Controllers.Auth
     public ProjectController(IProjectService projectService,IGenericService<Project,CreateProjectDto> genericService)
         {
       this.projectService = projectService;
-      this.projectService = projectService;
       this.genericService = genericService;
     }
 

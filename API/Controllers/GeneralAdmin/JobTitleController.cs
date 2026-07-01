@@ -85,8 +85,14 @@ namespace API.Controllers.GeneralAdmin
       }
       return StatusCode(result.StatusCode, result.Message);
     }
+        [HttpGet("Department/{departmentId}")]
+        public async Task<IActionResult> GetJobTitleByDepartment(int departmentId)
+        {
+            var result = await userJobTitleService.GetJobTitleByDepartmentAsync(departmentId);
+            return Ok(result);
+        }
 
-    [HttpDelete("{id}/undo")]
+        [HttpDelete("{id}/undo")]
     public async Task<IActionResult> UnSoftDeleteJobTitle(int id)
     {
       var result = await _JobTitleService.UndoSoftDeleteAsync(id);
