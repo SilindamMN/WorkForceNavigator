@@ -1,0 +1,16 @@
+﻿namespace Domain.Dtos.GeneralAdmin
+{
+  using System;
+  using System.Collections.Generic;
+  using System.Linq;
+  using System.Text;
+  using System.Threading.Tasks;
+
+  public class UserTeamListDto
+    {
+
+        public string UserName { get; set; }
+        public string TeamName { get; set; }
+        public string TeamLeader { get; set; }
+    }
+}
