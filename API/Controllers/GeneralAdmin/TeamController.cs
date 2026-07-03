@@ -33,20 +33,31 @@
     {
       var result = await _teamService.GetAllAsync();
       return Ok(result);
-    }
+        }
 
-    [HttpGet("{id}")]
-    public async Task<IActionResult> GetTeamById(int id)
-    {
-      var result = await _teamService.GetByIdAsync(id);
-      if (result is null)
-      {
-        return NotFound("Team not found");
-      }
-      return Ok(result);
-    }
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetTeamById(int id)
+        {
+            var result = await _teamService.GetByIdAsync(id);
+            if (result is null)
+            {
+                return NotFound("Team not found");
+            }
+            return Ok(result);
+        }
+        [HttpGet("user/{userId}")]
+        public async Task<IActionResult> GetTeamByUserIdAsync(string userId)
+        {
+            var result = await teamInterface.GetTeamByUserIdAsync(userId);
+            if (result is null)
+            {
+                return NotFound("User not found");
+            }
+            return Ok(result);
+        }
 
-    [HttpPost]
+
+        [HttpPost]
     public async Task<IActionResult> CreateTeam([FromBody] TeamDto teamDto)
     {
       var result = await teamInterface.CreateTeam(teamDto);

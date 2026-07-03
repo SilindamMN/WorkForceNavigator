@@ -307,5 +307,30 @@
       // Return the user's ID if found, otherwise return null
       return user.Id;
     }
-  }
+
+        public async Task<IEnumerable<UserTeamListDto>> GetTeamByUserIdAsync(string userId)
+        {
+            var teams = await (
+                from ut in dataContext.UserTeams
+                where ut.UserId == userId
+                join user in dataContext.Users
+                    on ut.UserId equals user.Id
+                join t in dataContext.Teams
+                    on ut.TeamId equals t.Id
+                join m in dataContext.Managers
+                    on t.Id equals m.TeamId
+                join manager in dataContext.Users
+                    on m.ManagerId equals manager.Id
+
+                select new UserTeamListDto
+                {
+                    UserName = $"{user.FirstName} {user.LastName}",
+                    TeamName = t.TeamName,
+                    TeamLeader = $"{manager.FirstName} {manager.LastName}"
+                })
+                .ToListAsync();
+
+            return teams;
+        }
+    }
 }
