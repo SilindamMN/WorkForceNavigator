@@ -7,6 +7,8 @@
     public interface IManageInterface
     {
         Task<IEnumerable<ManagerDto>> GetAllManagers();
-        Task<ManagerDto?> GetManagerByIdAsync(string userId);
+        Task<ManagerDto?> GetManagerByIdAsync(string userId); 
+        Task<string?> GetManagerByTeamIdAsync(int teamId);
+
     }
 }

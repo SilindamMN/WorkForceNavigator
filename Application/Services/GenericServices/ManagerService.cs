@@ -47,5 +47,20 @@
                 })
                 .FirstOrDefaultAsync();
         }
+        public async Task<string?> GetManagerByTeamIdAsync(int teamId)
+        {
+            var team = await dataContext.Teams
+                .Where(t => t.Id == teamId)
+                .Select(t => new { t.Id })
+                .FirstOrDefaultAsync();
+
+            if (team == null)
+                return null;
+
+            return await dataContext.Users
+                .Where(u => u.LineManagerId == team.Id.ToString())
+                .Select(u => u.Id)
+                .FirstOrDefaultAsync();
+        }
     }
 }
