@@ -16,16 +16,19 @@
   using IdentityRole = Microsoft.AspNetCore.Identity.IdentityRole;
   using Microsoft.EntityFrameworkCore;
     using Application.Interfaces.GenericInterfaces;
+    using Domain.Dtos.Account;
 
     public class TeamService : ITeamInterface
   {
     private readonly DataContext dataContext;
     private readonly UserManager<ApplicationUser> userManager;
+        private readonly IManageInterface manageInterface;
 
-        public TeamService(DataContext dataContext, UserManager<ApplicationUser> userManager)
+        public TeamService(DataContext dataContext, UserManager<ApplicationUser> userManager,IManageInterface manageInterface)
     {
       this.dataContext = dataContext;
       this.userManager = userManager;
+            this.manageInterface = manageInterface;
         }
 
         public async Task<GeneralServiceResponseDto> UpdateTeamMembership(CreateUserTeamDto dto)
@@ -33,13 +36,11 @@
             try
             {
                 var user = await userManager.FindByIdAsync(dto.UserId);
-
                 if (user == null)
                     return ResponseHelper.CreateResponse(false, 400, "User not found.");
 
                 var team = await dataContext.Teams
                     .FirstOrDefaultAsync(x => x.Id == dto.TeamId);
-
                 if (team == null)
                     return ResponseHelper.CreateResponse(false, 400, "Team not found.");
 
@@ -49,10 +50,10 @@
                     var userTeams = await dataContext.UserTeams
                         .Where(x => x.UserId == dto.UserId && x.TeamId == dto.TeamId)
                         .ToListAsync();
-
                     dataContext.UserTeams.RemoveRange(userTeams);
+                    user.LineManagerId = null;
+                    dataContext.Users.Update(user);
                     await dataContext.SaveChangesAsync();
-
                     return ResponseHelper.CreateResponse(true, 200, "Member removed successfully.");
                 }
 
@@ -69,9 +70,34 @@
                     TeamId = dto.TeamId,
                 };
 
+                // Only assign a line manager if the user doesn't already have one
+                if (string.IsNullOrWhiteSpace(user.LineManagerId))
+                {
+                    var managerId = await manageInterface.GetManagerByTeamIdAsync(dto.TeamId);
+                    if (managerId!=null)
+                    {
+                        return ResponseHelper.CreateResponse(false, 400, "No manager assigned to this team.");
+                    }
+
+                    var managerIdString = managerId?.ToString();
+
+                    // Correct check: does this id actually exist as a User?
+                    var managerExists = await dataContext.Users
+                        .AnyAsync(u => u.Id == managerIdString);
+                   
+
+                    // Prevent a user being set as their own manager
+                    if (managerIdString == user.Id)
+                    {
+                        return ResponseHelper.CreateResponse(false, 400, "A user cannot be their own line manager.");
+                    }
+
+                    user.LineManagerId = dto.UserId.ToString(); 
+                    dataContext.Users.Update(user);
+                }
+
                 dataContext.UserTeams.Add(userTeam);
                 await dataContext.SaveChangesAsync();
-
                 return ResponseHelper.CreateResponse(true, 200, "Member added successfully.");
             }
             catch (Exception ex)
@@ -79,26 +105,25 @@
                 return ResponseHelper.CreateResponse(false, 500, ex.Message);
             }
         }
-
         public async Task<IEnumerable<TeamMemberDetailsDto>> GetAllTeamsWithMembersAsync()
     {
       try
       {
-        var teamsWithMembers = await (from ut in dataContext.UserTeams
-                                      join u in dataContext.Users on ut.UserId equals u.Id
+                var teamsWithMembers = await (from ut in dataContext.UserTeams
+                                              join u in dataContext.Users on ut.UserId equals u.Id
                                       join t in dataContext.Teams on ut.TeamId equals t.Id
-                                      join jt in dataContext.JobTitles on u.JobTitleId equals jt.Id into jobTitles
+                                              join jt in dataContext.JobTitles on u.JobTitleId equals jt.Id into jobTitles
                                       from jt in dataContext.JobTitles.DefaultIfEmpty()
-                                      select new
-                                      {
-                                        TeamName = t.TeamName,
-                                        Member = new MemberDetails
-                                        {
-                                          FirstName = u.FirstName,
-                                          LastName = u.LastName,
-                                          JobTitle = jt.Title
-                                        }
-                                      }).ToListAsync();
+                                              select new
+                                              {
+                                                  TeamName = t.TeamName,
+                                                  Member = new MemberDetails
+                                                  {
+                                                      FirstName = u.FirstName,
+                                                      LastName = u.LastName,
+                                                      JobTitle = jt.Title
+                                                  }
+                                              }).ToListAsync();
 
         var teams = teamsWithMembers.GroupBy(t => new { t.TeamName,  })
                                     .Select(g => new TeamMemberDetailsDto
@@ -175,12 +200,11 @@
           return ResponseHelper.CreateResponse(false, 404, "User not found.");
         }
 
-        // Create a new UserTeam record linking the team leader to the new team
-        var newUserTeamRecord = new UserTeam
-        {
-          UserId = userId, // Assuming TeamLeader is the userId
+                var newUserTeamRecord = new UserTeam
+                {
+                    UserId = userId, // Assuming TeamLeader is the userId
           TeamId = createdTeam.Id
-        };
+                };
 
         // Add the new UserTeam record to the data context
         await dataContext.UserTeams.AddAsync(newUserTeamRecord);
