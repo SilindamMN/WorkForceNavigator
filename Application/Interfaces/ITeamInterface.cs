@@ -3,8 +3,8 @@
   using Domain.Dtos.General;
   using Domain.Dtos.GeneralAdmin;
   using Domain.Dtos.LeaveTypes.Teams;
-  using Domain.Entities.TimeSheets;
-  using System;
+    using Domain.Entities.TimeSheets;
+    using System;
   using System.Collections.Generic;
   using System.Linq;
   using System.Security.Claims;
@@ -17,5 +17,7 @@
     Task<IEnumerable<TeamMemberDetailsDto>> GetAllTeamsWithMembersAsync();
     Task<GeneralServiceResponseDto> CreateTeam(TeamDto team);
         Task<IEnumerable<UserTeamListDto>> GetTeamByUserIdAsync(string userId);
-  }
+        Task<IEnumerable<UserTeamListApplicableDto>> GetAvailableTeamsForUserAsync(string userId);
+
+    }
 }
