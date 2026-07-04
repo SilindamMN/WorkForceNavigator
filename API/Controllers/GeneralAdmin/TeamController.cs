@@ -114,8 +114,20 @@
       var response = await teamInterface.UpdateTeamMembership(createUserTeamDto);
       return StatusCode(response.StatusCode, response);
     }
+        [HttpGet("available/{userId}")]
+        public async Task<IActionResult> GetAvailableTeamsForUser(string userId)
+        {
+            var result = await teamInterface.GetAvailableTeamsForUserAsync(userId);
 
-    [HttpGet("withdetails")]
+            if (!result.Any())
+            {
+                return NotFound("No available teams found for this user.");
+            }
+
+            return Ok(result);
+        }
+
+        [HttpGet("withdetails")]
     public async Task<ActionResult<IEnumerable<TeamMemberDetailsDto>>> GetAllTeamsWithMembers()
     {
       var teams = await teamInterface.GetAllTeamsWithMembersAsync();

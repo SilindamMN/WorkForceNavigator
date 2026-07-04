@@ -332,5 +332,21 @@
 
             return teams;
         }
+
+        public async Task<IEnumerable<UserTeamListApplicableDto>> GetAvailableTeamsForUserAsync(string userId)
+        {
+            return await (
+                from u in dataContext.Users
+                join ut in dataContext.UserTeams on u.Id equals ut.UserId
+                join t in dataContext.Teams on ut.TeamId equals t.Id
+                where u.Id == userId
+                orderby t.TeamName
+                select new UserTeamListApplicableDto
+                {
+                    Id = t.Id,
+                    TeamName = t.TeamName
+                })
+                .ToListAsync();
+        }
     }
 }
