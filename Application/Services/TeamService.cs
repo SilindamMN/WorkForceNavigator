@@ -22,13 +22,11 @@
   {
     private readonly DataContext dataContext;
     private readonly UserManager<ApplicationUser> userManager;
-        private readonly IManageInterface manageInterface;
 
-        public TeamService(DataContext dataContext, UserManager<ApplicationUser> userManager,IManageInterface manageInterface)
+        public TeamService(DataContext dataContext, UserManager<ApplicationUser> userManager)
     {
       this.dataContext = dataContext;
       this.userManager = userManager;
-            this.manageInterface = manageInterface;
         }
 
         public async Task<GeneralServiceResponseDto> UpdateTeamMembership(CreateUserTeamDto dto)
@@ -70,31 +68,6 @@
                     TeamId = dto.TeamId,
                 };
 
-                // Only assign a line manager if the user doesn't already have one
-                if (string.IsNullOrWhiteSpace(user.LineManagerId))
-                {
-                    var managerId = await manageInterface.GetManagerByTeamIdAsync(dto.TeamId);
-                    if (managerId!=null)
-                    {
-                        return ResponseHelper.CreateResponse(false, 400, "No manager assigned to this team.");
-                    }
-
-                    var managerIdString = managerId?.ToString();
-
-                    // Correct check: does this id actually exist as a User?
-                    var managerExists = await dataContext.Users
-                        .AnyAsync(u => u.Id == managerIdString);
-                   
-
-                    // Prevent a user being set as their own manager
-                    if (managerIdString == user.Id)
-                    {
-                        return ResponseHelper.CreateResponse(false, 400, "A user cannot be their own line manager.");
-                    }
-
-                    user.LineManagerId = dto.UserId.ToString(); 
-                    dataContext.Users.Update(user);
-                }
 
                 dataContext.UserTeams.Add(userTeam);
                 await dataContext.SaveChangesAsync();
@@ -317,16 +290,11 @@
                     on ut.UserId equals user.Id
                 join t in dataContext.Teams
                     on ut.TeamId equals t.Id
-                join m in dataContext.Managers
-                    on t.Id equals m.TeamId
-                join manager in dataContext.Users
-                    on m.ManagerId equals manager.Id
 
                 select new UserTeamListDto
                 {
                     UserName = $"{user.FirstName} {user.LastName}",
-                    TeamName = t.TeamName,
-                    TeamLeader = $"{manager.FirstName} {manager.LastName}"
+                    TeamName = t.TeamName
                 })
                 .ToListAsync();
 

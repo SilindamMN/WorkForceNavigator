@@ -19,7 +19,6 @@
         public virtual Department Department { get; set; }
 
         public ICollection<Project> Projects { get; set; } = new List<Project>();
-        public ICollection<Manager> Managers { get; set; } = new List<Manager>();
 
         public ICollection<UserTeam> UserTeams { get; set; } = new List<UserTeam>();
     }
