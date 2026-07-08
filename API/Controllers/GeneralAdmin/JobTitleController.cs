@@ -13,7 +13,8 @@ namespace API.Controllers.GeneralAdmin
   using Domain.Dtos.JobTitles;
   using Domain.Enties;
   using Domain.Enties.Leaves;
-  using Microsoft.AspNetCore.Authorization;
+    using Domain.Enums;
+    using Microsoft.AspNetCore.Authorization;
   using Microsoft.AspNetCore.Mvc;
   using Microsoft.EntityFrameworkCore;
   using Persistence;
@@ -86,9 +87,9 @@ namespace API.Controllers.GeneralAdmin
       return StatusCode(result.StatusCode, result.Message);
     }
         [HttpGet("Department/{departmentId}")]
-        public async Task<IActionResult> GetJobTitleByDepartment(int departmentId)
+        public async Task<IActionResult> GetJobTitleByDepartment(int departmentId, Seniority? seniority)
         {
-            var result = await userJobTitleService.GetJobTitleByDepartmentAsync(departmentId);
+            var result = await userJobTitleService.GetJobTitleByDepartmentAndSeniorityAsync(departmentId,seniority);
             return Ok(result);
         }
 
