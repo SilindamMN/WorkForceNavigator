@@ -292,6 +292,7 @@
 
                 select new UserTeamListDto
                 {
+                    Id = t.Id,
                     UserName = $"{user.FirstName} {user.LastName}",
                     TeamName = t.TeamName
                 })
