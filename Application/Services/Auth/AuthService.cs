@@ -304,7 +304,7 @@
         // Handle the case where the user is not found
         throw new Exception("User not found");
       }
-            var jobTitles = await userJobTitleService.GetJobTitleByDepartmentAsync(departmentId);
+            var jobTitles = await userJobTitleService.GetJobTitleByDepartmentAndSeniorityAsync(departmentId,user.Seniority);
 
             var validJobTitle = jobTitles.Any(j => j.JobTitleId == userDetailsDto.JobTitleId);
 

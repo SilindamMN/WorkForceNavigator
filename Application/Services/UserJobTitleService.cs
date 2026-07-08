@@ -89,23 +89,24 @@
       return jobTitlesWithDepartments;
     }
 
-        public async Task<List<JobTitleDto>> GetJobTitleByDepartmentAsync(int departmentId)
-        {
-            return await dataContext.JobTitles
-                .AsNoTracking()
-                .Where(jt => jt.DepartmentId == departmentId)
-                .Select(jt =>new JobTitleDto
-                {
-                    JobTitleId = jt.Id,
-                    Title = jt.Title,
-                    Seniority = jt.Seniority.ToString()
-                })
-                .ToListAsync();
-        }
 
         public Task<GeneralServiceResponseDto> AssignSeniorityToUser(int jobtitleId)
         {
             throw new Exception("JobTitleId is null for the user.");
+        }
+
+        public async Task<List<JobTitleDto>> GetJobTitleByDepartmentAndSeniorityAsync(int departmentId, Seniority? seniority)
+        {
+            return await dataContext.JobTitles
+                .AsNoTracking()
+                .Where(jt => jt.DepartmentId == departmentId)
+                .Where(jt => !seniority.HasValue || jt.Seniority == seniority.Value)
+                .Select(jt => new JobTitleDto
+                {
+                    JobTitleId = jt.Id,
+                    Title = jt.Title,
+                    Seniority = jt.Seniority.ToString()
+                }).ToListAsync();
         }
     }
 }
