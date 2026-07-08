@@ -16,7 +16,10 @@
     public string Email { get; set; }
     public string Username { get; set; }
     public DateTime CreatedAt { get; set; }
-    public string PhoneNumber { get; set; }
+        public string DepartmentName { get; set; }
+        public string JobTitleName { get; set; }
+        public string TeamName { get; set; }
+        public string PhoneNumber { get; set; }
         [JsonConverter(typeof(JsonStringEnumConverter))]
         public Seniority? Seniority { get; set; }
         public Gender? Gender { get; set; }

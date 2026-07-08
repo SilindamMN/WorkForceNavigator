@@ -49,8 +49,8 @@
       if (user is null) { return null; }
 
       var roles = await userManager.GetRolesAsync(user);
-      var userInfor = GenerateUserInfoObject(user, roles);
-      return (UserInfoResult)userInfor;
+      var userInfor = await GenerateUserInfoObject(user, roles);
+      return userInfor;
     }
 
     public async Task<IEnumerable<UserInfoResult>> GetUserListAsync()
@@ -61,8 +61,8 @@
       foreach (var user in users)
       {
         var roles = await userManager.GetRolesAsync(user);
-        var userInfo = GenerateUserInfoObject(user, roles);
-        userInfoResults.Add((UserInfoResult)userInfo);
+        var userInfo = await GenerateUserInfoObject(user, roles);
+        userInfoResults.Add(userInfo);
       }
       return userInfoResults;
     }
@@ -89,7 +89,7 @@
       var userInfo = GenerateUserInfoObject(user, roles);
 
       await logService.SaveNewLog(user.UserName, "New Login");
-      return new LoginServiceResponseDto { NewToken = newToken, UserInfo = (UserInfoResult)userInfo };
+      return new LoginServiceResponseDto { NewToken = newToken, UserInfo = await userInfo };
     }
 
     public async Task<LoginServiceResponseDto> MeAsync(MeDto meDto)
@@ -114,7 +114,7 @@
       var userInfo = GenerateUserInfoObject(user, roles);
       await logService.SaveNewLog(user.UserName, "New Token Generated");
 
-      return new LoginServiceResponseDto { NewToken = newToken, UserInfo = (UserInfoResult)userInfo };
+      return new LoginServiceResponseDto { NewToken = newToken, UserInfo = await userInfo };
     }
 
     public async Task<GeneralServiceResponseDto> RegisterAsync(RegisterDto registerDto)
@@ -214,16 +214,31 @@
       }
     }
 
-    private object GenerateUserInfoObject(ApplicationUser user, IList<string> roles)
+    private async Task<UserInfoResult> GenerateUserInfoObject(ApplicationUser user, IList<string> roles)
     {
-      return new UserInfoResult
+            var currentUserTeam = await dataContext.UserTeams
+           .Where(ut => ut.UserId == user.Id)
+           .Select(ut => new
+           {
+               ut.TeamId,
+               TeamName = ut.Team.TeamName,
+               DepartmentName = ut.Team.Department.DepartmentName,
+           })
+           .FirstOrDefaultAsync();
+
+            var userTitle = await userJobTitleService.GetJobTitleForUser(user.UserName);
+             
+            return new UserInfoResult
       {
         Id = user.Id,
         CreatedAt = DateTime.Now,
         Email = user.Email,
         FirstName = user.FirstName,
         LastName = user.LastName,
-        Roles = roles,
+          TeamName = currentUserTeam?.TeamName,
+          DepartmentName = currentUserTeam?.DepartmentName,
+          JobTitleName = userTitle?.Title  ,
+          Roles = roles,
         Seniority = user.Seniority,
         Username = user.UserName,
         PhoneNumber = user.PhoneNumber,

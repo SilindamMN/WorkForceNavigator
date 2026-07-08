@@ -15,7 +15,7 @@
     {
         Task<GeneralServiceResponseDto> AssignJobTitleToUser(AssignJobTitleDto assignJobTitle);
         Task<GeneralServiceResponseDto> AssignSeniorityToUser(int jobtitleId);
-        Task<JobTitleDto> GetJobTitleForUser(string username);
+        Task<JobTitleDto?> GetJobTitleForUser(string username);
     Task<IEnumerable<ApplicationUser>> GetUsersByJobTitle(string title);
     Task<IEnumerable<JobTitleDto>> GetJobTitles();
         Task<List<JobTitleDto>> GetJobTitleByDepartmentAndSeniorityAsync(int departmentId, Seniority? seniority);
