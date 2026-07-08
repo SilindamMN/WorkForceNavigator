@@ -140,7 +140,7 @@
         dataContext.LeaveRequests.Remove(leaveRequest);
         // Save changes to the database
         await dataContext.SaveChangesAsync();
-        await AddLeaveDays(leaveRequest.UserName, leaveRequest.LeaveTypeId, leaveRequest.NumberOfDays);
+        await AddLeaveDays(leaveRequest.UserName, (int)leaveRequest.LeaveTypeId, leaveRequest.NumberOfDays);
         // Return success result
         return ResponseHelper.CreateResponse(false, 400, "Delete Successfully");
       }
@@ -241,7 +241,7 @@
       }
 
       // Subtract number of days from allocation
-      await AddLeaveDays(leaveRequest.UserName, leaveRequest.LeaveTypeId, leaveRequest.NumberOfDays);
+      await AddLeaveDays(leaveRequest.UserName, (int)leaveRequest.LeaveTypeId, leaveRequest.NumberOfDays);
       // Update the leave request
       leaveRequest.StartDate = updateLeaveRequestDto.StartDate;
       leaveRequest.EndDate = updateLeaveRequestDto.EndDate;

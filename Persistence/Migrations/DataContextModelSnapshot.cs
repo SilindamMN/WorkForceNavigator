@@ -58,9 +58,6 @@ namespace Persistence.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("LineManagerId")
-                        .HasColumnType("nvarchar(450)");
-
                     b.Property<bool>("LockoutEnabled")
                         .HasColumnType("bit");
 
@@ -103,8 +100,6 @@ namespace Persistence.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("JobTitleId");
-
-                    b.HasIndex("LineManagerId");
 
                     b.HasIndex("NormalizedEmail")
                         .HasDatabaseName("EmailIndex");
@@ -256,7 +251,7 @@ namespace Persistence.Migrations
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
-                    b.Property<int>("LeaveTypeId")
+                    b.Property<int?>("LeaveTypeId")
                         .HasColumnType("int");
 
                     b.Property<int>("NumberOfDays")
@@ -775,13 +770,7 @@ namespace Persistence.Migrations
                         .WithMany("Users")
                         .HasForeignKey("JobTitleId");
 
-                    b.HasOne("Domain.Account.ApplicationUser", "LineManager")
-                        .WithMany()
-                        .HasForeignKey("LineManagerId");
-
                     b.Navigation("JobTitle");
-
-                    b.Navigation("LineManager");
                 });
 
             modelBuilder.Entity("Domain.Enties.JobTitle", b =>
@@ -822,9 +811,7 @@ namespace Persistence.Migrations
 
                     b.HasOne("Domain.Enties.Leaves.LeaveType", "LeaveType")
                         .WithMany()
-                        .HasForeignKey("LeaveTypeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("LeaveTypeId");
 
                     b.Navigation("ApplicationUser");
 

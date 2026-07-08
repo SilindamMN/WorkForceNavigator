@@ -49,7 +49,6 @@
                         .Where(x => x.UserId == dto.UserId && x.TeamId == dto.TeamId)
                         .ToListAsync();
                     dataContext.UserTeams.RemoveRange(userTeams);
-                    user.LineManagerId = null;
                     dataContext.Users.Update(user);
                     await dataContext.SaveChangesAsync();
                     return ResponseHelper.CreateResponse(true, 200, "Member removed successfully.");
