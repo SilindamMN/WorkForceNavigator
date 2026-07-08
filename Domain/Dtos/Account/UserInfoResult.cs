@@ -5,7 +5,8 @@
   using System.Collections.Generic;
   using System.Linq;
   using System.Text;
-  using System.Threading.Tasks;
+    using System.Text.Json.Serialization;
+    using System.Threading.Tasks;
 
   public class UserInfoResult
   {
@@ -16,7 +17,9 @@
     public string Username { get; set; }
     public DateTime CreatedAt { get; set; }
     public string PhoneNumber { get; set; }
-    public Gender? Gender { get; set; }
+        [JsonConverter(typeof(JsonStringEnumConverter))]
+        public Seniority? Seniority { get; set; }
+        public Gender? Gender { get; set; }
     public IEnumerable<string> Roles { get; set; }
   }
 }

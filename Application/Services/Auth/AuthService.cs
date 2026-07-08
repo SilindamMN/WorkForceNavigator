@@ -224,6 +224,7 @@
         FirstName = user.FirstName,
         LastName = user.LastName,
         Roles = roles,
+        Seniority = user.Seniority,
         Username = user.UserName,
         PhoneNumber = user.PhoneNumber,
         Gender = (Gender?)user.Gender
