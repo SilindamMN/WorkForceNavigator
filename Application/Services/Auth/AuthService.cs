@@ -55,8 +55,15 @@
 
     public async Task<IEnumerable<UserInfoResult>> GetUserListAsync()
     {
-      var users = await userManager.Users.ToListAsync();
-      List<UserInfoResult> userInfoResults = new List<UserInfoResult>();
+            var users = await userManager.Users
+        .Include(u => u.JobTitle)
+            .ThenInclude(jt => jt.Department)
+        .Include(u => u.UserTeams)
+            .ThenInclude(ut => ut.Team)
+                .ThenInclude(t => t.Department)
+        .ToListAsync();
+
+            List<UserInfoResult> userInfoResults = new List<UserInfoResult>();
 
       foreach (var user in users)
       {
@@ -222,6 +229,7 @@
            {
                ut.TeamId,
                TeamName = ut.Team.TeamName,
+               DepartmentId = ut.Team.DepartmentId,
                DepartmentName = ut.Team.Department.DepartmentName,
            })
            .FirstOrDefaultAsync();
@@ -235,9 +243,12 @@
         Email = user.Email,
         FirstName = user.FirstName,
         LastName = user.LastName,
-          TeamName = currentUserTeam?.TeamName,
-          DepartmentName = currentUserTeam?.DepartmentName,
-          JobTitleName = userTitle?.Title  ,
+                TeamId = currentUserTeam?.TeamId,
+                TeamName = currentUserTeam?.TeamName,
+                DepartmentId = currentUserTeam?.DepartmentId,
+                DepartmentName = currentUserTeam?.DepartmentName,
+                JobTitleId = user.JobTitleId,
+                JobTitleName = userTitle?.Title  ,
           Roles = roles,
         Seniority = user.Seniority,
         Username = user.UserName,
@@ -298,9 +309,13 @@
         Roles = roles,
         Username = user.UserName,
         Salary = user.Salary,
+          DepartmentId = user.JobTitle?.DepartmentId,
           Department = details.DepartmentName,
+          JobTitleId = user.JobTitleId,
         JobTitle = details.Title,
-        PhoneNumber = user.PhoneNumber,
+        TeamId = user.UserTeams.FirstOrDefault()?.TeamId,
+          TeamName = user.UserTeams?.FirstOrDefault()?.Team?.TeamName,
+          PhoneNumber = user.PhoneNumber,
         Gender = (Gender)user.Gender,
       };
       return userInfo;

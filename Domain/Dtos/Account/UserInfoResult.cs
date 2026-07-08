@@ -16,8 +16,11 @@
     public string Email { get; set; }
     public string Username { get; set; }
     public DateTime CreatedAt { get; set; }
+        public int? DepartmentId { get; set; }
         public string DepartmentName { get; set; }
+        public int? JobTitleId { get; set; }
         public string JobTitleName { get; set; }
+        public int? TeamId { get; set; }
         public string TeamName { get; set; }
         public string PhoneNumber { get; set; }
         [JsonConverter(typeof(JsonStringEnumConverter))]
