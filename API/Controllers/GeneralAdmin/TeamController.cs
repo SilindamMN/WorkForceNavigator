@@ -114,8 +114,8 @@
       var response = await teamInterface.UpdateTeamMembership(createUserTeamDto);
       return StatusCode(response.StatusCode, response);
     }
-        [HttpGet("departmentId")]
-        public async Task<IActionResult> GetAvailableTeamsByDepartmentIdAsync(int  departmentId)
+        [HttpGet("by-department")]
+        public async Task<IActionResult> GetAvailableTeamsByDepartmentIdAsync([FromQuery] int  departmentId)
         {
             var result = await teamInterface.GetAvailableTeamsByDepartmentIdAsync(departmentId);
 
