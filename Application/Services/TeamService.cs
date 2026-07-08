@@ -301,20 +301,16 @@
             return teams;
         }
 
-        public async Task<IEnumerable<UserTeamListApplicableDto>> GetAvailableTeamsForUserAsync(string userId)
+        public async Task<IEnumerable<UserTeamListApplicableDto>> GetAvailableTeamsByDepartmentIdAsync(int departmentId)
         {
-            return await (
-                from u in dataContext.Users
-                join ut in dataContext.UserTeams on u.Id equals ut.UserId
-                join t in dataContext.Teams on ut.TeamId equals t.Id
-                where u.Id == userId
-                orderby t.TeamName
-                select new UserTeamListApplicableDto
-                {
-                    Id = t.Id,
-                    TeamName = t.TeamName
-                })
-                .ToListAsync();
+            return await dataContext.Teams
+                .AsNoTracking()
+                .Where(x =>x.DepartmentId == departmentId)
+                 .Select(x=> new UserTeamListApplicableDto
+                 {
+                     Id = x.Id,
+                     TeamName = x.TeamName
+                 }).ToListAsync();
         }
     }
 }
