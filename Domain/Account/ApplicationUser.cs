@@ -18,11 +18,6 @@
         public int? JobTitleId { get; set; }
         public JobTitle JobTitle { get; set; }
 
-        // FIX: was string "LineManager" (email) — now a proper self-referencing FK
-        public string? LineManagerId { get; set; }
-        [ForeignKey("LineManagerId")]
-        public ApplicationUser LineManager { get; set; }
-
         public Gender? Gender { get; set; }
         public decimal? Salary { get; set; }
         public Seniority? Seniority { get; set; }

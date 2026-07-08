@@ -282,7 +282,6 @@
         Roles = roles,
         Username = user.UserName,
         Salary = user.Salary,
-        LineManager = user.LineManager?.UserName,
           Department = details.DepartmentName,
         JobTitle = details.Title,
         PhoneNumber = user.PhoneNumber,

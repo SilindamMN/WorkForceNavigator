@@ -14,7 +14,6 @@
     public Gender? Gender { get; set; }
         public int JobTitleId { get; set; }
         public int? TeamId { get; set; }
-        public int? LineManagerId { get; set; }
         public Seniority? Seniority { get; set; }
         public decimal? Salary { get; set; }
     public string  Phonenumber { get; set; }
