@@ -37,7 +37,7 @@
     public async Task<IEnumerable<LeaveAllocationDto>> GetLeaveAllocations()
     {
       var leaveAllocations = await (from la in dataContext.LeaveAllocations
-                                    join u in dataContext.Users on la.EmployeeId equals u.UserName
+                                    join u in dataContext.Users on la.EmployeeId equals u.Id
                                     select new LeaveAllocationDto
                                     {
                                        Username = u.UserName,
