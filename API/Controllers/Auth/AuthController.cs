@@ -156,19 +156,17 @@
 
     [HttpPut]
     [Route("update")]
-    public async Task<ActionResult<GeneralServiceResponseDto>> UpdateUserDetails(string updateUsername,int departmentId, [FromBody] UpdateUserDetailsDto userDetailsDto)
-    {
-      try
-      {
-        // Assuming you have a service class that contains the UpdateUserDetails method
-        var response = await authService.UpdateUserDetails(updateUsername, departmentId, userDetailsDto);
-        return Ok(response);
-      }
-      catch (Exception ex)
-      {
-        // Log the exception and return an error response
-        return BadRequest(new GeneralServiceResponseDto { });
-      }
+        public async Task<IActionResult> UpdateUserDetails(string updateUsername, int departmentId, [FromBody] UpdateUserDetailsDto userDetailsDto)
+        {
+            var updateResult = await authService.UpdateUserDetails(updateUsername, departmentId, userDetailsDto);
+            if (updateResult.IsSucceed)
+            {
+                return Ok(updateResult.Message);
+            }
+            else
+            {
+                return StatusCode(updateResult.StatusCode, updateResult.Message);
+            }
+        }
     }
-  }
 }
