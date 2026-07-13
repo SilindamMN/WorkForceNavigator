@@ -75,9 +75,10 @@
         return (GeneralServiceResponseDto)ResponseHelper.CreateResponse(false, 400, "Invalid number of days requested");
       }
 
-      var allocation = await dataContext.LeaveAllocations
-           .Where(x => x.Employee.UserName == user.Identity.Name && x.Id == createLeaveRequestDto.LeaveTypeId)
-           .FirstOrDefaultAsync();
+            // get allocation for the current user and leave type
+var allocation = await dataContext.LeaveAllocations
+    .Where(x => x.Employee.UserName == user.Identity.Name && x.LeaveTypeId == createLeaveRequestDto.LeaveTypeId)
+    .FirstOrDefaultAsync();
 
 
       if (allocation == null)
@@ -202,11 +203,11 @@
 
       if (status == Status.Declined)
       {
-        await AddLeaveDays(leaveRequestDetails.UserName, leaveRequestDetails.Id, leaveRequestEntity.NumberOfDays);
+        await AddLeaveDays(leaveRequestDetails.UserName, (int)leaveRequestDetails.LeaveTypeId, leaveRequestEntity.NumberOfDays);
       }
       else if (status == Status.Approved)
       {
-        await DeductLeaveDays(leaveRequestDetails.UserName, leaveRequestDetails.Id, leaveRequestEntity.NumberOfDays);
+        await DeductLeaveDays(leaveRequestDetails.UserName, (int)leaveRequestDetails.LeaveTypeId, leaveRequestEntity.NumberOfDays);
       }
       // Save the updated entity to the database
       await dataContext.SaveChangesAsync();
