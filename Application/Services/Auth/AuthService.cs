@@ -95,7 +95,7 @@
       var roles = await userManager.GetRolesAsync(user);
       var userInfo = GenerateUserInfoObject(user, roles);
 
-      await logService.SaveNewLog(user.UserName, "New Login");
+     // await logService.SaveNewLog(user.UserName, "New Login");
       return new LoginServiceResponseDto { NewToken = newToken, UserInfo = await userInfo };
     }
 
