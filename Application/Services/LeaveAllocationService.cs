@@ -93,6 +93,7 @@
           .Where(x => x.Employee.FirstName == username) // Filter by username
           .Select(x => new EmployeeLeaveAllocationDto
           {
+              LeaveTypeId =x.LeaveTypeId,
             NumberOfDays = x.NumberOfDays,
             LeaveName = x.LeaveType.Name,
           })
@@ -114,7 +115,7 @@
           .Where(x => x.Employee.UserName == User.Identity.Name) // Filter by username
           .Select(x => new EmployeeLeaveAllocationDto
           {
-            Id = x.Id,
+            LeaveTypeId = x.LeaveTypeId,
             NumberOfDays = x.NumberOfDays,
             LeaveName = x.LeaveType.Name,
           })
