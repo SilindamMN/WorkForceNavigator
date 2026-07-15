@@ -101,7 +101,7 @@ namespace API.Controllers
       }
     }
 
-    [HttpPost]
+    [HttpPut]
     [Route("UpdateLeaveRequest")]
     [Authorize(Roles = StaticUserRoles.ADMIN)]
     public async Task<IActionResult> UpdateLeaveRequest(int leaveRequestId, [FromBody] UpdateLeaveRequestDto updateLeaveRequestDto)
