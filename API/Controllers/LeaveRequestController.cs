@@ -120,7 +120,7 @@ namespace API.Controllers
     [HttpPost]
     [Route("ProcessLeaveRequest")]
     [Authorize(Roles = StaticUserRoles.ADMIN)]
-    public async Task<IActionResult> ProcessLeaveRequest(int leaveRequestId, [FromBody] Status status)
+    public async Task<IActionResult> ProcessLeaveRequest(int leaveRequestId, Status status)
     {
       var processLeaveRequest = await leaveRequestService.ProcessLeaveRequest(User, leaveRequestId, status);
       if (processLeaveRequest.IsSucceed)
