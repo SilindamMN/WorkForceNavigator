@@ -171,49 +171,20 @@
       };
     }
 
-        public async Task<IEnumerable<TimesheetDetailDto>> GetWeeklyProjectHours(
-          ClaimsPrincipal user,
-          int weekOffSet)
-        {
-            DateTime today = DateTime.Today;
+    public async Task<IEnumerable<DailyProjectTotalDto>> GetWeeklyProjectHours(ClaimsPrincipal user, int weekOffSet)
+    {
+      DateTime today = DateTime.Today;
+      DateTime startOfWeek = today.AddDays(-(int)today.DayOfWeek + (int)DayOfWeek.Monday).AddDays(7 * weekOffSet);
+      DateTime endOfWeek = startOfWeek.AddDays(4);
 
-            DateTime startOfWeek = today
-                .AddDays(-(int)today.DayOfWeek + (int)DayOfWeek.Monday)
-                .AddDays(7 * weekOffSet);
+      List<DailyProjectTotalDto> weeklyProjectTotalHoursList = new List<DailyProjectTotalDto>();
 
-            DateTime endOfWeek = startOfWeek.AddDays(4);
-
-
-            var timesheetEntries = await (
-                from ts in dataContext.TimesheetEntries
-                join p in dataContext.Projects
-                    on ts.ProjectId equals p.Id
-
-                where ts.TimesheetDate.Date >= startOfWeek.Date
-                      && ts.TimesheetDate.Date <= endOfWeek.Date
-                      && ts.Username == user.Identity.Name
-
-                orderby ts.TimesheetDate
-
-                select new TimesheetDetailDto
-                {
-                    Id = ts.Id,
-                    TimesheetDate = ts.TimesheetDate,
-                    DayName = ts.TimesheetDate.DayOfWeek.ToString(),
-
-                    Username = ts.Username,
-
-                    Description = ts.Description,
-
-                    TimeSpent = ts.TimeSpent,
-
-                    ProjectId = ts.ProjectId,
-
-                    ProjectName = p.ProjectName
-                }
-
-            ).ToListAsync();
-            return timesheetEntries;
-        }
+      for (DateTime day = startOfWeek; day <= endOfWeek; day = day.AddDays(1))
+      {
+        var dailyProjectHours = await GetDailyProjectHours(user, day);
+        weeklyProjectTotalHoursList.Add(dailyProjectHours);
+      }
+      return weeklyProjectTotalHoursList;
     }
+  }
 }
