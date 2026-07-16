@@ -18,6 +18,6 @@
     Task<IEnumerable<TimesheetDetailDto>> GetTimesheetEntries(ClaimsPrincipal User,DateTime date);
     Task<IEnumerable<TimesheetDetailDto>> GetWeeklyTimesheetEntries(ClaimsPrincipal User);
     Task<DailyProjectTotalDto> GetDailyProjectHours(ClaimsPrincipal user, DateTime date);
-    Task<IEnumerable<DailyProjectTotalDto>> GetWeeklyProjectHours(ClaimsPrincipal user,int weekOffSet);
+    Task<IEnumerable<TimesheetDetailDto>> GetWeeklyProjectHours(ClaimsPrincipal user,int weekOffSet);
   }
 }
