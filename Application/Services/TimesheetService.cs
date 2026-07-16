@@ -35,45 +35,34 @@
       this.genericService = genericService;
     }
 
-    public async Task<IEnumerable<GroupedTimesheetDetailDto>> GetTimesheetEntries(ClaimsPrincipal User, DateTime date)
-    {
+        public async Task<IEnumerable<TimesheetDetailDto>> GetTimesheetEntries(
+           ClaimsPrincipal user,
+           DateTime date)
+        {
+            var entries = await (
+                from ts in dataContext.TimesheetEntries
+                join p in dataContext.Projects
+                    on ts.ProjectId equals p.Id
+                where ts.TimesheetDate.Date == date.Date
+                      && ts.Username == user.Identity.Name
+                orderby ts.TimesheetDate, ts.Id
+                select new TimesheetDetailDto
+                {
+                    Id = ts.Id,
+                    TimesheetDate = ts.TimesheetDate,
+                    DayName = ts.TimesheetDate.DayOfWeek.ToString(),
+                    Username = ts.Username,
+                    Description = ts.Description,
+                    TimeSpent = ts.TimeSpent,
+                    ProjectId = ts.ProjectId,
+                    ProjectName = p.ProjectName
+                })
+                .ToListAsync();
 
-      // Assuming dataContext is properly initialized and contains the necessary data
-      var timesheetEntries = (from ts in dataContext.TimesheetEntries
-                              join p in dataContext.Projects
-                              on ts.ProjectId equals p.Id
-                              where (ts.TimesheetDate.Date == date.Date) && (ts.Username == User.Identity.Name)
-                              select new
-                              {
-                                TimesheetDate = ts.TimesheetDate.Date,  // Normalize date
-                                Username = ts.Username,
-                                Detail = new TimesheetDetailDto
-                                {
-                                  Description = ts.Description,
-                                  TimeSpent = ts.TimeSpent,
-                                  ProjectName = p.ProjectName
-                                }
-                              }).ToList();
+            return entries;
+        }
 
-      if (!timesheetEntries.Any())
-      {
-        return Enumerable.Empty<GroupedTimesheetDetailDto>();
-      }
-
-      // Grouping by Username and normalized TimesheetDate
-      var groupedEntries = timesheetEntries.GroupBy(x => new { x.Username, x.TimesheetDate })
-                                           .Select(g => new GroupedTimesheetDetailDto
-                                           {
-                                             TimesheetDate = g.Key.TimesheetDate,
-                                             Username = g.Key.Username,
-                                             DayName = g.Key.TimesheetDate.DayOfWeek.ToString(),
-                                             TimesheetDetails = g.Select(x => x.Detail).Where(d => d.TimeSpent > 0).ToList()  // Filter out zero time entries
-                                           });
-
-      return groupedEntries;
-    }
-
-    public async Task<int> GetTotalTimeSpentByDate(ClaimsPrincipal user, DateTime date)
+        public async Task<int> GetTotalTimeSpentByDate(ClaimsPrincipal user, DateTime date)
     {
       var username = user.Identity.Name;
       var timeSpent = dataContext.TimesheetEntries
@@ -82,7 +71,7 @@
       return timeSpent;
     }
 
-    public async Task<IEnumerable<GroupedTimesheetDetailDto>> GetWeeklyTimesheetEntries(ClaimsPrincipal User)
+    public async Task<IEnumerable<TimesheetDetailDto>> GetWeeklyTimesheetEntries(ClaimsPrincipal User)
     {
       // Get today's date
       DateTime today = DateTime.Today;
@@ -92,7 +81,7 @@
       DateTime endOfWeek = startOfWeek.AddDays(4);
 
       // Initialize a list to hold all timesheet entries for the week
-      List<GroupedTimesheetDetailDto> weeklyTimesheetEntries = new List<GroupedTimesheetDetailDto>();
+      List<TimesheetDetailDto> weeklyTimesheetEntries = new List<TimesheetDetailDto>();
 
       // Iterate over each day of the week from Monday to Friday
       for (DateTime day = startOfWeek; day <= endOfWeek; day = day.AddDays(1))

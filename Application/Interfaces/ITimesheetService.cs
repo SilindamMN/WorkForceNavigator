@@ -15,8 +15,8 @@
   {
     Task<GeneralServiceResponseDto> TimesheetEntry(ClaimsPrincipal User, TimesheetCreateModifyDto TimesheetEntry);
     Task<int> GetTotalTimeSpentByDate(ClaimsPrincipal User, DateTime date);
-    Task<IEnumerable<GroupedTimesheetDetailDto>> GetTimesheetEntries(ClaimsPrincipal User,DateTime date);
-    Task<IEnumerable<GroupedTimesheetDetailDto>> GetWeeklyTimesheetEntries(ClaimsPrincipal User);
+    Task<IEnumerable<TimesheetDetailDto>> GetTimesheetEntries(ClaimsPrincipal User,DateTime date);
+    Task<IEnumerable<TimesheetDetailDto>> GetWeeklyTimesheetEntries(ClaimsPrincipal User);
     Task<DailyProjectTotalDto> GetDailyProjectHours(ClaimsPrincipal user, DateTime date);
     Task<IEnumerable<DailyProjectTotalDto>> GetWeeklyProjectHours(ClaimsPrincipal user,int weekOffSet);
   }
