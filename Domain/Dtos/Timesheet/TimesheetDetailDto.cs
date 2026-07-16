@@ -1,26 +1,23 @@
 ﻿namespace Domain.Dtos.Timesheet
 {
-  using System;
-  using System.Collections.Generic;
-  using System.ComponentModel.DataAnnotations.Schema;
-  using System.Linq;
-  using System.Text;
-  using System.Threading.Tasks;
+    using System;
 
-  public class TimesheetDetailDto
-  {
-    public string Description { get; set; }
+    public class TimesheetDetailDto
+    {
+        public int Id { get; set; }
 
-    public int TimeSpent { get; set; }
+        public DateTime TimesheetDate { get; set; }
 
-    public string ProjectName { get; set; }
-  }
-  public class GroupedTimesheetDetailDto
-  {
-    public string DayName { get; set; }
-    public DateTime TimesheetDate { get; set; }
-    public string Username { get; set; }
+        public string DayName { get; set; } = string.Empty;
 
-    public List<TimesheetDetailDto> TimesheetDetails { get; set; }
-  }
+        public string Username { get; set; } = string.Empty;
+
+        public string Description { get; set; } = string.Empty;
+
+        public int TimeSpent { get; set; }
+
+        public int ProjectId { get; set; }
+
+        public string ProjectName { get; set; } = string.Empty;
+    }
 }

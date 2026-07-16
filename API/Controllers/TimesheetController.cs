@@ -37,7 +37,7 @@
     [HttpGet]
     [Route("DAte")]
     [Authorize]
-    public async Task<ActionResult<IEnumerable<GroupedTimesheetDetailDto>>> GetTimeSheetByDate(DateTime date)
+    public async Task<ActionResult<IEnumerable<TimesheetDetailDto>>> GetTimeSheetByDate(DateTime date)
     {
       DateTime dates = date.Date;
       var timesheets = await timesheetService.GetTimesheetEntries(User, dates);
@@ -52,7 +52,7 @@
     [HttpGet]
     [Route("Weekly")]
     [Authorize]
-    public async Task<ActionResult<IEnumerable<GroupedTimesheetDetailDto>>> GetWeeklyTimesheetEntries()
+    public async Task<ActionResult<IEnumerable<TimesheetDetailDto>>> GetWeeklyTimesheetEntries()
     {
       var timesheets = await timesheetService.GetWeeklyTimesheetEntries(User);
 
