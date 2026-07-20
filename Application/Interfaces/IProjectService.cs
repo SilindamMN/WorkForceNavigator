@@ -13,5 +13,6 @@
     Task<IEnumerable<ProjectDto>> GetAllProjectsWithClientsAsync();
     Task<GeneralServiceResponseDto> CreateProjectAsync(CreateProjectDto projectDto);
     Task<GeneralServiceResponseDto> UpdateProjectAsync(CreateProjectDto projectDto);
+        Task<IEnumerable<UserProjectsDto>> GetUserProject(string username);
   }
 }

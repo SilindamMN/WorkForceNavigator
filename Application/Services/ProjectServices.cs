@@ -160,5 +160,19 @@
     {
       throw new NotImplementedException();
     }
-  }
+
+        public async Task<IEnumerable<UserProjectsDto>> GetUserProject(string username)
+        {
+            var projects  = await  (from project in dataContext.Projects 
+                             join teams in dataContext.UserTeams on project.TeamId equals teams.TeamId
+                             join user in dataContext.Users on teams.UserId equals user.Id
+                             where user.UserName == username
+                             select new UserProjectsDto
+                             {
+                                 ProjectId = project.Id,
+                                 ProjectName = project.ProjectName
+                             }).ToListAsync();
+            return projects;
+        }
+    }
 }
