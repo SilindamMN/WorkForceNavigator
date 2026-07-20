@@ -86,5 +86,18 @@ namespace API.Controllers.Auth
       }
       return Ok(result);
     }
-  }
+        [HttpGet("username/{username}")]
+        public async Task<ActionResult<IEnumerable<UserProjectsDto>>> GetUserProject(string username)
+        {
+            try
+            {
+                var projects = await projectService.GetUserProject(username);
+                return Ok(projects);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"An error occurred while retrieving projects: {ex.Message}");
+            }
+        }
+    }
 }
