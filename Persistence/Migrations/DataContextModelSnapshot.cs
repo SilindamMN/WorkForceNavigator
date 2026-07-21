@@ -325,9 +325,6 @@ namespace Persistence.Migrations
                     b.Property<int>("ClientId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("ClientId1")
-                        .HasColumnType("int");
-
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("Date");
 
@@ -360,8 +357,6 @@ namespace Persistence.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("ClientId");
-
-                    b.HasIndex("ClientId1");
 
                     b.HasIndex("TeamId");
 
@@ -821,14 +816,10 @@ namespace Persistence.Migrations
             modelBuilder.Entity("Domain.Enties.Project", b =>
                 {
                     b.HasOne("Domain.Enties.TimeSheets.Client", "Client")
-                        .WithMany()
+                        .WithMany("Projects")
                         .HasForeignKey("ClientId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
-
-                    b.HasOne("Domain.Enties.TimeSheets.Client", null)
-                        .WithMany("Projects")
-                        .HasForeignKey("ClientId1");
 
                     b.HasOne("Domain.Enties.TimeSheets.Team", "Team")
                         .WithMany("Projects")
