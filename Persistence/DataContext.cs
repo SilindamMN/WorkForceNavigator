@@ -71,10 +71,10 @@
 
             // ---------------- Project Relations ----------------
             builder.Entity<Project>()
-                .HasOne(p => p.Client)
-                .WithMany()
-                .HasForeignKey(p => p.ClientId)
-                .OnDelete(DeleteBehavior.Restrict);
+    .HasOne(p => p.Client)
+    .WithMany(c => c.Projects)
+    .HasForeignKey(p => p.ClientId)
+    .OnDelete(DeleteBehavior.Restrict);
 
             builder.Entity<Project>()
                 .HasOne(p => p.Team)
