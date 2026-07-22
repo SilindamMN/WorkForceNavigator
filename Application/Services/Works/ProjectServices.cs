@@ -6,6 +6,7 @@
     using AutoMapper;
     using Domain.Dtos.General;
     using Domain.Enties.Work;
+    using Microsoft.AspNetCore.Http;
     using Microsoft.EntityFrameworkCore;
     using Persistence;
     using System;
@@ -31,23 +32,23 @@
         // Check if ProjectName exists
         if (await ProjectExistsAsync(projectDto.ProjectName))
         {
-          return ResponseHelper.CreateResponse(false, 400, $"Project Name{projectDto.ProjectName} does  exist.");
+          return ResponseHelper.CreateResponse(false, StatusCodes.Status404NotFound, $"Project Name{projectDto.ProjectName} does  exist.");
         }
         // Check if ClientId exists
         if (!await ClientExistsAsync(projectDto.ClientId))
         {
-          return ResponseHelper.CreateResponse(false, 400, $"Client with ID {projectDto.ClientId} does not exist.");
+          return ResponseHelper.CreateResponse(false, StatusCodes.Status404NotFound, $"Client with ID {projectDto.ClientId} does not exist.");
         }
 
         // Check if TeamId exists
         if (!await TeamExistsAsync(projectDto.TeamId))
         {
-          return ResponseHelper.CreateResponse(false, 400, $"Team with ID {projectDto.TeamId} does not exist.");
+          return ResponseHelper.CreateResponse(false, StatusCodes.Status404NotFound, $"Team with ID {projectDto.TeamId} does not exist.");
         }
         // Check if EndDate is after StartDate
         if (!IsEndDateAfterStartDate(projectDto.StartDate, projectDto.EndDate))
         {
-          return ResponseHelper.CreateResponse(false, 400, "End Date must be after Start Date.");
+          return ResponseHelper.CreateResponse(false, StatusCodes.Status404NotFound, "End Date must be after Start Date.");
         }
         var project = new CreateProjectDto
         {
@@ -84,19 +85,19 @@
         // Check if ClientId exists
         if (!await ClientExistsAsync(projectDto.ClientId))
         {
-          return ResponseHelper.CreateResponse(false, 400, $"Client with ID {projectDto.ClientId} does not exist.");
+          return ResponseHelper.CreateResponse(false, StatusCodes.Status404NotFound, $"Client with ID {projectDto.ClientId} does not exist.");
         }
 
         // Check if TeamId exists
         if (!await TeamExistsAsync(projectDto.TeamId))
         {
-          return ResponseHelper.CreateResponse(false, 400, $"Team with ID {projectDto.TeamId} does not exist.");
+          return ResponseHelper.CreateResponse(false, StatusCodes.Status404NotFound, $"Team with ID {projectDto.TeamId} does not exist.");
         }
 
         // Check if EndDate is after StartDate
         if (!IsEndDateAfterStartDate(projectDto.StartDate, projectDto.EndDate))
         {
-          return ResponseHelper.CreateResponse(false, 400, "End Date must be after Start Date.");
+          return ResponseHelper.CreateResponse(false, StatusCodes.Status404NotFound, "End Date must be after Start Date.");
         }
 
         // Update the project properties

@@ -12,27 +12,27 @@
     using Microsoft.AspNetCore.Mvc;
 
     [ApiController]
-  [Route("api/[controller]")]
-  public class TeamController : ControllerBase
-  {
-    private readonly IGenericService<Team, TeamDto> _teamService;
-    private readonly ITeamInterface teamInterface;
-
-    public TeamController(
-        IGenericService<Team, TeamDto> teamService,ITeamInterface teamInterface)
+    [Route("api/teams")]
+    public class TeamController : ControllerBase
     {
-      _teamService = teamService;
-      this.teamInterface = teamInterface;
-    }
+        private readonly IGenericService<Team, TeamDto> _teamService;
+        private readonly ITeamService teamInterface;
 
-    [HttpGet]
-    public async Task<IActionResult> GetAllTeams()
-    {
-      var result = await _teamService.GetAllAsync();
-      return Ok(result);
+        public TeamController(
+            IGenericService<Team, TeamDto> teamService, ITeamService teamInterface)
+        {
+            _teamService = teamService;
+            this.teamInterface = teamInterface;
         }
 
-        [HttpGet("{id}")]
+        [HttpGet]
+        public async Task<IActionResult> GetAllTeams()
+        {
+            var result = await _teamService.GetAllAsync();
+            return Ok(result);
+        }
+
+        [HttpGet("{id:int}")]
         public async Task<IActionResult> GetTeamById(int id)
         {
             var result = await _teamService.GetByIdAsync(id);
@@ -55,64 +55,64 @@
 
 
         [HttpPost]
-    public async Task<IActionResult> CreateTeam([FromBody] TeamDto teamDto)
-    {
-      var result = await teamInterface.CreateTeam(teamDto);
-      if (result.IsSucceed)
-      {
-        return Ok(result.Message);
-      }
-      return StatusCode(result.StatusCode, result.Message);
-    }
+        public async Task<IActionResult> CreateTeam([FromBody] TeamDto teamDto)
+        {
+            var result = await teamInterface.CreateTeam(teamDto);
+            if (result.IsSucceed)
+            {
+                return Ok(result.Message);
+            }
+            return StatusCode(result.StatusCode, result.Message);
+        }
 
-    [HttpPut("{id}")]
-    public async Task<IActionResult> UpdateTeam(int id, [FromBody] TeamDto updateTeamDto)
-    {
-      var result = await _teamService.UpdateAsync(id, updateTeamDto);
-      if (result.IsSucceed)
-      {
-        return Ok(result.Message);
-      }
-      return StatusCode(result.StatusCode, result.Message);
-    }
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateTeam(int id, [FromBody] TeamDto updateTeamDto)
+        {
+            var result = await _teamService.UpdateAsync(id, updateTeamDto);
+            if (result.IsSucceed)
+            {
+                return Ok(result.Message);
+            }
+            return StatusCode(result.StatusCode, result.Message);
+        }
 
-    [HttpDelete("{id}")]
-    public async Task<IActionResult> SoftDeleteTeam(int id)
-    {
-      var result = await _teamService.SoftDelete(id);
-      if (result.IsSucceed)
-      {
-        return Ok(result.Message);
-      }
-      return StatusCode(result.StatusCode, result.Message);
-    }
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> SoftDeleteTeam(int id)
+        {
+            var result = await _teamService.SoftDelete(id);
+            if (result.IsSucceed)
+            {
+                return Ok(result.Message);
+            }
+            return StatusCode(result.StatusCode, result.Message);
+        }
 
-    [HttpDelete("{id}/undo")]
-    public async Task<IActionResult> UnSoftDeleteTeam(int id)
-    {
-      var result = await _teamService.UndoSoftDeleteAsync(id);
-      if (result.IsSucceed)
-      {
-        return Ok(result.Message);
-      }
-      return StatusCode(result.StatusCode, result.Message);
-    }
+        [HttpDelete("{id}/undo")]
+        public async Task<IActionResult> UnSoftDeleteTeam(int id)
+        {
+            var result = await _teamService.UndoSoftDeleteAsync(id);
+            if (result.IsSucceed)
+            {
+                return Ok(result.Message);
+            }
+            return StatusCode(result.StatusCode, result.Message);
+        }
 
-    [HttpPost("add-member")]
-    public async Task<IActionResult> AddTeamMember(CreateUserTeamDto createUserTeamDto)
-    {
-      var response = await teamInterface.UpdateTeamMembership(createUserTeamDto);
-      return StatusCode(response.StatusCode, response);
-    }
+        [HttpPost("addmember")]
+        public async Task<IActionResult> AddTeamMember(CreateUserTeamDto createUserTeamDto)
+        {
+            var response = await teamInterface.UpdateTeamMembership(createUserTeamDto);
+            return StatusCode(response.StatusCode, response);
+        }
 
-    [HttpPost("remove-member")]
-    public async Task<IActionResult> RemoveTeamMember(CreateUserTeamDto createUserTeamDto)
-    {
-      var response = await teamInterface.UpdateTeamMembership(createUserTeamDto);
-      return StatusCode(response.StatusCode, response);
-    }
-        [HttpGet("by-department")]
-        public async Task<IActionResult> GetAvailableTeamsByDepartmentIdAsync([FromQuery] int  departmentId)
+        [HttpPost("remove-member")]
+        public async Task<IActionResult> RemoveTeamMember(CreateUserTeamDto createUserTeamDto)
+        {
+            var response = await teamInterface.UpdateTeamMembership(createUserTeamDto);
+            return StatusCode(response.StatusCode, response);
+        }
+        [HttpGet("available")]
+        public async Task<IActionResult> GetAvailableTeamsByDepartmentIdAsync([FromQuery] int departmentId)
         {
             var result = await teamInterface.GetAvailableTeamsByDepartmentIdAsync(departmentId);
 
@@ -125,10 +125,10 @@
         }
 
         [HttpGet("withdetails")]
-    public async Task<ActionResult<IEnumerable<TeamMemberDetailsDto>>> GetAllTeamsWithMembers()
-    {
-      var teams = await teamInterface.GetAllTeamsWithMembersAsync();
-      return Ok(teams);
+        public async Task<ActionResult<IEnumerable<TeamMemberDetailsDto>>> GetAllTeamsWithMembers()
+        {
+            var teams = await teamInterface.GetAllTeamsWithMembersAsync();
+            return Ok(teams);
+        }
     }
-  }
 }

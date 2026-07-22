@@ -9,13 +9,12 @@
     using System.Text;
     using System.Threading.Tasks;
 
-    public interface ITeamInterface
-  {
-    Task<GeneralServiceResponseDto> UpdateTeamMembership(CreateUserTeamDto  createUserTeamDto);
-    Task<IEnumerable<TeamMemberDetailsDto>> GetAllTeamsWithMembersAsync();
-    Task<GeneralServiceResponseDto> CreateTeam(TeamDto team);
+    public interface ITeamService
+    {
+        Task<GeneralServiceResponseDto> UpdateTeamMembership(CreateUserTeamDto createUserTeamDto);
+        Task<IEnumerable<TeamMemberDetailsDto>> GetAllTeamsWithMembersAsync();
+        Task<GeneralServiceResponseDto> CreateTeam(TeamDto team);
         Task<IEnumerable<UserTeamListDto>> GetTeamByUserIdAsync(string userId);
         Task<IEnumerable<UserTeamListApplicableDto>> GetAvailableTeamsByDepartmentIdAsync(int departmentId);
-
     }
 }

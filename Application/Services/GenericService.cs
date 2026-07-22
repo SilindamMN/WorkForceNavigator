@@ -11,6 +11,7 @@ namespace Application.Services
     using AutoMapper;
     using Domain.Dtos.General;
     using Domain.Enties;
+    using Microsoft.AspNetCore.Http;
     using Microsoft.EntityFrameworkCore;
     using Persistence;
 
@@ -41,7 +42,7 @@ namespace Application.Services
       catch (Exception ex)
       {
         // Log or handle the exception appropriately
-        return ResponseHelper.CreateResponse(false, 400, "Failed to create entity");
+        return ResponseHelper.CreateResponse(false, StatusCodes.Status400BadRequest, "Failed to create entity");
       }
     }
 
@@ -65,19 +66,19 @@ namespace Application.Services
           }
           else
           {
-            return ResponseHelper.CreateResponse(false, 400, "Entity with id {id} not found.");
+            return ResponseHelper.CreateResponse(false, StatusCodes.Status400BadRequest, "Entity with id {id} not found.");
           }
         }
         else
         {
           // The GetByIdAsync failed to find the entity
-          return ResponseHelper.CreateResponse(false, 400, "Failed for ${Id}");
+          return ResponseHelper.CreateResponse(false, StatusCodes.Status400BadRequest, "Failed for ${Id}");
         }
       }
       catch (Exception ex)
       {
         // Log or handle the exception appropriately
-        return ResponseHelper.CreateResponse(false, 400, "Failed for ${Id}");
+        return ResponseHelper.CreateResponse(false, StatusCodes.Status400BadRequest, "Failed for ${Id}");
       }
     }
 
@@ -89,7 +90,7 @@ namespace Application.Services
 
         if (entity == null)
         {
-          return ResponseHelper.CreateResponse(false, 400, "Not found  for ${Id}");
+          return ResponseHelper.CreateResponse(false, StatusCodes.Status400BadRequest, "Not found  for ${Id}");
         }
 
         // Soft delete by setting the 'IsDeleted' property to true
@@ -105,7 +106,7 @@ namespace Application.Services
       catch (Exception ex)
       {
         // Log or handle the exception appropriately
-        return ResponseHelper.CreateResponse(false, 400, "Failed for ${Id}");
+        return ResponseHelper.CreateResponse(false, StatusCodes.Status400BadRequest, "Failed for ${Id}");
       }
     }
 
@@ -136,7 +137,7 @@ namespace Application.Services
 
         if (entity == null)
         {
-          return ResponseHelper.CreateResponse(false, 400, "Not found  for ${Id}");
+          return ResponseHelper.CreateResponse(false, StatusCodes.Status400BadRequest, "Not found  for ${Id}");
         }
 
         // Soft delete by setting the 'IsDeleted' property to true
@@ -152,7 +153,7 @@ namespace Application.Services
       catch (Exception ex)
       {
         // Log or handle the exception appropriately
-        return ResponseHelper.CreateResponse(false, 400, "Failed for ${Id}");
+        return ResponseHelper.CreateResponse(false, StatusCodes.Status400BadRequest, "Failed for ${Id}");
       }
     }
 

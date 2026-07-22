@@ -38,7 +38,6 @@ namespace API.Controllers.Auth
 
     [HttpPost("CreateProject")]
     [ProducesResponseType(typeof(Project), 201)] // Define the response type for successful creation
-    [ProducesResponseType(typeof(IDictionary<string, string[]>), 400)] // Define the response type for validation errors
     public async Task<IActionResult> CreateNewProject([FromBody] CreateProjectDto projectDto)
     {
       var result = await projectService.CreateProjectAsync(projectDto);
@@ -52,8 +51,7 @@ namespace API.Controllers.Auth
     [HttpPost]
     [Route("UpdateProject")]
     [ProducesResponseType(typeof(Project), 200)] // Define the response type for successful update
-    [ProducesResponseType(typeof(IDictionary<string, string[]>), 400)] // Define the response type for validation errors
-    [ProducesResponseType(404)] // Define the response type for not found
+     [ProducesResponseType(404)] // Define the response type for not found
     public async Task<IActionResult> UpdateProject(int id, [FromBody] CreateProjectDto projectDto)
     {
       try

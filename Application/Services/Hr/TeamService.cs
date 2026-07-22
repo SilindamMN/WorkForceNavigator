@@ -14,32 +14,30 @@
     using Application.Dtos.Hr.Teams;
     using Application.Interfaces.Hr;
     using Domain.Enties.Hr;
+    using Microsoft.AspNetCore.Http;
 
-    public class TeamService : ITeamInterface
-  {
-    private readonly DataContext dataContext;
-    private readonly UserManager<ApplicationUser> userManager;
+    public class TeamService : ITeamService
+    {
+        private readonly DataContext dataContext;
+        private readonly UserManager<ApplicationUser> userManager;
 
         public TeamService(DataContext dataContext, UserManager<ApplicationUser> userManager)
-    {
-      this.dataContext = dataContext;
-      this.userManager = userManager;
+        {
+            this.dataContext = dataContext;
+            this.userManager = userManager;
         }
 
         public async Task<GeneralServiceResponseDto> UpdateTeamMembership(CreateUserTeamDto dto)
         {
-            try
-            {
                 var user = await userManager.FindByIdAsync(dto.UserId);
                 if (user == null)
-                    return ResponseHelper.CreateResponse(false, 400, "User not found.");
+                    return ResponseHelper.CreateResponse(false, StatusCodes.Status400BadRequest, "User not found.");
 
                 var team = await dataContext.Teams
                     .FirstOrDefaultAsync(x => x.Id == dto.TeamId);
                 if (team == null)
-                    return ResponseHelper.CreateResponse(false, 400, "Team not found.");
+                    return ResponseHelper.CreateResponse(false, StatusCodes.Status404NotFound, "Team not found.");
 
-                // REMOVE FLOW
                 if (dto.IsRemove)
                 {
                     var userTeams = await dataContext.UserTeams
@@ -48,15 +46,14 @@
                     dataContext.UserTeams.RemoveRange(userTeams);
                     dataContext.Users.Update(user);
                     await dataContext.SaveChangesAsync();
-                    return ResponseHelper.CreateResponse(true, 200, "Member removed successfully.");
+                    return ResponseHelper.CreateResponse(true, StatusCodes.Status200OK, "Member removed successfully.");
                 }
 
-                // ADD FLOW
                 if (await IsUserInTeam(dto.UserId, dto.TeamId))
-                    return ResponseHelper.CreateResponse(false, 400, "User already in this team.");
+                    return ResponseHelper.CreateResponse(false, StatusCodes.Status400BadRequest, "User already in this team.");
 
                 if (await IsUserInMaxTeams(dto.UserId))
-                    return ResponseHelper.CreateResponse(false, 400, "User already in max 3 teams.");
+                    return ResponseHelper.CreateResponse(false, StatusCodes.Status400BadRequest, "User already in max 3 teams.");
 
                 var userTeam = new UserTeam
                 {
@@ -64,25 +61,18 @@
                     TeamId = dto.TeamId,
                 };
 
-
                 dataContext.UserTeams.Add(userTeam);
                 await dataContext.SaveChangesAsync();
-                return ResponseHelper.CreateResponse(true, 200, "Member added successfully.");
-            }
-            catch (Exception ex)
-            {
-                return ResponseHelper.CreateResponse(false, 500, ex.Message);
-            }
+                return ResponseHelper.CreateResponse(true, StatusCodes.Status201Created, "Member added successfully.");
+            
         }
         public async Task<IEnumerable<TeamMemberDetailsDto>> GetAllTeamsWithMembersAsync()
-    {
-      try
-      {
+        {
                 var teamsWithMembers = await (from ut in dataContext.UserTeams
                                               join u in dataContext.Users on ut.UserId equals u.Id
-                                      join t in dataContext.Teams on ut.TeamId equals t.Id
+                                              join t in dataContext.Teams on ut.TeamId equals t.Id
                                               join jt in dataContext.JobTitles on u.JobTitleId equals jt.Id into jobTitles
-                                      from jt in dataContext.JobTitles.DefaultIfEmpty()
+                                              from jt in dataContext.JobTitles.DefaultIfEmpty()
                                               select new
                                               {
                                                   TeamName = t.TeamName,
@@ -94,149 +84,88 @@
                                                   }
                                               }).ToListAsync();
 
-        var teams = teamsWithMembers.GroupBy(t => new { t.TeamName,  })
-                                    .Select(g => new TeamMemberDetailsDto
-                                    {
-                                      TeamLeader = g.Key.TeamName,
-                                      TeamName = g.Key.TeamName,
-                                      MemberDetails = g.Select(m => m.Member).ToList()
-                                    }).ToList();
-
-        return teams;
-      }
-      catch (Exception ex)
-      {
-        // Log the exception (optional)
-        return Enumerable.Empty<TeamMemberDetailsDto>(); // Return an empty list in case of an error
-      }
-    }
-
-    public async Task<GeneralServiceResponseDto> CreateTeam(TeamDto teamDto)
-    {
-      try
-      {
-        // Check if a team with the same name already exists
-        var existingTeam = dataContext.Teams.FirstOrDefault(t => t.TeamName == teamDto.TeamName);
-
-        if (existingTeam != null)
-        {
-          return ResponseHelper.CreateResponse(false, 400, "A team with this name already exists.");
+                var teams = teamsWithMembers.GroupBy(t => new { t.TeamName, })
+                                            .Select(g => new TeamMemberDetailsDto
+                                            {
+                                                TeamLeader = g.Key.TeamName,
+                                                TeamName = g.Key.TeamName,
+                                                MemberDetails = g.Select(m => m.Member).ToList()
+                                            }).ToList();
+                return teams;
         }
 
-        // Check if the teamLeader is a Manager
-        var teamLeader = await userManager.FindByNameAsync(teamDto.TeamLeader);
-
-        if (teamLeader == null)
+        public async Task<GeneralServiceResponseDto> CreateTeam(TeamDto teamDto)
         {
-          return ResponseHelper.CreateResponse(false, 400, "User Name not found or invalid.");
-        }
+                var existingTeam = dataContext.Teams.FirstOrDefault(t => t.TeamName == teamDto.TeamName);
 
-        if (!await IsUserManager(teamDto.TeamLeader))
-        {
-          return ResponseHelper.CreateResponse(false, 403, "The assigned user does not qualify to be team leader");
-        }
+                if (existingTeam != null)
+                {
+                    return ResponseHelper.CreateResponse(false, StatusCodes.Status400BadRequest, "A team with this name already exists.");
+                }
+                var teamLeader = await userManager.FindByNameAsync(teamDto.TeamLeader);
 
-        // Check if the user is already a team leader of another team
-        if (await IsUserTeamLeaderInAnyTeam(teamDto.TeamLeader))
-        {
-          return ResponseHelper.CreateResponse(false, 400, "User is already a team leader of another team.");
-        }
+                if (teamLeader == null)
+                {
+                    return ResponseHelper.CreateResponse(false, StatusCodes.Status400BadRequest, "User Name not found or invalid.");
+                }
 
-        // Create a new team entity and populate it with data from the DTO
-        var newTeam = new Team
-        {
-          TeamName = teamDto.TeamName,
-          Description = teamDto.Description
-        };
+                if (!await IsUserManager(teamDto.TeamLeader))
+                {
+                    return ResponseHelper.CreateResponse(false, StatusCodes.Status403Forbidden, "The assigned user does not qualify to be team leader");
+                }
+                if (await IsUserTeamLeaderInAnyTeam(teamDto.TeamLeader))
+                {
+                    return ResponseHelper.CreateResponse(false, StatusCodes.Status400BadRequest, "User is already a team leader of another team.");
+                }
 
-        // Add the new team to the data context
-        await dataContext.Teams.AddAsync(newTeam);
-        await dataContext.SaveChangesAsync();
+                var newTeam = new Team
+                {
+                    TeamName = teamDto.TeamName,
+                    Description = teamDto.Description
+                };
 
-        // Retrieve the newly created team from the database to get its Id
-        var createdTeam = await dataContext.Teams.FindAsync(newTeam.Id);
+                await dataContext.Teams.AddAsync(newTeam);
+                await dataContext.SaveChangesAsync();
 
-        if (createdTeam == null)
-        {
-          return ResponseHelper.CreateResponse(false, 500, "Failed to retrieve the newly created team.");
-        }
+                var createdTeam = await dataContext.Teams.FindAsync(newTeam.Id);
 
-        // Fetch the user's ID based on the TeamLeader username/email provided in the TeamDto
-        var userId = await GetUserIdAsync(teamDto.TeamLeader);
+                if (createdTeam == null)
+                {
+                    return ResponseHelper.CreateResponse(false, StatusCodes.Status500InternalServerError, "Failed to retrieve the newly created team.");
+                }
 
-        if (userId == null)
-        {
-          return ResponseHelper.CreateResponse(false, 404, "User not found.");
-        }
+                var userId = await GetUserIdAsync(teamDto.TeamLeader);
+
+                if (userId == null)
+                {
+                    return ResponseHelper.CreateResponse(false, StatusCodes.Status404NotFound, "User not found.");
+                }
 
                 var newUserTeamRecord = new UserTeam
                 {
                     UserId = userId, // Assuming TeamLeader is the userId
-          TeamId = createdTeam.Id
+                    TeamId = createdTeam.Id
                 };
+                await dataContext.UserTeams.AddAsync(newUserTeamRecord);
 
-        // Add the new UserTeam record to the data context
-        await dataContext.UserTeams.AddAsync(newUserTeamRecord);
+                await dataContext.SaveChangesAsync();
 
-        // Save changes to the database
-        await dataContext.SaveChangesAsync();
-
-
-        // Return a success response
-        return ResponseHelper.CreateResponse(true, 201, "Team created successfully.");
-      }
-      catch (Exception ex)
-      {
-        // Return an error response in case of an exception
-        return ResponseHelper.CreateResponse(false, 500, $"An error occurred: {ex.Message}");
-      }
-    }
-
-    private async Task<bool> IsUserManager(string username)
-    {
-      try
-      {
-        // Retrieve the user by username
-        var user = await userManager.FindByNameAsync(username);
-
-        if (user == null)
-        {
-          // User not found
-          return false;
+            return ResponseHelper.CreateResponse(true, StatusCodes.Status201Created, "Team created successfully.");   
         }
+        private async Task<bool> IsUserManager(string username)
+        {
+                // Retrieve the user by username
+                var user = await userManager.FindByNameAsync(username);
 
-        // Check if the user has the Manager role
-        return await userManager.IsInRoleAsync(user, "Manager");
-      }
-      catch (Exception ex)
-      {
-        // Log or handle the exception as needed
-        // For simplicity, returning false if any exception occurs
-        return false;
-      }
-    }
+                if (user == null)
+                {
+                    // User not found
+                    return false;
+                }
 
-        // Fix for CS0029 and CS8603 in the AssignLineManager method
-        //private async Task<string?> AssignLineManager(int teamId)
-        //{
-        //    try
-        //    {
-        //        // Retrieve the TeamLeader's username for the specified team
-        //        var teamLeader = await dataContext.Teams
-        //            .Where(t => t.Id == teamId)
-        //            .Select(t => t.UserTeams)
-        //            .FirstOrDefaultAsync();
-
-        //        // Ensure the teamLeader is not null and return the UserName
-        //        return teamLeader;
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        // Log or handle the exception as needed
-        //        // For simplicity, returning null if any exception occurs
-        //        return null;
-        //    }
-        //}
+                // Check if the user has the Manager role
+                return await userManager.IsInRoleAsync(user, "Manager");
+        }
 
         // Private method to check if the user is already a member of the maximum allowed teams
         private async Task<bool> IsUserInMaxTeams(string userId)
@@ -251,11 +180,11 @@
 
         // Private method to check if the user is already a team leader in any team
         private async Task<bool> IsUserTeamLeaderInAnyTeam(string username)
-    {
-      // Count the number of teams the user is a team leader of
-      var teamLeaderCount = await dataContext.Teams.CountAsync(t => t.TeamName == username);
-      return teamLeaderCount > 0;
-    }
+        {
+            // Count the number of teams the user is a team leader of
+            var teamLeaderCount = await dataContext.Teams.CountAsync(t => t.TeamName == username);
+            return teamLeaderCount > 0;
+        }
 
         private async Task<bool> IsUserInTeam(string userId, int teamId)
         {
@@ -264,18 +193,15 @@
                 .AnyAsync(x => x.UserId == userId && x.TeamId == teamId);
         }
         private async Task<string> GetUserIdAsync(string userId)
-    {
-      // Attempt to find the user by email
-      var user = await userManager.FindByIdAsync(userId);
+        {
+            var user = await userManager.FindByIdAsync(userId);
 
-      // If the user is not found by email, attempt to find by username
-      if (user == null)
-      {
-        user = await userManager.FindByIdAsync(userId);
-      }
-      // Return the user's ID if found, otherwise return null
-      return user.Id;
-    }
+            if (user == null)
+            {
+                user = await userManager.FindByIdAsync(userId);
+            }
+            return user.Id;
+        }
 
         public async Task<IEnumerable<UserTeamListDto>> GetTeamByUserIdAsync(string userId)
         {
@@ -302,8 +228,8 @@
         {
             return await dataContext.Teams
                 .AsNoTracking()
-                .Where(x =>x.DepartmentId == departmentId)
-                 .Select(x=> new UserTeamListApplicableDto
+                .Where(x => x.DepartmentId == departmentId)
+                 .Select(x => new UserTeamListApplicableDto
                  {
                      Id = x.Id,
                      TeamName = x.TeamName
