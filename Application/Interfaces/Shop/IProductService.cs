@@ -4,7 +4,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Domain.Dtos.General;
-using Domain.Dtos.GeneralAdmin;
 using Domain.Dtos.Shop;
 
 namespace Application.Interfaces.Shop

@@ -1,19 +1,20 @@
 ﻿namespace Application.Services.Auth
 {
-  using Application.Interfaces.Auth;
-  using AutoMapper;
-  using Domain.Dtos.Account;
-  using Domain.Entities;
-  using Microsoft.EntityFrameworkCore;
-  using Persistence;
-  using System;
-  using System.Collections.Generic;
-  using System.Linq;
-  using System.Security.Claims;
-  using System.Text;
-  using System.Threading.Tasks;
+    using Application.Dtos.Account.Logs;
+    using Application.Interfaces.Auth;
+    using AutoMapper;
+    using Domain.Enties.Hr;
+    using Domain.Entities;
+    using Microsoft.EntityFrameworkCore;
+    using Persistence;
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Security.Claims;
+    using System.Text;
+    using System.Threading.Tasks;
 
-  public class LogService : ILogService
+    public class LogService : ILogService
   {
     private readonly DataContext dataContext;
     private readonly IMapper mapper;

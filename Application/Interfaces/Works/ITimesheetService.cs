@@ -1,0 +1,21 @@
+﻿namespace Application.Interfaces.Works
+{
+    using Application.Dtos.Work.Timesheet;
+    using Domain.Dtos.General;
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Security.Claims;
+    using System.Text;
+    using System.Threading.Tasks;
+
+    public interface ITimesheetService
+  {
+    Task<GeneralServiceResponseDto> TimesheetEntry(ClaimsPrincipal User, TimesheetCreateModifyDto TimesheetEntry);
+    Task<int> GetTotalTimeSpentByDate(ClaimsPrincipal User, DateTime date);
+    Task<IEnumerable<TimesheetDetailDto>> GetTimesheetEntries(ClaimsPrincipal User,DateTime date);
+    Task<IEnumerable<TimesheetDetailDto>> GetWeeklyTimesheetEntries(ClaimsPrincipal User);
+    Task<DailyProjectTotalDto> GetDailyProjectHours(ClaimsPrincipal user, DateTime date);
+    Task<IEnumerable<DailyProjectTotalDto>> GetWeeklyProjectHours(ClaimsPrincipal user,int weekOffSet);
+  }
+}

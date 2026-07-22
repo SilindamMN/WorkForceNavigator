@@ -1,11 +1,15 @@
 using Application.Interfaces;
 using Application.Interfaces.Auth;
-using Application.Interfaces.GenericInterfaces;
+using Application.Interfaces.Hr;
+using Application.Interfaces.Leaves;
 using Application.Interfaces.Shop;
+using Application.Interfaces.Works;
 using Application.Mappings;
 using Application.Services;
 using Application.Services.Auth;
-using Application.Services.GenericServices;
+using Application.Services.Hr;
+using Application.Services.Leaves;
+using Application.Services.Works;
 using Domain.Account;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;

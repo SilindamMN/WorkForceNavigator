@@ -1,22 +1,25 @@
 ﻿namespace Application.Mappings
 {
-  using AutoMapper;
-  using Domain.Account;
-  using Domain.Dtos.Account;
-  using Domain.Dtos.Departments;
-  using Domain.Dtos.GeneralAdmin;
-  using Domain.Dtos.JobTitles;
-  using Domain.Dtos.LeaveAllocation;
-  using Domain.Dtos.LeaveRequest;
+    using Application.Dtos.Account.Logs;
+    using Application.Dtos.Account.Messages;
+    using Application.Dtos.Account.Users;
+    using Application.Dtos.Hr.Clients;
+    using Application.Dtos.Hr.Departments;
+    using Application.Dtos.Hr.JobTitles;
+    using Application.Dtos.Hr.Teams;
+    using Application.Dtos.Leaves.LeaveAllocation;
+    using Application.Dtos.Leaves.LeaveRequest;
+    using Application.Dtos.Work.Projects;
+    using Application.Dtos.Work.Timesheet;
+    using AutoMapper;
+    using Domain.Account;
     using Domain.Dtos.Shop;
-    using Domain.Dtos.Timesheet;
-    using Domain.Enties;
-  using Domain.Enties.Leaves;
-    using Domain.Enties.TimeSheets;
-    using Domain.Entities;
-  using Domain.Entities.TimeSheets;
+    using Domain.Enties.hr;
+    using Domain.Enties.Hr;
+    using Domain.Enties.Leaves;
+    using Domain.Enties.Work;
 
-  public class MappingProfiles : Profile
+    public class MappingProfiles : Profile
   {
     public MappingProfiles()
     {

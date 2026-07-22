@@ -1,17 +1,17 @@
-﻿namespace Persistence
+﻿using Domain.Enties.hr;
+
+namespace Persistence
 {
     using Domain.Account;
-    using Domain.Dtos.GeneralAdmin;
-    using Domain.Enties;
+    using Domain.Enties.hr;
+    using Domain.Enties.Hr;
     using Domain.Enties.Leaves;
-    using Domain.Enties.TimeSheets;
-    using Domain.Entities;
-    using Domain.Entities.TimeSheets;
+    using Domain.Enties.Work;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.EntityFrameworkCore.Diagnostics;
-    using Department = Domain.Enties.Department;
+    using Department = Department;
 
     public class DataContext : IdentityDbContext<ApplicationUser>
     {

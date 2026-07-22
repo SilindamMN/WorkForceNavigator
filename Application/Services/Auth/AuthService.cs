@@ -1,28 +1,28 @@
 ﻿namespace Application.Services.Auth
 {
-  using Application.Helpers;
-  using Application.Interfaces;
-  using Application.Interfaces.Auth;
-  using Domain.Account;
-  using Domain.Constants;
-  using Domain.Dtos.Account;
-  using Domain.Dtos.General;
-  using Domain.Enums;
-  using Microsoft.AspNetCore.Identity;
-  using Microsoft.EntityFrameworkCore;
-  using Microsoft.Extensions.Configuration;
-  using Microsoft.Extensions.Options;
-  using Microsoft.IdentityModel.Tokens;
-  using Persistence;
-  using System;
-  using System.Collections.Generic;
-  using System.IdentityModel.Tokens.Jwt;
-  using System.Linq;
-  using System.Security.Claims;
-  using System.Text;
-  using System.Threading.Tasks;
+    using Application.Dtos.Account.Users;
+    using Application.Helpers;
+    using Application.Interfaces.Auth;
+    using Application.Interfaces.Leaves;
+    using Domain.Account;
+    using Domain.Constants;
+    using Domain.Constants.Enums;
+    using Domain.Dtos.General;
+    using Microsoft.AspNetCore.Identity;
+    using Microsoft.EntityFrameworkCore;
+    using Microsoft.Extensions.Configuration;
+    using Microsoft.Extensions.Options;
+    using Microsoft.IdentityModel.Tokens;
+    using Persistence;
+    using System;
+    using System.Collections.Generic;
+    using System.IdentityModel.Tokens.Jwt;
+    using System.Linq;
+    using System.Security.Claims;
+    using System.Text;
+    using System.Threading.Tasks;
 
-  public class AuthService : IAuthService
+    public class AuthService : IAuthService
   {
     private readonly DataContext dataContext;
     private readonly IUserJobTitleService userJobTitleService;

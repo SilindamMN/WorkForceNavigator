@@ -1,18 +1,17 @@
 ﻿namespace API.Controllers.Auth
 {
-  using Application.Interfaces;
-  using Application.Interfaces.Auth;
-  using Application.Services.Auth;
-  using Domain.Constants;
-  using Domain.Dtos.Account;
-  using Domain.Dtos.General;
-  using Domain.Dtos.JobTitles;
-  using Microsoft.AspNetCore.Authorization;
-  using Microsoft.AspNetCore.Http;
-  using Microsoft.AspNetCore.Mvc;
-  using Persistence;
+    using Application.Dtos.Account.Users;
+    using Application.Dtos.Hr.JobTitles;
+    using Application.Interfaces.Auth;
+    using Application.Services.Auth;
+    using Domain.Constants;
+    using Domain.Dtos.General;
+    using Microsoft.AspNetCore.Authorization;
+    using Microsoft.AspNetCore.Http;
+    using Microsoft.AspNetCore.Mvc;
+    using Persistence;
 
-  [Route("api/[controller]")]
+    [Route("api/[controller]")]
   [ApiController]
   public class AuthController : ControllerBase
   {

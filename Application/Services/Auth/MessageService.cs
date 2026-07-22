@@ -1,23 +1,24 @@
 ﻿namespace Application.Services.Auth
 {
-  using Application.Helpers;
-  using Application.Interfaces.Auth;
-  using AutoMapper;
-  using Domain.Account;
-  using Domain.Dtos.Account;
-  using Domain.Dtos.General;
-  using Domain.Entities;
-  using Microsoft.AspNetCore.Identity;
-  using Microsoft.EntityFrameworkCore;
-  using Persistence;
-  using System;
-  using System.Collections.Generic;
-  using System.Linq;
-  using System.Security.Claims;
-  using System.Text;
-  using System.Threading.Tasks;
+    using Application.Dtos.Account.Messages;
+    using Application.Helpers;
+    using Application.Interfaces.Auth;
+    using AutoMapper;
+    using Domain.Account;
+    using Domain.Dtos.General;
+    using Domain.Enties.Hr;
+    using Domain.Entities;
+    using Microsoft.AspNetCore.Identity;
+    using Microsoft.EntityFrameworkCore;
+    using Persistence;
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Security.Claims;
+    using System.Text;
+    using System.Threading.Tasks;
 
-  public class MessageService : IMessageService
+    public class MessageService : IMessageService
   {
     private readonly IMapper mapper;
     private readonly DataContext dataContext;

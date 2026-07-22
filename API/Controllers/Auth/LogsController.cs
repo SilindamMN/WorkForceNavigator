@@ -1,13 +1,13 @@
 ﻿namespace API.Controllers.Auth
 {
-  using Application.Interfaces.Auth;
-  using Domain.Constants;
-  using Domain.Dtos.Account;
-  using Microsoft.AspNetCore.Authorization;
-  using Microsoft.AspNetCore.Http;
-  using Microsoft.AspNetCore.Mvc;
+    using Application.Dtos.Account.Logs;
+    using Application.Interfaces.Auth;
+    using Domain.Constants;
+    using Microsoft.AspNetCore.Authorization;
+    using Microsoft.AspNetCore.Http;
+    using Microsoft.AspNetCore.Mvc;
 
-  [Route("api/[controller]")]
+    [Route("api/[controller]")]
   [ApiController]
   public class LogsController : ControllerBase
   {
