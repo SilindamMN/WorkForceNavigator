@@ -14,7 +14,7 @@
     using Application.Interfaces.Leaves;
 
     [ApiController]
-  [Route("api/[controller]")]
+  [Route("api/leave-requests")]
   public class LeaveRequestController : ControllerBase
   {
     private readonly ILeaveRequestService leaveRequestService;
@@ -26,18 +26,19 @@
       this.mapper = mapper;
     }
 
-    //[HttpGet]
-    //public async Task<ActionResult<IEnumerable<LeaveRequestDto>>> GetLeaveRequests()
-    //{
-    //  var logs = await leaveRequestService.GetAllLeaveRequests();
-    //  return Ok(logs);
-    //}
-    [HttpPost]
+        [HttpGet]
+        [Route("up-coming")]
+        public async Task<ActionResult<IEnumerable<LeaveRequestDto>>> GetLeaveRequests()
+        {
+            var logs = await leaveRequestService.GetUpComingLeavesAsync();
+            return Ok(logs);
+        }
+        [HttpPost]
     [Authorize]
-    [Route("Create")]
+    [Route("create")]
     public async Task<IActionResult> CreateLeaveRequest([FromBody] CreateLeaveRequestDto createLeave)
     {
-      var result = await leaveRequestService.CreateLeaveRequest(User,createLeave);
+      var result = await leaveRequestService.CreateLeaveRequestAsync(User,createLeave);
       if (result.IsSucceed)
       {
         return Ok(result.Message);
@@ -46,49 +47,40 @@
     }
 
     [HttpGet]
-    [Route("LeaveRequests")]
-    [Authorize]
-    public async Task<ActionResult<IEnumerable<LeaveRequestDto>>> GetLeaveRequests()
-    {
-      var leaveRequests = await leaveRequestService.GetAllLeaveRequests();
-      return Ok(leaveRequests);
-    }
-
-    [HttpGet]
-    [Route("LeaveRequestsByUsereName")]
+    [Route("by-username")]
     public async Task<ActionResult<IEnumerable<EmployeeLeaveAllocationDto>>> GetUserAllocationByUserNamesync(string userName)
     {
-      var leaveRequests = await leaveRequestService.GetLeaveRequestsByUser(userName);
+      var leaveRequests = await leaveRequestService.GetLeaveRequestsByUserAsync(userName);
 
       if (leaveRequests == null)
       {
-        return NotFound(); // Return HTTP 404 Not Found if user not found
+        return NotFound(); 
       }
 
-      return Ok(leaveRequests); // Return HTTP 200 OK with the allocations
+      return Ok(leaveRequests); 
     }
 
     [HttpGet]
-    [Route("MyLeaveRequests")]
+    [Route("mine")]
     [Authorize]
     public async Task<ActionResult<IEnumerable<LeaveRequestDto>>> GetMyLeaveRequests()
     {
-      var leaveRequests = await leaveRequestService.GetLeaveRequestsByUser(User.Identity.Name);
+      var leaveRequests = await leaveRequestService.GetLeaveRequestsByUserAsync(User.Identity.Name);
       var mappr = mapper.Map<IEnumerable<MyLeaveRequestDto>>(leaveRequests);
 
       if (mappr == null)
       {
-        return NotFound(); // Return HTTP 404 Not Found if user not found
+        return NotFound(); 
       }
 
-      return Ok(mappr); // Return HTTP 200 OK with the allocations
+      return Ok(mappr);
     }
 
     [HttpGet]
-    [Route("LeaveRequest/{requestId}")]
+    [Route("{requestId}")]
     public async Task<ActionResult<LeaveRequestDto>> GetLeaveRequestById([FromRoute] int requestId)
     {
-      var leaveRequests = await leaveRequestService.GetLeaveRequestsById(requestId);
+      var leaveRequests = await leaveRequestService.GetLeaveRequestsByIdAsync(requestId);
       if (leaveRequests is null)
       {
         return NotFound("leaveRequestId not found");
@@ -100,11 +92,11 @@
     }
 
     [HttpPut]
-    [Route("UpdateLeaveRequest")]
+    [Route("update")]
     [Authorize(Roles = StaticUserRoles.ADMIN)]
     public async Task<IActionResult> UpdateLeaveRequest(int leaveRequestId, [FromBody] UpdateLeaveRequestDto updateLeaveRequestDto)
     {
-      var updateLeaveRequest = await leaveRequestService.UpdateLeaveRequest(User, leaveRequestId, updateLeaveRequestDto);
+      var updateLeaveRequest = await leaveRequestService.UpdateLeaveRequestAsync(User, leaveRequestId, updateLeaveRequestDto);
       if (updateLeaveRequest.IsSucceed)
       {
         return Ok(updateLeaveRequest.Message);
@@ -116,11 +108,11 @@
     }
 
     [HttpPost]
-    [Route("ProcessLeaveRequest")]
+    [Route("process")]
     [Authorize(Roles = StaticUserRoles.ADMIN)]
     public async Task<IActionResult> ProcessLeaveRequest(int leaveRequestId, Status status)
     {
-      var processLeaveRequest = await leaveRequestService.ProcessLeaveRequest(User, leaveRequestId, status);
+      var processLeaveRequest = await leaveRequestService.ProcessLeaveRequestAsync(User, leaveRequestId, status);
       if (processLeaveRequest.IsSucceed)
       {
         return Ok(processLeaveRequest.Message);
@@ -131,13 +123,13 @@
       }
     }
 
-    [HttpGet("UpcomingLeaveRequest")]
+    [HttpGet("upcoming")]
     [Authorize]
     public async Task<ActionResult<IEnumerable<LeaveRequestDto>>> GetUpcomingLeaves()
     {
       try
       {
-        var upcomingLeaves = await leaveRequestService.GetUpComingLeaves();
+        var upcomingLeaves = await leaveRequestService.GetUpComingLeavesAsync();
         if (upcomingLeaves == null || !upcomingLeaves.Any())
         {
           return NotFound("No upcoming leaves found.");
@@ -151,11 +143,11 @@
     }
 
     [HttpPost]
-    [Route("deleteLeaveRequest")]
+    [Route("delete")]
     [Authorize(Roles = StaticUserRoles.ADMIN)]
     public async Task<IActionResult> DeleteLeaveRequest(int leaveRequestId)
     {
-      var deleteLeaveRequest = await leaveRequestService.DeleteLeaveRequest(User, leaveRequestId);
+      var deleteLeaveRequest = await leaveRequestService.DeleteLeaveRequestAsync(User, leaveRequestId);
       if (deleteLeaveRequest.IsSucceed)
       {
         return Ok(deleteLeaveRequest.Message);

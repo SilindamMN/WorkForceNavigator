@@ -28,7 +28,7 @@
         [Route("jobtitle/{username}")]
         public async Task<ActionResult<JobTitleDto>> GetJobTitleByUsername([FromRoute] string username)
         {
-            var user = await userJobTitleService.GetJobTitleForUser(username);
+            var user = await userJobTitleService.GetJobTitleForUserAsync(username);
             return user is null ? NotFound("Username Not Found") : Ok(user);    
         }
 

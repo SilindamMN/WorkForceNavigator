@@ -12,10 +12,10 @@ namespace Application.Interfaces.Leaves
 
     public interface ILeaveAllocationService
   {
-    Task<IEnumerable<EmployeeLeaveAllocationDto>> GetLeaveAllocationsByUsername(string username);
-    Task<IEnumerable<EmployeeLeaveAllocationDto>> GetMyLeavesAllocations(ClaimsPrincipal User);
-    Task<IEnumerable<LeaveAllocationDto>> GetLeaveAllocations();
-    Task<IEnumerable<LeaveAllocationDto>> GetLeaveAllocationsByLeaveType(string LeaveName);
-    Task<GeneralServiceResponseDto> CreateLeaveAllocation(string username);
+    Task<IEnumerable<EmployeeLeaveAllocationDto>> GetLeaveAllocationsByUsernameAsync(string username);
+    Task<IEnumerable<EmployeeLeaveAllocationDto>> GetMyLeavesAllocationsAsync(ClaimsPrincipal User);
+    Task<IEnumerable<LeaveAllocationDto>> GetLeaveAllocationsAsync();
+    Task<IEnumerable<LeaveAllocationDto>> GetLeaveAllocationsByLeaveTypeAsync(string LeaveName);
+    Task<GeneralServiceResponseDto> CreateLeaveAllocationAsync(string username);
   }
 }

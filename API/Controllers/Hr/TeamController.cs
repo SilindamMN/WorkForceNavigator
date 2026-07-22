@@ -79,7 +79,7 @@
         [HttpDelete("{id}")]
         public async Task<IActionResult> SoftDeleteTeam(int id)
         {
-            var result = await _teamService.SoftDelete(id);
+            var result = await _teamService.SoftDeleteAsync(id);
             if (result.IsSucceed)
             {
                 return Ok(result.Message);

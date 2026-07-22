@@ -10,7 +10,7 @@
 
     public interface ILogService
   {
-    Task SaveNewLog(string UserName, string Description);
+    Task <Repos> SaveNewLogAsync(string UserName, string Description);
     Task<IEnumerable<GetLogDto>> getLogsAsync();
     Task<IEnumerable<GetLogDto>> getMyLogsAsync(ClaimsPrincipal User);
   }

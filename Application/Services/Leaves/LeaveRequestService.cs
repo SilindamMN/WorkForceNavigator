@@ -31,7 +31,7 @@
       this.dataContext = dataContext;
       this.logService = logService;
     }
-    public async Task<IEnumerable<LeaveRequestDto>> GetAllLeaveRequests()
+    public async Task<IEnumerable<LeaveRequestDto>> GetAllLeaveRequestsAsync()
     {
       var leaveRequests = await (from request in dataContext.LeaveRequests
                                  join user in dataContext.Users on request.UserName equals user.UserName
@@ -58,7 +58,7 @@
       return leaveRequests;
     }
 
-    public async Task<GeneralServiceResponseDto> CreateLeaveRequest(ClaimsPrincipal user, CreateLeaveRequestDto createLeaveRequestDto)
+    public async Task<GeneralServiceResponseDto> CreateLeaveRequestAsync(ClaimsPrincipal user, CreateLeaveRequestDto createLeaveRequestDto)
     {
       // Check if the start date is before today
       if (createLeaveRequestDto.StartDate.Date <= DateTime.Today)
@@ -90,7 +90,7 @@ var allocation = await dataContext.LeaveAllocations
         return (GeneralServiceResponseDto)ResponseHelper.CreateResponse(false, StatusCodes.Status404NotFound, "You don't have enough days for the applied leave");
       }
       // Check for overlapping leave requests within the specified range
-      var overlappingLeave = await CheckForOverlappingLeaveRequest(user,createLeaveRequestDto.StartDate,createLeaveRequestDto.EndDate);
+      var overlappingLeave = await CheckForOverlappingLeaveRequestAsync(user,createLeaveRequestDto.StartDate,createLeaveRequestDto.EndDate);
 
       if (overlappingLeave != null)
       {
@@ -115,14 +115,14 @@ var allocation = await dataContext.LeaveAllocations
       await dataContext.SaveChangesAsync();
 
       dataContext.LeaveAllocations.Update(allocation);
-      await DeductLeaveDays(user?.Identity?.Name, createLeaveRequestDto.LeaveTypeId, requestedDays);
-      await logService.SaveNewLog(user.Identity.Name, "Leave Request");
+      await DeductLeaveDaysAsync(user?.Identity?.Name, createLeaveRequestDto.LeaveTypeId, requestedDays);
+      await logService.SaveNewLogAsync(user.Identity.Name, "Leave Request");
       await dataContext.SaveChangesAsync();
 
       return (GeneralServiceResponseDto)ResponseHelper.CreateResponse(true, 200, "LeaveRequestCreatedSuccessfully"); // Return the created leave request DTO
     }
 
-    public async Task<GeneralServiceResponseDto> DeleteLeaveRequest(ClaimsPrincipal User, int leaveRequestId)
+    public async Task<GeneralServiceResponseDto> DeleteLeaveRequestAsync(ClaimsPrincipal User, int leaveRequestId)
     {
       try
       {
@@ -140,7 +140,7 @@ var allocation = await dataContext.LeaveAllocations
         dataContext.LeaveRequests.Remove(leaveRequest);
         // Save changes to the database
         await dataContext.SaveChangesAsync();
-        await AddLeaveDays(leaveRequest.UserName, (int)leaveRequest.LeaveTypeId, leaveRequest.NumberOfDays);
+        await AddLeaveDaysAsync(leaveRequest.UserName, (int)leaveRequest.LeaveTypeId, leaveRequest.NumberOfDays);
         // Return success result
         return ResponseHelper.CreateResponse(false, StatusCodes.Status404NotFound, "Delete Successfully");
       }
@@ -151,7 +151,7 @@ var allocation = await dataContext.LeaveAllocations
       }
     }
 
-    public async Task<LeaveRequestDto> GetLeaveRequestsById(int requestId)
+    public async Task<LeaveRequestDto> GetLeaveRequestsByIdAsync(int requestId)
     {
       var leaveRequests = await (from request in dataContext.LeaveRequests
                                  join user in dataContext.Users on request.UserName equals user.UserName
@@ -173,7 +173,7 @@ var allocation = await dataContext.LeaveAllocations
       return leaveRequests;
     }
 
-    public async Task<GeneralServiceResponseDto> ProcessLeaveRequest(ClaimsPrincipal User,int leaveRequestId, Status status)
+    public async Task<GeneralServiceResponseDto> ProcessLeaveRequestAsync(ClaimsPrincipal User,int leaveRequestId, Status status)
     {
       // Fetch the actual entity from the database
       var leaveRequestEntity = await dataContext.LeaveRequests.FindAsync(leaveRequestId);
@@ -202,11 +202,11 @@ var allocation = await dataContext.LeaveAllocations
 
       if (status == Status.Declined)
       {
-        await AddLeaveDays(leaveRequestDetails.UserName, (int)leaveRequestDetails.LeaveTypeId, leaveRequestEntity.NumberOfDays);
+        await AddLeaveDaysAsync(leaveRequestDetails.UserName, (int)leaveRequestDetails.LeaveTypeId, leaveRequestEntity.NumberOfDays);
       }
       else if (status == Status.Approved)
       {
-        await DeductLeaveDays(leaveRequestDetails.UserName, (int)leaveRequestDetails.LeaveTypeId, leaveRequestEntity.NumberOfDays);
+        await DeductLeaveDaysAsync(leaveRequestDetails.UserName, (int)leaveRequestDetails.LeaveTypeId, leaveRequestEntity.NumberOfDays);
       }
       // Save the updated entity to the database
       await dataContext.SaveChangesAsync();
@@ -214,7 +214,7 @@ var allocation = await dataContext.LeaveAllocations
       return (GeneralServiceResponseDto)ResponseHelper.CreateResponse(true, 200, "Leave Processed Succesasfully");
     }
 
-    public async Task<GeneralServiceResponseDto> UpdateLeaveRequest(ClaimsPrincipal user, int leaveRequestId, UpdateLeaveRequestDto updateLeaveRequestDto)
+    public async Task<GeneralServiceResponseDto> UpdateLeaveRequestAsync(ClaimsPrincipal user, int leaveRequestId, UpdateLeaveRequestDto updateLeaveRequestDto)
     {
       // Get the original leave request
       var leaveRequest = await dataContext.LeaveRequests.FindAsync(leaveRequestId);
@@ -224,7 +224,7 @@ var allocation = await dataContext.LeaveAllocations
       }
 
       // Check if available days are sufficient
-      var result = await CheckAvailableDays(user, updateLeaveRequestDto.StartDate, updateLeaveRequestDto.EndDate);
+      var result = await CheckAvailableDaysAsync(user, updateLeaveRequestDto.StartDate, updateLeaveRequestDto.EndDate);
       if (!result.IsSuccess)
       {
         return (GeneralServiceResponseDto)ResponseHelper.CreateResponse(true, 200, result.Errors.First().Message);
@@ -233,7 +233,7 @@ var allocation = await dataContext.LeaveAllocations
       // Assuming 'User' is a ClaimsPrincipal object
       string specificUsername = user.FindFirstValue(ClaimTypes.Name);
 
-      var overlappingLeave = await CheckForOverlappingLeaveRequest(user, updateLeaveRequestDto.StartDate, updateLeaveRequestDto.EndDate);
+      var overlappingLeave = await CheckForOverlappingLeaveRequestAsync(user, updateLeaveRequestDto.StartDate, updateLeaveRequestDto.EndDate);
 
       if (overlappingLeave != null)
       {
@@ -241,7 +241,7 @@ var allocation = await dataContext.LeaveAllocations
       }
 
       // Subtract number of days from allocation
-      await AddLeaveDays(leaveRequest.UserName, (int)leaveRequest.LeaveTypeId, leaveRequest.NumberOfDays);
+      await AddLeaveDaysAsync(leaveRequest.UserName, (int)leaveRequest.LeaveTypeId, leaveRequest.NumberOfDays);
       // Update the leave request
       leaveRequest.StartDate = updateLeaveRequestDto.StartDate;
       leaveRequest.EndDate = updateLeaveRequestDto.EndDate;
@@ -252,7 +252,7 @@ var allocation = await dataContext.LeaveAllocations
 
       return (GeneralServiceResponseDto)ResponseHelper.CreateResponse(true, 200, "Leave updated successfully");
     }
-    private async Task<Result> CheckAvailableDays(ClaimsPrincipal User, DateTime startDate, DateTime endDate)
+    private async Task<Result> CheckAvailableDaysAsync(ClaimsPrincipal User, DateTime startDate, DateTime endDate)
     {
       var allocation = await dataContext.LeaveAllocations
           .Where(x => x.Employee.UserName == User.Identity.Name)
@@ -272,7 +272,7 @@ var allocation = await dataContext.LeaveAllocations
 
       return Result.Ok();
     }
-    private async Task<LeaveRequest> CheckForOverlappingLeaveRequest(ClaimsPrincipal user, DateTime StartDate,DateTime EndDate)
+    private async Task<LeaveRequest> CheckForOverlappingLeaveRequestAsync(ClaimsPrincipal user, DateTime StartDate,DateTime EndDate)
     {
       // Check for overlapping leave requests within the specified range
       var overlaps = await this.dataContext.LeaveRequests
@@ -282,7 +282,7 @@ var allocation = await dataContext.LeaveAllocations
           .FirstOrDefaultAsync();
       return overlaps;
     }
-    private async Task<Result> DeductLeaveDays(string username, int leaveTypeId, int days)
+    private async Task<Result> DeductLeaveDaysAsync(string username, int leaveTypeId, int days)
     {
       var allocation = await dataContext.LeaveAllocations
           .Where(x => x.Employee.UserName == username && x.LeaveType.Id == leaveTypeId)
@@ -300,7 +300,7 @@ var allocation = await dataContext.LeaveAllocations
       return Result.Ok();
     }
 
-    public async Task<IEnumerable<LeaveRequestDto>> GetLeaveRequestsByUser(string username)
+    public async Task<IEnumerable<LeaveRequestDto>> GetLeaveRequestsByUserAsync(string username)
     {
       var employee = await dataContext.Users.FirstOrDefaultAsync(x => x.UserName == username);
       if (employee == null)
@@ -324,7 +324,7 @@ var allocation = await dataContext.LeaveAllocations
           .ToListAsync();
       return leaveAllocations;
     }
-    private async Task<Result<int>> AddLeaveDays(string username, int leaveTypeId, int days)
+    private async Task<Result<int>> AddLeaveDaysAsync(string username, int leaveTypeId, int days)
     {
       var allocation = await dataContext.LeaveAllocations
           .Where(x => x.Employee.UserName == username && x.LeaveType.Id == leaveTypeId)
@@ -342,7 +342,7 @@ var allocation = await dataContext.LeaveAllocations
       return Result.Ok(allocation.NumberOfDays); // Return the updated number of days
     }
 
-    public async Task<IEnumerable<LeaveRequestDto>> GetUpComingLeaves()
+    public async Task<IEnumerable<LeaveRequestDto>> GetUpComingLeavesAsync()
     {
       var leaveRequests = await(from request in dataContext.LeaveRequests
                                 join user in dataContext.Users on request.UserName equals user.UserName

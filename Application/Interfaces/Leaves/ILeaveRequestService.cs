@@ -9,15 +9,15 @@
     using Domain.Dtos.General;
 
     public interface ILeaveRequestService
-  {
-    Task<IEnumerable<LeaveRequestDto>> GetAllLeaveRequests();
-    Task<IEnumerable<LeaveRequestDto>> GetUpComingLeaves();
-    Task<IEnumerable<LeaveRequestDto>> GetLeaveRequestsByUser(string username);
-    Task<LeaveRequestDto> GetLeaveRequestsById(int requestId);
-    Task<GeneralServiceResponseDto> CreateLeaveRequest(ClaimsPrincipal User,CreateLeaveRequestDto createLeaveRequestDto);
-    Task<GeneralServiceResponseDto> UpdateLeaveRequest(ClaimsPrincipal User, int leaveRequestId, UpdateLeaveRequestDto updateLeaveRequestDto);
-    Task<GeneralServiceResponseDto> DeleteLeaveRequest(ClaimsPrincipal User,int leaveRequestId);
-    Task<GeneralServiceResponseDto> ProcessLeaveRequest(ClaimsPrincipal User, int leaveRequestId, Status status);
+    {
+        Task<IEnumerable<LeaveRequestDto>> GetAllLeaveRequestsAsync();
+        Task<IEnumerable<LeaveRequestDto>> GetUpComingLeavesAsync();
+        Task<IEnumerable<LeaveRequestDto>> GetLeaveRequestsByUserAsync(string username);
+        Task<LeaveRequestDto> GetLeaveRequestsByIdAsync(int requestId);
+        Task<GeneralServiceResponseDto> CreateLeaveRequestAsync(ClaimsPrincipal User, CreateLeaveRequestDto createLeaveRequestDto);
+        Task<GeneralServiceResponseDto> UpdateLeaveRequestAsync(ClaimsPrincipal User, int leaveRequestId, UpdateLeaveRequestDto updateLeaveRequestDto);
+        Task<GeneralServiceResponseDto> DeleteLeaveRequestAsync(ClaimsPrincipal User, int leaveRequestId);
+        Task<GeneralServiceResponseDto> ProcessLeaveRequestAsync(ClaimsPrincipal User, int leaveRequestId, Status status);
 
-  }
+    }
 }

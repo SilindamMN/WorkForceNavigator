@@ -14,7 +14,7 @@ namespace API.Controllers.Hr
     using Microsoft.AspNetCore.Mvc;
 
     [ApiController]
-  [Route("api/[controller]")]
+  [Route("api/department")]
   public class DepartmentController : ControllerBase
   {
     private readonly IGenericService<Department, DepartmentDto> _DepartmentService;
@@ -53,7 +53,7 @@ namespace API.Controllers.Hr
     }
 
     [HttpGet]
-    [Route("DepartmentUserDetailJobTitle/{id}")]
+    [Route("jobtitle/{id}")]
     public async Task<ActionResult<List<UserDetailJobTitle>>> GetDepartmentUserDetailJobTitle(int id)
     {
       var result = await departmentService.GetUserJobTitleTeamsListAsync(id);
@@ -76,7 +76,7 @@ namespace API.Controllers.Hr
       return StatusCode(result.StatusCode, result.Message);
     }
 
-        [HttpPut("UpdateDepartment/{id}")]
+        [HttpPut("update/{id}")]
         public async Task<IActionResult> UpdateDepartment(int id, [FromBody] UpdateDepartmentDto updateDepartmentDto)
     {
       var result = await updateDepartmentService.UpdateAsync(id, updateDepartmentDto);
@@ -91,10 +91,10 @@ namespace API.Controllers.Hr
     }
 
     [HttpDelete]
-    [Route("DeleteDepartment")]
+    [Route("delete")]
     public async Task<IActionResult> SoftDeleteDepartment(int id)
     {
-      var result = await _DepartmentService.SoftDelete(id);
+      var result = await _DepartmentService.SoftDeleteAsync(id);
       if (result.IsSucceed)
       {
         return Ok(result.Message);
