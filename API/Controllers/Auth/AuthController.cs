@@ -102,7 +102,7 @@
           return Unauthorized("Invalid Token");
         }
       }
-      catch (Exception ex)
+      catch (Exception)
       {
         return Unauthorized("Invalid Token");
       }
