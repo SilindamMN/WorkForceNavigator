@@ -23,8 +23,7 @@
     public Status Status { get; set; }
 
     public int NumberOfDays { get; set; }
-    public ApplicationUser ApplicationUser { get; set; }
-    public string UserName { get; set; }
-    // Constructor that accepts UserName
+    public ApplicationUser? ApplicationUser { get; set; }
+    public string UserName { get; set; } = string.Empty;
   }
 }
