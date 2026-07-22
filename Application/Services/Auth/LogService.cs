@@ -37,7 +37,7 @@
       return mapper.Map<IEnumerable<GetLogDto>>(logs);
     }
 
-    public async Task SaveNewLog(string UserName, string Description)
+    public async Task SaveNewLogAsync(string UserName, string Description)
     {
       var newLog = new Log()
       {

@@ -46,7 +46,7 @@
           return ResponseHelper.CreateResponse(false, StatusCodes.Status404NotFound, $"Team with ID {projectDto.TeamId} does not exist.");
         }
         // Check if EndDate is after StartDate
-        if (!IsEndDateAfterStartDate(projectDto.StartDate, projectDto.EndDate))
+        if (!IsEndDateAfterStartDateAsync(projectDto.StartDate, projectDto.EndDate))
         {
           return ResponseHelper.CreateResponse(false, StatusCodes.Status404NotFound, "End Date must be after Start Date.");
         }
@@ -95,7 +95,7 @@
         }
 
         // Check if EndDate is after StartDate
-        if (!IsEndDateAfterStartDate(projectDto.StartDate, projectDto.EndDate))
+        if (!IsEndDateAfterStartDateAsync(projectDto.StartDate, projectDto.EndDate))
         {
           return ResponseHelper.CreateResponse(false, StatusCodes.Status404NotFound, "End Date must be after Start Date.");
         }
@@ -152,7 +152,7 @@
       return dataContext.Projects.AnyAsync(t => t.ProjectName == projectName);
     }
 
-    private bool IsEndDateAfterStartDate(DateTime startDate, DateTime endDate)
+    private bool IsEndDateAfterStartDateAsync(DateTime startDate, DateTime endDate)
     {
       return endDate > startDate;
     }
@@ -162,7 +162,7 @@
       throw new NotImplementedException();
     }
 
-        public async Task<IEnumerable<UserProjectsDto>> GetUserProject(string username)
+        public async Task<IEnumerable<UserProjectsDto>> GetUserProjectAsync(string username)
         {
             var projects  = await  (from project in dataContext.Projects 
                              join teams in dataContext.UserTeams on project.TeamId equals teams.TeamId

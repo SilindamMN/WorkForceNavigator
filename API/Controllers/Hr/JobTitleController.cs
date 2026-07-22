@@ -37,7 +37,7 @@
         [HttpGet]
         public async Task<IActionResult> GetAllJobTitles()
         {
-            var result = await userJobTitleService.GetJobTitles();
+            var result = await userJobTitleService.GetJobTitlesAsync();
             return Ok(result);
         }
 
@@ -77,7 +77,7 @@
         [HttpDelete("{id}")]
         public async Task<IActionResult> SoftDeleteJobTitle(int id)
         {
-            var result = await _JobTitleService.SoftDelete(id);
+            var result = await _JobTitleService.SoftDeleteAsync(id);
             if (result.IsSucceed)
             {
                 return Ok(result.Message);
@@ -105,14 +105,14 @@
         [HttpGet("username")]
         public async Task<JobTitleDto> GetUserJobTitle(string userName)
         {
-            var jobTitle = await userJobTitleService.GetJobTitleForUser(userName);
+            var jobTitle = await userJobTitleService.GetJobTitleForUserAsync(userName);
             return (JobTitleDto)jobTitle;
         }
 
-        [HttpPost("assignJobtitle")]
+        [HttpPost("assign-job-title")]
         public async Task<IActionResult> AssignJobTitleToUser([FromBody] AssignJobTitleDto request)
         {
-            var result = await userJobTitleService.AssignJobTitleToUser(request); if (result.IsSucceed)
+            var result = await userJobTitleService.AssignJobTitleToUserAsync(request); if (result.IsSucceed)
             {
                 return Ok(result.Message);
             }

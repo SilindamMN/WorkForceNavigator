@@ -13,11 +13,11 @@
 
     public interface IUserJobTitleService
     {
-        Task<GeneralServiceResponseDto> AssignJobTitleToUser(AssignJobTitleDto assignJobTitle);
-        Task<GeneralServiceResponseDto> AssignSeniorityToUser(int jobtitleId);
-        Task<JobTitleDto?> GetJobTitleForUser(string username);
-    Task<IEnumerable<ApplicationUser>> GetUsersByJobTitle(string title);
-    Task<IEnumerable<JobTitleDto>> GetJobTitles();
+        Task<GeneralServiceResponseDto> AssignJobTitleToUserAsync(AssignJobTitleDto assignJobTitle);
+        Task<GeneralServiceResponseDto> AssignSeniorityToUserAsync(int jobtitleId);
+        Task<JobTitleDto?> GetJobTitleForUserAsync(string username);
+        Task<IEnumerable<ApplicationUser>> GetUsersByJobTitleAsync(string title);
+        Task<IEnumerable<JobTitleDto>> GetJobTitlesAsync();
         Task<IEnumerable<JobTitleDto>> GetJobTitleByDepartmentAndSeniorityAsync(int departmentId, Seniority? seniority);
     }
 }

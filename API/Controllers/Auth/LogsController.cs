@@ -7,7 +7,7 @@
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
 
-    [Route("api/[controller]")]
+    [Route("api/logs")]
   [ApiController]
   public class LogsController : ControllerBase
   {

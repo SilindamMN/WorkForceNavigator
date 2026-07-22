@@ -11,16 +11,18 @@
     using Microsoft.AspNetCore.Mvc;
     using Persistence;
 
-    [Route("api/[controller]")]
+    [Route("api/auth")]
     [ApiController]
     public class AuthController : ControllerBase
     {
         private readonly IAuthService authService;
+        private readonly IUserService userService;
         private readonly IUserJobTitleService userJobTitleService;
 
-        public AuthController(IAuthService authService, IUserJobTitleService userJobTitleService)
+        public AuthController(IAuthService authService,IUserService userService,IUserJobTitleService userJobTitleService)
         {
             this.authService = authService;
+            this.userService = userService;
             this.userJobTitleService = userJobTitleService;
         }
 
@@ -28,7 +30,7 @@
         [Route("jobtitle/{username}")]
         public async Task<ActionResult<JobTitleDto>> GetJobTitleByUsername([FromRoute] string username)
         {
-            var user = await userJobTitleService.GetJobTitleForUser(username);
+            var user = await userJobTitleService.GetJobTitleForUserAsync(username);
             if (user is not null)
             {
                 return Ok(user);
@@ -72,7 +74,7 @@
         }
 
         [HttpPost]
-        [Route("UpdateRoles")]
+        [Route("update")]
         //[Authorize(Roles =StaticUserRoles.OwnerAdmin)]
         public async Task<IActionResult> UpdateRole([FromBody] UpdateRoleDto updateRoleDto)
         {
@@ -91,8 +93,6 @@
         [Route("me")]
         public async Task<ActionResult<LoginServiceResponseDto>> Me([FromBody] MeDto token)
         {
-            try
-            {
                 var me = await authService.MeAsync(token);
                 if (me is null)
                 {
@@ -103,25 +103,21 @@
                     return Unauthorized("Invalid Token");
                 }
             }
-            catch (Exception)
+
+        [HttpGet]
+        [Route("users/{username}")]
+        public async Task<ActionResult<UserDetailsDto>> GetUserDetailsByUsernames([FromRoute] string username)
+        {
+            var user = await userService.GetUserDetailsByUserNameAsync(username);
+           
+            if (user is not null)
             {
-                return Unauthorized("Invalid Token");
+                return Ok(user);
+            }
+            else
+            {
+                return NotFound("Username not found");
             }
         }
-
-        //[HttpGet]
-        //[Route("users/{username}")]
-        //public async Task<ActionResult<UserDetailsDto>> GetUserDetailsByUsernames([FromRoute] string username)
-        //{
-        //  var user = await authService.GetUserDetailsByUserNamesync(username);
-        //  if (user is not null)
-        //  {
-        //    return Ok(user);
-        //  }
-        //  else
-        //  {
-        //    return NotFound("Username not found");
-        //  }
-        //}
     }
 }

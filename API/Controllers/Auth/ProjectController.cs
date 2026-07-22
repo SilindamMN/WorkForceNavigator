@@ -85,7 +85,7 @@ namespace API.Controllers.Auth
         {
             try
             {
-                var projects = await projectService.GetUserProject(username);
+                var projects = await projectService.GetUserProjectAsync(username);
                 return Ok(projects);
             }
             catch (Exception ex)

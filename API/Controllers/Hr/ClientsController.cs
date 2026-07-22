@@ -13,99 +13,102 @@
     using Microsoft.AspNetCore.Mvc;
 
     [ApiController]
-  [Route("api/[controller]")]
-  public class ClientController : ControllerBase
-  {
-    private readonly IGenericService<Client, ClientDto> _ClientService;
-    private readonly IClientService clientService;
-
-    public ClientController(
-        IGenericService<Client, ClientDto> ClientService,
-        IClientService clientService)
+    [Route("api/clients")]
+    public class ClientController : ControllerBase
     {
-      _ClientService = ClientService;
-      this.clientService = clientService;
-    }
+        private readonly IGenericService<Client, ClientDto> _ClientService;
+        private readonly IClientService clientService;
 
-    [HttpGet]
-    public async Task<IActionResult> GetAllClients()
-    {
-      var result = await _ClientService.GetAllAsync();
+        public ClientController(
+            IGenericService<Client, ClientDto> ClientService,
+            IClientService clientService)
+        {
+            _ClientService = ClientService;
+            this.clientService = clientService;
+        }
 
-      return Ok(result);
-    }
+        [HttpGet]
+        public async Task<IActionResult> GetAllClients()
+        {
+            var result = await _ClientService.GetAllAsync();
 
-    [HttpGet("{id}")]
-    public async Task<IActionResult> GetClientById(int id)
-    {
-      var result = await _ClientService.GetByIdAsync(id);
-      if (result is null)
-      {
-        return NotFound("leaveRequestId not found");
-      }
-      else
-      {
-        return Ok(result);
-      }
-    }
+            return Ok(result);
+        }
 
-    [HttpPost]
-    public async Task<IActionResult> CreateClient([FromBody] ClientDto ClientDto)
-    {
-      var result = await _ClientService.CreateAsync(ClientDto);
-      if (result.IsSucceed)
-      {
-        return Ok(result.Message);
-      }
-      return StatusCode(result.StatusCode, result.Message);
-    }
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetClientById(int id)
+        {
+            var result = await _ClientService.GetByIdAsync(id);
+            if (result is null)
+            {
+                return NotFound("leaveRequestId not found");
+            }
+            else
+            {
+                return Ok(result);
+            }
+        }
 
-    [HttpPut("{id}")]
-    public async Task<IActionResult> UpdateClient(int id, [FromBody] ClientDto updateClientDto)
-    {
-      var result = await _ClientService.UpdateAsync(id, updateClientDto);
-      if (result.IsSucceed)
-      {
-        return Ok(result.Message);
-      }
-      else
-      {
-        return StatusCode(result.StatusCode, result.Message);
-      }
-    }
+        [HttpPost]
+        [Route("create")]
+        public async Task<IActionResult> CreateClient([FromBody] ClientDto ClientDto)
+        {
+            var result = await _ClientService.CreateAsync(ClientDto);
+            if (result.IsSucceed)
+            {
+                return Ok(result.Message);
+            }
+            return StatusCode(result.StatusCode, result.Message);
+        }
 
-    [HttpDelete("{id}")]
-    public async Task<IActionResult> SoftDeleteClient(int id)
-    {
-      var result = await _ClientService.SoftDelete(id);
-      if (result.IsSucceed)
-      {
-        return Ok(result.Message);
-      }
-      return StatusCode(result.StatusCode, result.Message);
-    }
+        [HttpPut]
+        [Route("update")]
+        public async Task<IActionResult> UpdateClient(int id, [FromBody] ClientDto updateClientDto)
+        {
+            var result = await _ClientService.UpdateAsync(id, updateClientDto);
+            if (result.IsSucceed)
+            {
+                return Ok(result.Message);
+            }
+            else
+            {
+                return StatusCode(result.StatusCode, result.Message);
+            }
+        }
 
-    [HttpDelete("{id}/undo")]
-    public async Task<IActionResult> UnSoftDeleteClient(int id)
-    {
-      var result = await _ClientService.UndoSoftDeleteAsync(id);
-      if (result.IsSucceed)
-      {
-        return Ok(result.Message);
-      }
-      return StatusCode(result.StatusCode, result.Message);
-    }
+        [HttpDelete]
+        [Route("delete")]
+        public async Task<IActionResult> SoftDeleteClient(int id)
+        {
+            var result = await _ClientService.SoftDeleteAsync(id);
+            if (result.IsSucceed)
+            {
+                return Ok(result.Message);
+            }
+            return StatusCode(result.StatusCode, result.Message);
+        }
 
-    [HttpGet]
-    [Route("ClientProjectDetails/{id}")]
-    public async Task<ActionResult<List<ClientDetailDto>>> GetClientProject(int id)
-    {
-      var result = await clientService.GetClientProjectAsync(id);
-      if (result == null || !result.Any())
-      {
-        return NotFound($"No details found for departmentId: {id}");
-      }
-      return Ok(result);
+        [HttpDelete("{id}/undo")]
+        public async Task<IActionResult> UnSoftDeleteClient(int id)
+        {
+            var result = await _ClientService.UndoSoftDeleteAsync(id);
+            if (result.IsSucceed)
+            {
+                return Ok(result.Message);
+            }
+            return StatusCode(result.StatusCode, result.Message);
+        }
+
+        [HttpGet]
+        [Route("ClientProjectDetails/{id}")]
+        public async Task<ActionResult<List<ClientDetailDto>>> GetClientProject(int id)
+        {
+            var result = await clientService.GetClientProjectAsync(id);
+            if (result == null || !result.Any())
+            {
+                return NotFound($"No details found for departmentId: {id}");
+            }
+            return Ok(result);
+        }
     }
-  }
 }
