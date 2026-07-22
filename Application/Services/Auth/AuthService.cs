@@ -43,7 +43,7 @@
       this.leaveAllocationService = leaveAllocationService;
     }
 
-    public async Task<UserInfoResult> GetUserDetailsByUserNamesync(string userName)
+    public async Task<UserInfoResult?> GetUserDetailsByUserNamesync(string userName)
     {
       var user = await userManager.FindByNameAsync(userName);
       if (user is null) { return null; }
@@ -76,7 +76,7 @@
 
     public async Task<IEnumerable<string>> GetUsernamesListAsync()
     {
-      return await userManager.Users.Select(u => u.UserName).ToListAsync();
+      return await userManager.Users.Select(u => u.UserName).ToListAsync() ;
     }
 
     public async Task<LoginServiceResponseDto> LoginAsync(LoginDto loginDto)
@@ -119,7 +119,7 @@
       var newToken = await GenerateJWTTokenAsync(user);
       var roles = await userManager.GetRolesAsync(user);
       var userInfo = GenerateUserInfoObject(user, roles);
-      await logService.SaveNewLog(user.UserName, "New Token Generated");
+      await logService.SaveNewLog(user?.UserName ?? string.Empty, "New Token Generated");
 
       return new LoginServiceResponseDto { NewToken = newToken, UserInfo = await userInfo };
     }
@@ -204,7 +204,7 @@
         }
         else return ResponseHelper.CreateResponse(false, 403, "You are not allowed to change role of this user");
       }
-      //USER IS THE OWNER
+
       else
       {
         if (userRoles.Any(x => x.Equals(StaticUserRoles.OWNER)))
@@ -228,9 +228,9 @@
            .Select(ut => new
            {
                ut.TeamId,
-               TeamName = ut.Team.TeamName,
+               TeamName = ut.Team.TeamName ?? string.Empty,
                DepartmentId = ut.Team.DepartmentId,
-               DepartmentName = ut.Team.Department.DepartmentName,
+               DepartmentName = ut.Team.Department.DepartmentName
            })
            .FirstOrDefaultAsync();
 
@@ -240,19 +240,19 @@
       {
         Id = user.Id,
         CreatedAt = DateTime.Now,
-        Email = user.Email,
+        Email = user.Email ?? string.Empty,
         FirstName = user.FirstName,
         LastName = user.LastName,
                 TeamId = currentUserTeam?.TeamId,
-                TeamName = currentUserTeam?.TeamName,
+                TeamName = currentUserTeam?.TeamName ?? string.Empty,
                 DepartmentId = currentUserTeam?.DepartmentId,
-                DepartmentName = currentUserTeam?.DepartmentName,
+                DepartmentName = currentUserTeam?.DepartmentName ?? string.Empty,
                 JobTitleId = user.JobTitleId,
-                JobTitleName = userTitle?.Title  ,
+                JobTitleName = userTitle?.Title ?? string.Empty ,
           Roles = roles,
         Seniority = user.Seniority,
         Username = user.UserName,
-        PhoneNumber = user.PhoneNumber,
+        PhoneNumber = user.PhoneNumber ?? string.Empty,
         Gender = (Gender?)user.Gender
       };
     }
@@ -303,27 +303,26 @@
       {
         Id = user.Id,
         JoiningDate = user.CreatedAt,
-        Email = user.Email,
+        Email = user.Email ?? string.Empty,
         FirstName = user.FirstName,
         LastName = user.LastName,
         Roles = roles,
         Username = user.UserName,
         Salary = user.Salary,
           DepartmentId = user.JobTitle?.DepartmentId,
-          Department = details.DepartmentName,
+          Department = details.DepartmentName ?? string.Empty,
           JobTitleId = user.JobTitleId,
         JobTitle = details.Title,
         TeamId = user.UserTeams.FirstOrDefault()?.TeamId,
-          TeamName = user.UserTeams?.FirstOrDefault()?.Team?.TeamName,
-          PhoneNumber = user.PhoneNumber,
-        Gender = (Gender)user.Gender,
+          TeamName = user.UserTeams?.FirstOrDefault()?.Team?.TeamName ?? string.Empty,
+          PhoneNumber = user?.PhoneNumber ?? string.Empty,
+          Gender = (Gender)user.Gender,
       };
       return userInfo;
     }
 
     public async Task<GeneralServiceResponseDto> UpdateUserDetails(string username,int departmentId, UpdateUserDetailsDto userDetailsDto)
     {
-      // Step 1: Retrieve the user from the database
       var user = await dataContext.Users
           .Include(u => u.JobTitle)
           .Where(x => x.UserName == username)
@@ -331,7 +330,6 @@
 
       if (user == null)
       {
-        // Handle the case where the user is not found
         throw new Exception("User not found");
       }
             var jobTitles = await userJobTitleService.GetJobTitleByDepartmentAndSeniorityAsync(departmentId,user.Seniority);
@@ -343,19 +341,16 @@
                 throw new Exception("Invalid Job Title for this department");
             }
 
-            // Step 2: Update the user entity with the new values
             user.FirstName = userDetailsDto.FirstName;
       user.LastName = userDetailsDto.LastName;
       user.Gender = userDetailsDto.Gender;
       user.Salary = userDetailsDto.Salary;
       user.PhoneNumber = userDetailsDto.Phonenumber;
-            user.JobTitleId = userDetailsDto.JobTitleId; // Assuming JobTitle has a Title property
+            user.JobTitleId = userDetailsDto.JobTitleId; 
             user.Seniority = Enum.Parse<Seniority>(
     jobTitles.First(x => x.JobTitleId == userDetailsDto.JobTitleId).Seniority);
-            // Step 3: Save the changes to the database
             await dataContext.SaveChangesAsync();
 
-      // Return a response indicating success
       return new GeneralServiceResponseDto { };
     }
   }

@@ -114,7 +114,7 @@ var allocation = await dataContext.LeaveAllocations
       await dataContext.SaveChangesAsync();
 
       dataContext.LeaveAllocations.Update(allocation);
-      await DeductLeaveDays(user.Identity.Name, createLeaveRequestDto.LeaveTypeId, requestedDays);
+      await DeductLeaveDays(user?.Identity?.Name, createLeaveRequestDto.LeaveTypeId, requestedDays);
       await logService.SaveNewLog(user.Identity.Name, "Leave Request");
       await dataContext.SaveChangesAsync();
 
@@ -178,7 +178,7 @@ var allocation = await dataContext.LeaveAllocations
       var leaveRequestEntity = await dataContext.LeaveRequests.FindAsync(leaveRequestId);
 
       //user cannot approve their own leave 
-      if (leaveRequestEntity.UserName == User.Identity.Name)
+      if (leaveRequestEntity?.UserName == User?.Identity?.Name)
       {
         return ResponseHelper.CreateResponse(false, 400, "You cannot process your own leave request");
       }

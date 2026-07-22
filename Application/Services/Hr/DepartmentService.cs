@@ -31,7 +31,7 @@
                            {
                              FirstName = u.FirstName,
                              LastName = u.LastName,
-                             Email = u.Email,
+                             Email = u.Email ?? string.Empty,
                              JobTitle = j.Title,
                              Team = tt.TeamName,
                            }).ToListAsync();
