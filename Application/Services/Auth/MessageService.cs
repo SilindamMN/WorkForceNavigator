@@ -34,7 +34,7 @@
     }
     public async Task<GeneralServiceResponseDto> CreateNewMessageAsync(ClaimsPrincipal user, CreateMessageDto createMessageDto)
     {
-      if (user.Identity.Name == createMessageDto.ReceiverUserName)
+      if (user?.Identity?.Name == createMessageDto.ReceiverUserName)
       {
         return ResponseHelper.CreateResponse(false, 400, "Sender and Receiver cannot be the same");
       }
@@ -47,7 +47,7 @@
 
       var message = new Message()
       {
-        SenderUsername = user.Identity.Name,
+        SenderUsername = user?.Identity?.Name ?? string.Empty,
         ReceiverUserName = createMessageDto.ReceiverUserName,
         Text = createMessageDto.Text
       };
@@ -67,7 +67,7 @@
 
     public async Task<IEnumerable<GetMessageDto>> GetMyMessageAsync(ClaimsPrincipal User)
     {
-      var loggedInUser = User.Identity.Name;
+      var loggedInUser = User?.Identity?.Name;
       var messages = await dataContext.Messages
           .Where(m => m.SenderUsername == loggedInUser || m.ReceiverUserName == loggedInUser)
           .OrderByDescending(m => m.CreatedAt)

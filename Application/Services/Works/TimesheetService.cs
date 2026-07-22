@@ -62,7 +62,7 @@
 
         public async Task<int> GetTotalTimeSpentByDate(ClaimsPrincipal user, DateTime date)
     {
-      var username = user.Identity.Name;
+      var username = user?.Identity?.Name;
       var timeSpent = dataContext.TimesheetEntries
                              .Where(t => t.TimesheetDate.Date == date.Date && t.Username == username)
                              .Sum(t => t.TimeSpent);
@@ -98,7 +98,7 @@
     {
       try
       {
-        var username = user.Identity.Name;
+        var username = user?.Identity?.Name;
 
         // Retrieve the project and ensure it exists
         var project = await genericService.GetByIdAsync(timesheetEntryDto.ProjectId);
@@ -121,7 +121,7 @@
           };
 
           var map = mapper.Map<TimesheetEntry>(timesheetEntry);
-          map.Username = username;
+          map.Username = username ?? string.Empty;
           dataContext.TimesheetEntries.Add(map);
           await dataContext.SaveChangesAsync();
 
@@ -138,7 +138,7 @@
 
     public async Task<DailyProjectTotalDto> GetDailyProjectHours(ClaimsPrincipal user, DateTime date)
     {
-      var username = user.Identity.Name;
+      var username = user?.Identity?.Name;
 
       var timesheetEntries = dataContext.TimesheetEntries
           .Where(t => t.TimesheetDate.Date == date.Date && t.Username == username)
