@@ -9,9 +9,9 @@
   public class ClientDto
   {
     public int Id { get; set; }
-    public string ClientName { get; set; }
-    public string Phone { get; set; }
-    public string Fax { get; set; }
-    public string Email { get; set; }
+    public string ClientName { get; set; } = string.Empty.ToString();
+    public string Phone { get; set; } = string.Empty.ToString();
+    public string Fax { get; set; } = string.Empty.ToString();
+    public string Email { get; set; } = string.Empty.ToString();
   }
 }

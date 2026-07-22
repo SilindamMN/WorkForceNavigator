@@ -12,6 +12,6 @@
   {
     public int LeaveTypeId { get; set; }
     public int NumberOfDays { get; set; }
-    public string LeaveName { get; set; }
+    public string LeaveName { get; set; } = string.Empty;
   }
 }

@@ -8,7 +8,7 @@
 
     public class LoginServiceResponseDto
   {
-    public string NewToken  { get; set; }
-    public UserInfoResult UserInfo { get; set; }
+    public string NewToken { get; set; } = string.Empty;
+    public UserInfoResult UserInfo { get; set; } = new UserInfoResult();
   }
 }

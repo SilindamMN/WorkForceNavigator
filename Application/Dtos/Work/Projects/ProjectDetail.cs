@@ -8,6 +8,6 @@
 
   public class ProjectDetail
   {
-    public string HoursSpent { get; set; }
+    public string HoursSpent { get; set; } = string.Empty;
   }
 }
