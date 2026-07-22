@@ -9,8 +9,8 @@
   public class UserTeamListDto
     {
         public int Id { get; set; }
-        public string UserName { get; set; }
-        public string TeamName { get; set; }
-        public string TeamLeader { get; set; }
+        public string UserName { get; set; } = string.Empty;
+        public string TeamName { get; set; } = string.Empty;
+        public string TeamLeader { get; set; }  = string.Empty;
     }
 }

@@ -12,10 +12,10 @@
   {
     public int TotalHours { get; set; }
 
-    public HashSet<string> ProjectNames { get; set; }
+    public HashSet<string>? ProjectNames { get; set; }
 
     [Column(TypeName = "Date")]
     public DateTime TimesheetDate { get; set; }
-    public string  Day { get; set; }
+    public string  Day { get; set; } = string.Empty;
   }
 }

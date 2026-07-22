@@ -8,10 +8,10 @@
 
   public class ProjectDto
   {
-    public string ProjectName { get; set; }
-    public string ClientName { get; set; }
-    public string TeamName { get; set; }
-    public string Description { get; set; }
+    public string ProjectName { get; set; } = string.Empty; 
+    public string ClientName { get; set; } = string.Empty;
+    public string TeamName { get; set; } = string.Empty;
+    public string Description { get; set; } = string.Empty;
     public DateTime StartDate { get; set; }
     public DateTime EndDate { get; set; }
   }

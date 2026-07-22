@@ -7,7 +7,7 @@
   using System.Threading.Tasks;
   public class UpdateDepartmentDto
   {
-    public string DepartmentName { get; set; }
-    public string Description { get; set; }
+    public string DepartmentName { get; set; } = string.Empty;
+    public string Description { get; set; } = string.Empty;
   }
 }

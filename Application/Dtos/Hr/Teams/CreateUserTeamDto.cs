@@ -8,7 +8,7 @@
 
   public class CreateUserTeamDto
     {
-        public string UserId { get; set; }
+        public string UserId { get; set; } = string.Empty;
         public int TeamId { get; set; }
         public bool IsRemove { get; set; }
 

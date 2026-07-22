@@ -8,7 +8,7 @@
 
   public class AssignJobTitleDto
   {
-    public string username { get; set; }
+    public string username { get; set; } = string.Empty;
     public int jobTitleId { get; set; }
   }
 }

@@ -9,8 +9,8 @@
   {
         public int? JobTitleId { get; set; }
         public string? Title { get; set; }
-    public string DepartmentName { get; set; }
-    public string Description { get; set; }
-    public string Seniority { get; set; }
+    public string DepartmentName { get; set; } = string.Empty;
+    public string Description { get; set; } = string.Empty;
+    public string Seniority { get; set; } = string.Empty;
   }
 }

@@ -12,7 +12,7 @@
   {
     [Column(TypeName = "Date")]
     public DateTime TimesheetDate { get; set; }
-    public string Description { get; set; }
+    public string Description { get; set; } = string.Empty;
     public int TimeSpent { get; set; }
     public int ProjectId { get; set; }
   }

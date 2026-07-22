@@ -11,7 +11,7 @@
     [Column(TypeName = "Date")]
     public DateTime Date { get; set; }
     public int TotalHours { get; set; }
-    public string DayName { get; set; }
-    public HashSet<string> ProjectNames { get; set; }
+    public string DayName { get; set; } = string.Empty;
+    public HashSet<string>? ProjectNames { get; set; }
   }
 }
