@@ -9,6 +9,7 @@
     using Domain.Dtos.General;
     using Domain.Enties;
     using Domain.Enties.Leaves;
+    using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.EntityFrameworkCore;
     using Persistence;
@@ -55,7 +56,7 @@
 
       if (user == null)
       {
-        return ResponseHelper.CreateResponse(false, 400, "User not found");
+        return ResponseHelper.CreateResponse(false, StatusCodes.Status400BadRequest, "User not found");
       }
 
       // Retrieve all leave types
@@ -84,7 +85,7 @@
 
       if (employee == null)
       {
-        return (IEnumerable<EmployeeLeaveAllocationDto>)ResponseHelper.CreateResponse(false, 400, "User not found");
+        return (IEnumerable<EmployeeLeaveAllocationDto>)ResponseHelper.CreateResponse(false, StatusCodes.Status400BadRequest, "User not found");
       }
       var leaveAllocations = await dataContext.LeaveAllocations
           .Include(x => x.LeaveType) // Include related LeaveType entity
@@ -104,7 +105,7 @@
       var employee = await dataContext.Users.FirstOrDefaultAsync(x => x.UserName == User.Identity.Name);
       if (employee == null)
       {
-        return (IEnumerable<EmployeeLeaveAllocationDto>)ResponseHelper.CreateResponse(false, 400, "User not found");
+        return (IEnumerable<EmployeeLeaveAllocationDto>)ResponseHelper.CreateResponse(false, StatusCodes.Status400BadRequest, "User not found");
       }
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
@@ -130,7 +131,7 @@
 
       if (allocation is null)
       {
-        return (IEnumerable<LeaveAllocationDto>)ResponseHelper.CreateResponse(false, 400, "No Leave Allocations for this ");
+        return (IEnumerable<LeaveAllocationDto>)ResponseHelper.CreateResponse(false, StatusCodes.Status400BadRequest, "No Leave Allocations for this ");
       }
 
       var leaveAllocations = await (from la in dataContext.LeaveAllocations

@@ -8,6 +8,7 @@
     using Domain.Dtos.General;
     using Domain.Enties.Hr;
     using Domain.Entities;
+    using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.EntityFrameworkCore;
     using Persistence;
@@ -36,13 +37,13 @@
     {
       if (user?.Identity?.Name == createMessageDto.ReceiverUserName)
       {
-        return ResponseHelper.CreateResponse(false, 400, "Sender and Receiver cannot be the same");
+        return ResponseHelper.CreateResponse(false, StatusCodes.Status404NotFound, "Sender and Receiver cannot be the same");
       }
 
       var validReceiverName = await userManager.Users.AnyAsync(u => u.UserName == createMessageDto.ReceiverUserName);
       if (!validReceiverName)
       {
-        return ResponseHelper.CreateResponse(false, 400, "Receiver Username not valid");
+        return ResponseHelper.CreateResponse(false, StatusCodes.Status404NotFound, "Receiver Username not valid");
       }
 
       var message = new Message()

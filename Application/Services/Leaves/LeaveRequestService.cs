@@ -11,6 +11,7 @@
     using Domain.Enties.Leaves;
     using Domain.Entities;
     using FluentResults;
+    using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.EntityFrameworkCore;
     using Persistence;
@@ -51,7 +52,7 @@
 
       if (leaveRequests == null)
       {
-        return (IEnumerable<LeaveRequestDto>)ResponseHelper.CreateResponse(false, 400, "LeaveRequest Empty");
+        return (IEnumerable<LeaveRequestDto>)ResponseHelper.CreateResponse(false, StatusCodes.Status404NotFound, "LeaveRequest Empty");
       }
 
       return leaveRequests;
@@ -62,7 +63,7 @@
       // Check if the start date is before today
       if (createLeaveRequestDto.StartDate.Date <= DateTime.Today)
       {
-        return (GeneralServiceResponseDto)ResponseHelper.CreateResponse(false, 400, "Leave cannot start before today");
+        return (GeneralServiceResponseDto)ResponseHelper.CreateResponse(false, StatusCodes.Status404NotFound, "Leave cannot start before today");
       }
 
       int requestedDays = (int)(createLeaveRequestDto.EndDate.Date - createLeaveRequestDto.StartDate.Date).TotalDays + 1;
@@ -70,7 +71,7 @@
       // Check if requested days are greater than zero
       if (requestedDays <= 0)
       {
-        return (GeneralServiceResponseDto)ResponseHelper.CreateResponse(false, 400, "Invalid number of days requested");
+        return (GeneralServiceResponseDto)ResponseHelper.CreateResponse(false, StatusCodes.Status404NotFound, "Invalid number of days requested");
       }
 
             // get allocation for the current user and leave type
@@ -81,19 +82,19 @@ var allocation = await dataContext.LeaveAllocations
 
       if (allocation == null)
       {
-        return (GeneralServiceResponseDto)ResponseHelper.CreateResponse(false, 400, "Leave Type not allocated for the user");
+        return (GeneralServiceResponseDto)ResponseHelper.CreateResponse(false, StatusCodes.Status404NotFound, "Leave Type not allocated for the user");
       }
 
       if (requestedDays > allocation.NumberOfDays)
       {
-        return (GeneralServiceResponseDto)ResponseHelper.CreateResponse(false, 400, "You don't have enough days for the applied leave");
+        return (GeneralServiceResponseDto)ResponseHelper.CreateResponse(false, StatusCodes.Status404NotFound, "You don't have enough days for the applied leave");
       }
       // Check for overlapping leave requests within the specified range
       var overlappingLeave = await CheckForOverlappingLeaveRequest(user,createLeaveRequestDto.StartDate,createLeaveRequestDto.EndDate);
 
       if (overlappingLeave != null)
       {
-        return (GeneralServiceResponseDto)ResponseHelper.CreateResponse(false, 400, "Leave request overlaps with an existing leave request");
+        return (GeneralServiceResponseDto)ResponseHelper.CreateResponse(false, StatusCodes.Status404NotFound, "Leave request overlaps with an existing leave request");
       }
 
       //var name = this.userManager.FindByNameAsync(user.Identity.Name);
@@ -132,7 +133,7 @@ var allocation = await dataContext.LeaveAllocations
         if (leaveRequest == null)
         {
           // Leave request not found
-          return ResponseHelper.CreateResponse(false, 400, "Leave request not found.");
+          return ResponseHelper.CreateResponse(false, StatusCodes.Status404NotFound, "Leave request not found.");
         }
 
         // delete the leave request
@@ -141,12 +142,12 @@ var allocation = await dataContext.LeaveAllocations
         await dataContext.SaveChangesAsync();
         await AddLeaveDays(leaveRequest.UserName, (int)leaveRequest.LeaveTypeId, leaveRequest.NumberOfDays);
         // Return success result
-        return ResponseHelper.CreateResponse(false, 400, "Delete Successfully");
+        return ResponseHelper.CreateResponse(false, StatusCodes.Status404NotFound, "Delete Successfully");
       }
       catch (Exception ex)
       {
         // Log the exception or handle it as needed
-        return ResponseHelper.CreateResponse(false, 400, ex.Message);
+        return ResponseHelper.CreateResponse(false, StatusCodes.Status404NotFound, ex.Message);
       }
     }
 
@@ -180,17 +181,17 @@ var allocation = await dataContext.LeaveAllocations
       //user cannot approve their own leave 
       if (leaveRequestEntity?.UserName == User?.Identity?.Name)
       {
-        return ResponseHelper.CreateResponse(false, 400, "You cannot process your own leave request");
+        return ResponseHelper.CreateResponse(false, StatusCodes.Status404NotFound, "You cannot process your own leave request");
       }
       if (leaveRequestEntity == null)
       {
         // If the entity is null or IsDeleted is true, return an appropriate error message
-        return ResponseHelper.CreateResponse(false, 400, "Leave request not found.");
+        return ResponseHelper.CreateResponse(false, StatusCodes.Status404NotFound, "Leave request not found.");
       }
       if (leaveRequestEntity.IsDeleted == true)
       {
         // If the entity is null or IsDeleted is true, return an appropriate error message
-        return (GeneralServiceResponseDto)ResponseHelper.CreateResponse(false, 400, "The leave request has been deleted and cannot be processed.");
+        return (GeneralServiceResponseDto)ResponseHelper.CreateResponse(false, StatusCodes.Status404NotFound, "The leave request has been deleted and cannot be processed.");
       }
 
       // Update the status of the entity
@@ -304,7 +305,7 @@ var allocation = await dataContext.LeaveAllocations
       var employee = await dataContext.Users.FirstOrDefaultAsync(x => x.UserName == username);
       if (employee == null)
       {
-        return (IEnumerable<LeaveRequestDto>)ResponseHelper.CreateResponse(false, 400, "User not found");
+        return (IEnumerable<LeaveRequestDto>)ResponseHelper.CreateResponse(false, StatusCodes.Status404NotFound, "User not found");
       }
       var leaveAllocations = await dataContext.LeaveRequests
           .Include(x => x.LeaveType) // Include related LeaveType entity
@@ -362,7 +363,7 @@ var allocation = await dataContext.LeaveAllocations
 
       if (leaveRequests == null)
       {
-        return (IEnumerable<LeaveRequestDto>)ResponseHelper.CreateResponse(false, 400, "LeaveRequest Empty");
+        return (IEnumerable<LeaveRequestDto>)ResponseHelper.CreateResponse(false, StatusCodes.Status404NotFound, "LeaveRequest Empty");
       }
 
       return leaveRequests;
