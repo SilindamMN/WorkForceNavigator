@@ -1,6 +1,7 @@
 ﻿namespace Application.Interfaces.Auth
 {
     using Application.Dtos.Account.Logs;
+    using Domain.Dtos.General;
     using System;
     using System.Collections.Generic;
     using System.Linq;
@@ -10,7 +11,7 @@
 
     public interface ILogService
   {
-    Task <Repos> SaveNewLogAsync(string UserName, string Description);
+    Task <GeneralServiceResponseDto> SaveNewLogAsync(string UserName, string Description);
     Task<IEnumerable<GetLogDto>> getLogsAsync();
     Task<IEnumerable<GetLogDto>> getMyLogsAsync(ClaimsPrincipal User);
   }
