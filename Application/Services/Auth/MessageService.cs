@@ -55,7 +55,7 @@
 
       await dataContext.Messages.AddAsync(message);
       await dataContext.SaveChangesAsync();
-      await logService.SaveNewLog(user.Identity.Name, "Send Message");
+      await logService.SaveNewLogAsync(user.Identity.Name, "Send Message");
 
       return ResponseHelper.CreateResponse(true, 200, "Message Saved Successfully");
     }

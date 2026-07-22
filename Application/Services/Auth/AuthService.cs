@@ -85,7 +85,7 @@
             var newToken = await GenerateJWTTokenAsync(user);
             var roles = await userManager.GetRolesAsync(user);
             var userInfo = this.userService.GenerateUserInfoAsync(user, roles);
-            await logService.SaveNewLog(user?.UserName ?? string.Empty, "New Token Generated");
+            await logService.SaveNewLogAsync(user?.UserName ?? string.Empty, "New Token Generated");
 
             return new LoginServiceResponseDto { NewToken = newToken, UserInfo = await userInfo };
         }
@@ -116,8 +116,8 @@
                 return ResponseHelper.CreateResponse(false, StatusCodes.Status400BadRequest, errorString);
             }
             await userManager.AddToRoleAsync(user, StaticUserRoles.USER);
-            await logService.SaveNewLog(user.UserName, "Registed");
-            await leaveAllocationService.CreateLeaveAllocation(registerDto.Username);
+            await logService.SaveNewLogAsync(user.UserName, "Registed");
+            await leaveAllocationService.CreateLeaveAllocationAsync(registerDto.Username);
             return ResponseHelper.CreateResponse(true, StatusCodes.Status201Created, "User Registed Successfully");
         }
 
@@ -164,7 +164,7 @@
                     {
                         await userManager.RemoveFromRolesAsync(user, userRoles);
                         await userManager.AddToRoleAsync(user, updateRoleDto.NewRole.ToString());
-                        await logService.SaveNewLog(user.UserName, "Role update");
+                        await logService.SaveNewLogAsync(user.UserName, "Role update");
                         return ResponseHelper.CreateResponse(true, StatusCodes.Status200OK, "Role Updated Successfully");
                     }
                 }
@@ -181,7 +181,7 @@
                 {
                     await userManager.RemoveFromRolesAsync(user, userRoles);
                     await userManager.AddToRoleAsync(user, updateRoleDto.NewRole.ToString());
-                    await logService.SaveNewLog(user.UserName, "Role update");
+                    await logService.SaveNewLogAsync(user.UserName, "Role update");
                     return ResponseHelper.CreateResponse(true, StatusCodes.Status201Created, "Role Updated Successfully");
                 }
             }

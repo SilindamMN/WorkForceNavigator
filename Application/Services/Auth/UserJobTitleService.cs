@@ -1,5 +1,6 @@
 ﻿namespace Application.Services.Auth
 {
+    using Application.Dtos.Account.Users;
     using Application.Dtos.Hr.JobTitles;
     using Application.Helpers;
     using Application.Interfaces.Auth;
@@ -33,7 +34,7 @@
       return ResponseHelper.CreateResponse(true, 200, "JobTitle Assigned Successfully");
     }
 
-    public Task<IEnumerable<ApplicationUser>> GetUsersByJobTitle(string title)
+    public Task<IEnumerable<UserDetailsDto>> GetUsersByJobTitle(string title)
     {
       throw new NotImplementedException();
     }
@@ -93,6 +94,31 @@
                     Title = jt.Title,
                     Seniority = jt.Seniority.ToString()
                 }).ToListAsync();
+        }
+
+        public Task<GeneralServiceResponseDto> AssignJobTitleToUserAsync(AssignJobTitleDto assignJobTitle)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<GeneralServiceResponseDto> AssignSeniorityToUserAsync(int jobtitleId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<JobTitleDto?> GetJobTitleForUserAsync(string username)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<IEnumerable<UserDetailsDto>> GetUsersByJobTitleAsync(string title)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<IEnumerable<JobTitleDto>> GetJobTitlesAsync()
+        {
+            throw new NotImplementedException();
         }
     }
 }
