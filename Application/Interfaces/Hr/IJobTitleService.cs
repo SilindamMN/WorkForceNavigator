@@ -5,12 +5,12 @@
     using System.Threading.Tasks;
     public interface IJobTitleService
     {
-    Task<IEnumerable<JobTitleDto>> GetAllJobTitlesAsync();
+        Task<IEnumerable<JobTitleDto>> GetAllJobTitlesAsync();
         Task<JobTitleDto> GetJobTitleByIdAsync(int id);
-        Task<List<JobTitleDto>> GetJobTitleByDepartmentAsync(int departmentId);
+        Task<IEnumerable<JobTitleDto>> GetJobTitleByDepartmentAsync(int departmentId);
         Task<int> CreateJobTitleAsync(UpdateCreateJobTitleDto jobTitleDto);
-    Task UpdateJobTitleAsync(int id, UpdateCreateJobTitleDto jobTitleDto);
-    Task DeleteJobTitleAsync(int id);
-    Task  AssignJobTitle(AssignJobTitleDto jobTitleDto);
-  }
+        Task UpdateJobTitleAsync(int id, UpdateCreateJobTitleDto jobTitleDto);
+        Task DeleteJobTitleAsync(int id);
+        Task AssignJobTitle(AssignJobTitleDto jobTitleDto);
+    }
 }

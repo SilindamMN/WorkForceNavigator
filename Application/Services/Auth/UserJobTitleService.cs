@@ -28,7 +28,6 @@
     public async Task<GeneralServiceResponseDto> AssignJobTitleToUser(AssignJobTitleDto assignJobTitle)
     {
       var user = await dataContext.Users.FirstOrDefaultAsync(x => x.UserName == assignJobTitle.username);
-      //assign the jobTitle id
       user.JobTitleId = assignJobTitle.jobTitleId;
       await dataContext.SaveChangesAsync();
       return ResponseHelper.CreateResponse(true, 200, "JobTitle Assigned Successfully");
@@ -47,7 +46,6 @@
 
     }
 
-    //will get the jobTitle including department name
     private async Task<JobTitleDto?> GetJobTitleInfo(int jobTitleId)
     {
       return await (from jobTitle in dataContext.JobTitles
@@ -57,7 +55,7 @@
                     {
                       Title = jobTitle.Title,
                       DepartmentName = department.DepartmentName,
-                      Seniority = jobTitle.Seniority.ToString() // Assuming Seniority is an enum
+                      Seniority = jobTitle.Seniority.ToString() 
                     }).FirstOrDefaultAsync();
     }
 
@@ -83,7 +81,7 @@
             throw new Exception("JobTitleId is null for the user.");
         }
 
-        public async Task<List<JobTitleDto>> GetJobTitleByDepartmentAndSeniorityAsync(int departmentId, Seniority? seniority)
+        public async Task<IEnumerable<JobTitleDto>> GetJobTitleByDepartmentAndSeniorityAsync(int departmentId, Seniority? seniority)
         {
             return await dataContext.JobTitles
                 .AsNoTracking()
