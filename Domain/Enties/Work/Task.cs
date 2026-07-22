@@ -10,6 +10,6 @@
   public class Task : BaseEntity<int>
   {
     public int ProjectID { get; set; }
-    public string TaskName { get; set; }
+    public string TaskName { get; set; } = string.Empty;
   }
 }

@@ -9,7 +9,7 @@
 
   public class BaseEntity<TID>
   {
-    public TID Id { get; set; }
+        public TID Id { get; set; } =  default!;
 
     [Column(TypeName = "Date")]
     public DateTime CreatedAt  { get; set; }

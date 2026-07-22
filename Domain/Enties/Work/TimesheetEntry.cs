@@ -6,12 +6,12 @@ namespace Domain.Enties.Work
     using System;
     using System.ComponentModel.DataAnnotations.Schema;
     public class TimesheetEntry : BaseEntity<int>
-  {
-    public DateTime TimesheetDate { get;  set; } 
-    public string Username { get; set; }
-    public string Description { get; set; }
-    public int TimeSpent { get; set; }
-    public int ProjectId { get; set; }
-    public Project Project { get; set; } // Navigation property to Project
-  }
+    {
+        public DateTime TimesheetDate { get; set; }
+        public string Username { get; set; } = string.Empty;
+        public string Description { get; set; } = string.Empty;
+        public int TimeSpent { get; set; }
+        public int ProjectId { get; set; }
+        public Project? Project { get; set; }
+    }
 }

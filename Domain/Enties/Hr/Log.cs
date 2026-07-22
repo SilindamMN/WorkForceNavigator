@@ -10,7 +10,7 @@ namespace Domain.Enties.Hr
 
   public class Log : BaseEntity<int>
   {
-    public string? Username { get; set; }
-    public string Description { get; set; }
+    public string Username { get; set; } = string.Empty;
+        public string Description { get; set; } = string.Empty;
   }
 }

@@ -11,9 +11,9 @@
 
   public class LeaveAllocation : BaseEntity<int>
   {
-        public string EmployeeId { get; set; }
+        public required string EmployeeId { get; set; }
         [ForeignKey("EmployeeId")]
-        public ApplicationUser Employee { get; set; }
+        public ApplicationUser? Employee { get; set; }
         public int NumberOfDays { get; set; }
         public int LeaveTypeId { get; set; }
         [ForeignKey(nameof(LeaveTypeId))]

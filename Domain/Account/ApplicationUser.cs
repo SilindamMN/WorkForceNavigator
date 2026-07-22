@@ -8,15 +8,15 @@
     using System.ComponentModel.DataAnnotations.Schema;
     public class ApplicationUser : IdentityUser
   {
-        public string FirstName { get; set; }
-        public string LastName { get; set; }
+        public string FirstName { get; set; } = string.Empty;
+        public string LastName { get; set; } = string.Empty;
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow; 
 
         [NotMapped]
-        public IList<string> Roles { get; set; }
+        public IList<string>? Roles { get; set; }
 
         public int? JobTitleId { get; set; }
-        public JobTitle JobTitle { get; set; }
+        public JobTitle? JobTitle { get; set; }
 
         public Gender? Gender { get; set; }
         public decimal? Salary { get; set; }
