@@ -12,7 +12,7 @@
     Task <GeneralServiceResponseDto>UpdateAsync(int id, TDto updatedEntityDto);
     Task<GeneralServiceResponseDto> SoftDelete(int id);
     Task<TDto> GetByIdAsync(int id);
-    Task<GeneralServiceResponseDto> UndoSoftDeleteAsync(int id); // New method
+    Task<GeneralServiceResponseDto> UndoSoftDeleteAsync(int id); 
     Task<IEnumerable<TEntity>> GetPagedAsync(int pageNumber, int pageSize);
   }
 }
