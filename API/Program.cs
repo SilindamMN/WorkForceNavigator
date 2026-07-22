@@ -44,6 +44,7 @@ builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<ILeaveRequestService, LeaveRequestService>();
 builder.Services.AddScoped<ILeaveAllocationService, LeaveAllocationService>();
 builder.Services.AddScoped<ITeamInterface, TeamService>();
+builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IDepartmentService, DepartmentService>();
 builder.Services.AddScoped<IUserJobTitleService, UserJobTitleService>();
 builder.Services.AddScoped<ITimesheetService, TimesheetService>();
