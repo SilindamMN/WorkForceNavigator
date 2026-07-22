@@ -43,7 +43,7 @@ builder.Services.AddScoped<IMessageService, MessageService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<ILeaveRequestService, LeaveRequestService>();
 builder.Services.AddScoped<ILeaveAllocationService, LeaveAllocationService>();
-builder.Services.AddScoped<ITeamInterface, TeamService>();
+builder.Services.AddScoped<ITeamService, TeamService>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IDepartmentService, DepartmentService>();
 builder.Services.AddScoped<IUserJobTitleService, UserJobTitleService>();

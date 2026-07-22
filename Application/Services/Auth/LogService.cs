@@ -1,10 +1,13 @@
 ﻿namespace Application.Services.Auth
 {
     using Application.Dtos.Account.Logs;
+    using Application.Helpers;
     using Application.Interfaces.Auth;
     using AutoMapper;
+    using Domain.Dtos.General;
     using Domain.Enties.Hr;
     using Domain.Entities;
+    using Microsoft.AspNetCore.Http;
     using Microsoft.EntityFrameworkCore;
     using Persistence;
     using System;
@@ -37,7 +40,7 @@
       return mapper.Map<IEnumerable<GetLogDto>>(logs);
     }
 
-    public async Task SaveNewLogAsync(string UserName, string Description)
+    public async Task<GeneralServiceResponseDto> SaveNewLogAsync(string UserName, string Description)
     {
       var newLog = new Log()
       {
@@ -46,6 +49,8 @@
       };
       await dataContext.Logs.AddAsync(newLog);
       await dataContext.SaveChangesAsync();
-    }
+
+            return ResponseHelper.CreateResponse(true, StatusCodes.Status201Created, "Log Created Successfully");
+        }
   }
 }
