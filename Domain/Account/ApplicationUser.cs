@@ -1,16 +1,16 @@
 ﻿namespace Domain.Account
 {
-  using Domain.Enties;
+    using Domain.Constants.Enums;
+    using Domain.Enties.hr;
+    using Domain.Enties.Hr;
     using Domain.Enties.Leaves;
-    using Domain.Enties.TimeSheets;
-    using Domain.Enums;
-  using Microsoft.AspNetCore.Identity;
-  using System.ComponentModel.DataAnnotations.Schema;
-  public class ApplicationUser : IdentityUser
+    using Microsoft.AspNetCore.Identity;
+    using System.ComponentModel.DataAnnotations.Schema;
+    public class ApplicationUser : IdentityUser
   {
         public string FirstName { get; set; }
         public string LastName { get; set; }
-        public DateTime CreatedAt { get; set; } = DateTime.UtcNow; // FIX: use UtcNow
+        public DateTime CreatedAt { get; set; } = DateTime.UtcNow; 
 
         [NotMapped]
         public IList<string> Roles { get; set; }

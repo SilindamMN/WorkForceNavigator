@@ -1,19 +1,15 @@
 ﻿
 namespace API.Controllers.Auth
 {
-  using Application.Interfaces;
+    using Application.Dtos.Work.Projects;
+    using Application.Interfaces;
+    using Application.Interfaces.Works;
+    using Application.Services;
+    using Application.Services.Auth;
+    using Domain.Enties.Work;
+    using Microsoft.AspNetCore.Mvc;
 
-  using Application.Interfaces.GenericInterfaces;
-  using Application.Services;
-  using Application.Services.Auth;
-  using Application.Services.GenericServices;
-  using Domain.Dtos.Account;
-  using Domain.Dtos.GeneralAdmin;
-  using Domain.Enties;
-  using Domain.Entities.TimeSheets;
-  using Microsoft.AspNetCore.Mvc;
-
-  [Route("api/[controller]")]
+    [Route("api/[controller]")]
     [ApiController]
     public class ProjectController : ControllerBase
     {

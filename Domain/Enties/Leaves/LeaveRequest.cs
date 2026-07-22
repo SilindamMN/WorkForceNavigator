@@ -1,16 +1,16 @@
 ﻿namespace Domain.Enties.Leaves
 {
-  using Domain.Account;
-  using Domain.Entities;
-  using Domain.Enums;
-  using System;
-  using System.Collections.Generic;
+    using Domain.Account;
+    using Domain.Constants.Enums;
+    using Domain.Entities;
+    using System;
+    using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Linq;
     using System.Text;
     using System.Threading.Tasks;
 
-  public class LeaveRequest : BaseEntity<int>
+    public class LeaveRequest : BaseEntity<int>
   {
     public DateTime StartDate { get; set; }
     public DateTime EndDate { get; set; }
