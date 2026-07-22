@@ -82,7 +82,7 @@ namespace Application.Services
       }
     }
 
-    public async Task<GeneralServiceResponseDto> SoftDelete(int id)
+    public async Task<GeneralServiceResponseDto> SoftDeleteAsync(int id)
     {
       try
       {

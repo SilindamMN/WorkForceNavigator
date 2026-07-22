@@ -78,7 +78,7 @@ namespace Application.Services.Auth
            })
            .FirstOrDefaultAsync();
 
-            var userTitle = await userJobTitleService.GetJobTitleForUser(user.UserName);
+            var userTitle = await userJobTitleService.GetJobTitleForUserAsync(user.UserName);
 
             return new UserInfoResult
             {
@@ -144,7 +144,7 @@ namespace Application.Services.Auth
         }
         private async Task<UserDetailsDto> GenerateUserInfo(ApplicationUser user, IList<string> roles, IUserJobTitleService userJobTitleService)
         {
-            var details = await userJobTitleService.GetJobTitleForUser(user.UserName);
+            var details = await userJobTitleService.GetJobTitleForUserAsync(user.UserName);
             var userInfo = new UserDetailsDto
             {
                 Id = user.Id,
