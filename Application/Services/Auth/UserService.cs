@@ -91,10 +91,10 @@ namespace Application.Services.Auth
                 TeamName = currentUserTeam?.TeamName ?? string.Empty,
                 DepartmentId = currentUserTeam?.DepartmentId,
                 DepartmentName = currentUserTeam?.DepartmentName ?? string.Empty,
-                JobTitleId = user.JobTitleId,
+                JobTitleId = user?.JobTitleId,
                 JobTitleName = userTitle?.Title ?? string.Empty,
                 Roles = roles,
-                Seniority = user.Seniority,
+                Seniority = user?.Seniority,
                 Username = user.UserName,
                 PhoneNumber = user.PhoneNumber ?? string.Empty,
                 Gender = (Gender?)user.Gender

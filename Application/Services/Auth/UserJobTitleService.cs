@@ -8,6 +8,7 @@
     using Domain.Constants.Enums;
     using Domain.Dtos.General;
     using Domain.Enties;
+    using Domain.Enties.hr;
     using Microsoft.EntityFrameworkCore;
     using Persistence;
     using System;
@@ -106,9 +107,17 @@
             throw new NotImplementedException();
         }
 
-        public Task<JobTitleDto?> GetJobTitleForUserAsync(string username)
+        public async Task<JobTitleDto?> GetJobTitleForUserAsync(string username)
         {
-            throw new NotImplementedException();
+            var userJobtitle = await (from u in dataContext.Users
+                                      join j in dataContext.JobTitles on u.JobTitleId equals j.Id
+                                      where u.UserName == username
+                                      select new JobTitleDto
+                                      {
+                                          Title = j.Title
+                                      }).FirstOrDefaultAsync();
+                                
+            return userJobtitle;
         }
 
         public Task<IEnumerable<UserDetailsDto>> GetUsersByJobTitleAsync(string title)

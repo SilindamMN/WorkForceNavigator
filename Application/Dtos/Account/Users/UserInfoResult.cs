@@ -18,7 +18,7 @@
     public DateTime CreatedAt { get; set; }
         public int? DepartmentId { get; set; }
         public string DepartmentName { get; set; } = string.Empty.ToString();
-        public int? JobTitleId { get; set; }
+        public int? JobTitleId { get; set; } 
         public string JobTitleName { get; set; } = string.Empty.ToString();
         public int? TeamId { get; set; }
         public string TeamName { get; set; } = string.Empty.ToString();
