@@ -7,7 +7,7 @@
      where TEntity : class
      where TDto : class
   {
-    Task <GeneralServiceResponseDto> CreateAsync(TDto entityDto);
+    Task <GeneralServiceResponseDto> CreateAsync(TDto TDto);
     Task<IEnumerable<TDto>> GetAllAsync();
     Task <GeneralServiceResponseDto>UpdateAsync(int id, TDto updatedEntityDto);
     Task<GeneralServiceResponseDto?> SoftDeleteAsync(int id);

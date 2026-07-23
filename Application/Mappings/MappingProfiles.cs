@@ -37,7 +37,8 @@
             CreateMap<Team, CreateUserTeamDto>().ReverseMap();
             CreateMap<TeamDto, CreateUserTeamDto>().ReverseMap();
             CreateMap<Client, ClientDto>().ReverseMap();
-      CreateMap<Project, CreateUpdateProjectDto>().ReverseMap();
+            CreateMap<Client, CreateUpdateClientDto>().ReverseMap();
+            CreateMap<Project, CreateUpdateProjectDto>().ReverseMap();
       CreateMap<Project, ProjectDto>().ReverseMap();
       CreateMap<ApplicationUser, UserInfoResult>().ReverseMap();
       CreateMap<TimesheetEntry,TimesheetDetailDto>().ReverseMap();
