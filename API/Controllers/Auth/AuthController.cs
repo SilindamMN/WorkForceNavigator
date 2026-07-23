@@ -73,7 +73,7 @@
             return Ok(loginResult);
         }
 
-        [HttpPost]
+        [HttpPatch]
         [Route("update")]
         //[Authorize(Roles =StaticUserRoles.OwnerAdmin)]
         public async Task<IActionResult> UpdateRole([FromBody] UpdateRoleDto updateRoleDto)

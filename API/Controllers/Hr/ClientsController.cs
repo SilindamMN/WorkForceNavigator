@@ -16,11 +16,11 @@
     [Route("api/clients")]
     public class ClientController : ControllerBase
     {
-        private readonly IGenericService<Client, ClientDto> _ClientService;
+        private readonly IGenericService<Client,CreateUpdateClientDto> _ClientService;
         private readonly IClientService clientService;
 
         public ClientController(
-            IGenericService<Client, ClientDto> ClientService,
+            IGenericService<Client, CreateUpdateClientDto> ClientService,
             IClientService clientService)
         {
             _ClientService = ClientService;
@@ -51,9 +51,9 @@
 
         [HttpPost]
         [Route("create")]
-        public async Task<IActionResult> CreateClient([FromBody] ClientDto clientDto)
+        public async Task<IActionResult> CreateClient([FromBody] CreateUpdateClientDto client)
         {
-            var result = await _ClientService.CreateAsync(clientDto);
+            var result = await _ClientService.CreateAsync(client);
             if (result.IsSucceed)
             {
                 return Ok(result.Message);
@@ -61,9 +61,9 @@
             return StatusCode(result.StatusCode, result.Message);
         }
 
-        [HttpPut]
+        [HttpPatch]
         [Route("update")]
-        public async Task<IActionResult> UpdateClient(int id, [FromBody] ClientDto updateClientDto)
+        public async Task<IActionResult> UpdateClient(int id, [FromBody] CreateUpdateClientDto updateClientDto)
         {
             var result = await _ClientService.UpdateAsync(id, updateClientDto);
             if (result.IsSucceed)
