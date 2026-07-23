@@ -96,38 +96,38 @@
 
         public async Task<GeneralServiceResponseDto> TimesheetEntryAsync(ClaimsPrincipal user, TimesheetCreateModifyDto timesheetEntryDto)
         {
-                var username = user?.Identity?.Name;
+            var username = user?.Identity?.Name;
 
-                // Retrieve the project and ensure it exists
-                var project = await genericService.GetByIdAsync(timesheetEntryDto.ProjectId);
-                if (project == null)
+            // Retrieve the project and ensure it exists
+            var project = await genericService.GetByIdAsync(timesheetEntryDto.ProjectId);
+            if (project == null)
+            {
+                return ResponseHelper.CreateResponse(false, 404, "Project not found.");
+            }
+            //user can insert many entry for a specific day as much as they are less than 8 hours
+            var hourSpent = await GetTotalTimeSpentByDateAsync(user, timesheetEntryDto.TimesheetDate);
+            var updateHours = hourSpent + timesheetEntryDto.TimeSpent;
+
+            if (hourSpent < 8 && updateHours <= 8)
+            {
+                var timesheetEntry = new TimesheetCreateModifyDto
                 {
-                    return ResponseHelper.CreateResponse(false, 404, "Project not found.");
-                }
-                //user can insert many entry for a specific day as much as they are less than 8 hours
-                var hourSpent = await GetTotalTimeSpentByDateAsync(user, timesheetEntryDto.TimesheetDate);
-                var updateHours = hourSpent + timesheetEntryDto.TimeSpent;
+                    TimesheetDate = timesheetEntryDto.TimesheetDate,
+                    Description = timesheetEntryDto.Description,
+                    TimeSpent = timesheetEntryDto.TimeSpent,
+                    ProjectId = timesheetEntryDto.ProjectId
+                };
 
-                if (hourSpent < 8 && updateHours <= 8)
-                {
-                    var timesheetEntry = new TimesheetCreateModifyDto
-                    {
-                        TimesheetDate = timesheetEntryDto.TimesheetDate,
-                        Description = timesheetEntryDto.Description,
-                        TimeSpent = timesheetEntryDto.TimeSpent,
-                        ProjectId = timesheetEntryDto.ProjectId
-                    };
+                var map = mapper.Map<TimesheetEntry>(timesheetEntry);
+                map.Username = username ?? string.Empty;
+                dataContext.TimesheetEntries.Add(map);
+                await dataContext.SaveChangesAsync();
 
-                    var map = mapper.Map<TimesheetEntry>(timesheetEntry);
-                    map.Username = username ?? string.Empty;
-                    dataContext.TimesheetEntries.Add(map);
-                    await dataContext.SaveChangesAsync();
+                // Return a success response
+                return ResponseHelper.CreateResponse(true, 200, "Timesheet entry successfully created.");
+            }
+            return ResponseHelper.CreateResponse(false, 501, "You can only work 8 hours per day " + "You have already worked " + hourSpent + "Hours");
 
-                    // Return a success response
-                    return ResponseHelper.CreateResponse(true, 200, "Timesheet entry successfully created.");
-                }
-                return ResponseHelper.CreateResponse(false, 501, "You can only work 8 hours per day " + "You have already worked " + hourSpent + "Hours");
-            
         }
 
         public async Task<DailyProjectTotalDto> GetDailyProjectHoursAsync(ClaimsPrincipal user, DateTime date)

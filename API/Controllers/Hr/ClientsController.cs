@@ -51,9 +51,9 @@
 
         [HttpPost]
         [Route("create")]
-        public async Task<IActionResult> CreateClient([FromBody] ClientDto ClientDto)
+        public async Task<IActionResult> CreateClient([FromBody] ClientDto clientDto)
         {
-            var result = await _ClientService.CreateAsync(ClientDto);
+            var result = await _ClientService.CreateAsync(clientDto);
             if (result.IsSucceed)
             {
                 return Ok(result.Message);

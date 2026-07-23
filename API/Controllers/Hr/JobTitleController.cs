@@ -25,12 +25,12 @@
         private readonly IUserJobTitleService userJobTitleService;
 
         public JobTitleController(
-            IGenericService<JobTitle, JobTitleDto> JobTitleService,
-            IGenericService<JobTitle, UpdateCreateJobTitleDto> JobTitleUpdateService,
+            IGenericService<JobTitle, JobTitleDto> jobTitleService,
+            IGenericService<JobTitle, UpdateCreateJobTitleDto> jobTitleUpdateService,
             IUserJobTitleService userJobTitleService)
         {
-            _JobTitleService = JobTitleService;
-            _JobTitleUpdateService = JobTitleUpdateService;
+            _JobTitleService = jobTitleService;
+            _JobTitleUpdateService = jobTitleUpdateService;
             this.userJobTitleService = userJobTitleService;
         }
 
@@ -49,9 +49,9 @@
         }
 
         [HttpPost("create")]
-        public async Task<IActionResult> CreateJobTitle([FromBody] UpdateCreateJobTitleDto JobTitleDto)
+        public async Task<IActionResult> CreateJobTitle([FromBody] UpdateCreateJobTitleDto jobTitleDto)
         {
-            var result = await _JobTitleUpdateService.CreateAsync(JobTitleDto);
+            var result = await _JobTitleUpdateService.CreateAsync(jobTitleDto);
 
             if (result.IsSucceed)
             {

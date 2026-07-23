@@ -66,9 +66,9 @@
       return mapper.Map<IEnumerable<GetMessageDto>>(messages);
     }
 
-    public async Task<IEnumerable<GetMessageDto>> GetMyMessageAsync(ClaimsPrincipal User)
+    public async Task<IEnumerable<GetMessageDto>> GetMyMessageAsync(ClaimsPrincipal user)
     {
-      var loggedInUser = User?.Identity?.Name;
+      var loggedInUser = user?.Identity?.Name;
       var messages = await dataContext.Messages
           .Where(m => m.SenderUsername == loggedInUser || m.ReceiverUserName == loggedInUser)
           .OrderByDescending(m => m.CreatedAt)

@@ -252,10 +252,10 @@ var allocation = await dataContext.LeaveAllocations
 
       return (GeneralServiceResponseDto)ResponseHelper.CreateResponse(true, 200, "Leave updated successfully");
     }
-    private async Task<Result> CheckAvailableDaysAsync(ClaimsPrincipal User, DateTime startDate, DateTime endDate)
+    private async Task<Result> CheckAvailableDaysAsync(ClaimsPrincipal user, DateTime startDate, DateTime endDate)
     {
       var allocation = await dataContext.LeaveAllocations
-          .Where(x => x.Employee.UserName == User.Identity.Name)
+          .Where(x => x.Employee.UserName == user.Identity.Name)
           .FirstOrDefaultAsync();
 
       if (allocation == null)
@@ -272,13 +272,13 @@ var allocation = await dataContext.LeaveAllocations
 
       return Result.Ok();
     }
-    private async Task<LeaveRequest> CheckForOverlappingLeaveRequestAsync(ClaimsPrincipal user, DateTime StartDate,DateTime EndDate)
+    private async Task<LeaveRequest> CheckForOverlappingLeaveRequestAsync(ClaimsPrincipal user, DateTime startDate,DateTime endDate)
     {
       // Check for overlapping leave requests within the specified range
       var overlaps = await this.dataContext.LeaveRequests
           .Where(x => x.UserName.Equals(user.Identity.Name)  &&
-                      ((x.StartDate <= StartDate && x.EndDate >= StartDate) ||
-                       (x.StartDate <=  EndDate && x.EndDate >= EndDate)))
+                      ((x.StartDate <= startDate && x.EndDate >= startDate) ||
+                       (x.StartDate <=  endDate && x.EndDate >= endDate)))
           .FirstOrDefaultAsync();
       return overlaps;
     }

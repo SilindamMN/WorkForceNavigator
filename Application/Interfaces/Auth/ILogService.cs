@@ -11,8 +11,8 @@
 
     public interface ILogService
   {
-    Task <GeneralServiceResponseDto> SaveNewLogAsync(string UserName, string Description);
+    Task <GeneralServiceResponseDto> SaveNewLogAsync(string userName, string description);
     Task<IEnumerable<GetLogDto>> getLogsAsync();
-    Task<IEnumerable<GetLogDto>> getMyLogsAsync(ClaimsPrincipal User);
+    Task<IEnumerable<GetLogDto>> getMyLogsAsync(ClaimsPrincipal user);
   }
 }
