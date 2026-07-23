@@ -65,7 +65,7 @@
             return StatusCode(result.StatusCode, result.Message);
         }
 
-        [HttpPut("{id}")]
+        [HttpPatch("{id}")]
         public async Task<IActionResult> UpdateTeam(int id, [FromBody] TeamDto updateTeamDto)
         {
             var result = await _teamService.UpdateAsync(id, updateTeamDto);

@@ -91,8 +91,8 @@
       }
     }
 
-    [HttpPut]
-    [Route("update")]
+    [HttpPatch]
+    [Route("{id}")]
     [Authorize(Roles = StaticUserRoles.ADMIN)]
     public async Task<IActionResult> UpdateLeaveRequest(int leaveRequestId, [FromBody] UpdateLeaveRequestDto updateLeaveRequestDto)
     {
