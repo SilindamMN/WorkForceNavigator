@@ -101,7 +101,7 @@
             throw new NotImplementedException();
         }
 
-        public Task<GeneralServiceResponseDto> AssignSeniorityToUserAsync(int jobtitleId)
+        public Task<GeneralServiceResponseDto> AssignSeniorityToUserAsync(int userId)
         {
             throw new NotImplementedException();
         }
