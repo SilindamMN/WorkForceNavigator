@@ -47,7 +47,7 @@
         }
 
         [HttpGet]
-        [Route("my-allocations")]
+        [Route("mine")]
         public async Task<ActionResult<IEnumerable<EmployeeLeaveAllocationDto>>> GetMyAllocationsync()
         {
             var allocations = await leaveAllocationService.GetMyLeavesAllocationsAsync(User);
@@ -59,7 +59,7 @@
             return Ok(allocations); // Return HTTP 200 OK with the allocations
         }
 
-        [HttpGet("all-allocations")]
+        [HttpGet("all")]
         public async Task<IActionResult> GetLeaveAllocations()
         {
             var result = await leaveAllocationService.GetLeaveAllocationsAsync();

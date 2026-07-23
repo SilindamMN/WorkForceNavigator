@@ -11,7 +11,7 @@
     using Microsoft.AspNetCore.Mvc;
     using Persistence;
 
-    [Route("api/[controller]")]
+    [Route("api/users")]
     [ApiController]
     public class UsersController : ControllerBase
     {
@@ -48,7 +48,7 @@
         }
 
         [HttpGet]
-        [Route("userDetails/{username}")]
+        [Route("{username}")]
         public async Task<ActionResult<UserDetailsDto>> GetUserExtraDetailsByUsername([FromRoute] string username)
         {
             var user = await userService.GetUserExtraDetailsByUserNameAsync(username);

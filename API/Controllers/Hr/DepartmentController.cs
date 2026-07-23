@@ -14,7 +14,7 @@ namespace API.Controllers.Hr
     using Microsoft.AspNetCore.Mvc;
 
     [ApiController]
-  [Route("api/department")]
+  [Route("api/departments")]
   public class DepartmentController : ControllerBase
   {
     private readonly IGenericService<Department, DepartmentDto> _DepartmentService;
