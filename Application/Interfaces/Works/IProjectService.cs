@@ -11,8 +11,8 @@
     public interface IProjectService
     {
         Task<IEnumerable<ProjectDto>> GetAllProjectsWithClientsAsync();
-        Task<GeneralServiceResponseDto> CreateProjectAsync(CreateProjectDto projectDto);
-        Task<GeneralServiceResponseDto> UpdateProjectAsync(CreateProjectDto projectDto);
+        Task<GeneralServiceResponseDto> CreateProjectAsync(CreateUpdateProjectDto projectDto);
+        Task<GeneralServiceResponseDto> UpdateProjectAsync(CreateUpdateProjectDto projectDto);
         Task<IEnumerable<UserProjectsDto>> GetUserProjectAsync(string username);
     }
 }

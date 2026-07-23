@@ -6,11 +6,11 @@
   using System.Text;
   using System.Threading.Tasks;
 
-  public class CreateProjectDto
+  public class CreateUpdateProjectDto
   {
     public string ProjectName { get; set; } = string.Empty;
     public int ClientId { get; set; }
-        public string Description { get; set; } = string.Empty;
+       public string Description { get; set; } = string.Empty;
     public DateTime StartDate { get; set; }
     public DateTime EndDate { get; set; }
     public int TeamId { get; set; }
