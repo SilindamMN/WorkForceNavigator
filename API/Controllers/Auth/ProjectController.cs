@@ -14,9 +14,9 @@ namespace API.Controllers.Auth
     public class ProjectController : ControllerBase
     {
     private readonly IProjectService projectService;
-    private readonly IGenericService<Project, CreateProjectDto> genericService;
+    private readonly IGenericService<Project, CreateUpdateProjectDto> genericService;
 
-    public ProjectController(IProjectService projectService,IGenericService<Project,CreateProjectDto> genericService)
+    public ProjectController(IProjectService projectService,IGenericService<Project,CreateUpdateProjectDto> genericService)
         {
       this.projectService = projectService;
       this.genericService = genericService;
@@ -38,7 +38,7 @@ namespace API.Controllers.Auth
 
     [HttpPost("CreateProject")]
     [ProducesResponseType(typeof(Project), 201)] // Define the response type for successful creation
-    public async Task<IActionResult> CreateNewProject([FromBody] CreateProjectDto projectDto)
+    public async Task<IActionResult> CreateNewProject([FromBody] CreateUpdateProjectDto projectDto)
     {
       var result = await projectService.CreateProjectAsync(projectDto);
       if (result.IsSucceed)
@@ -52,7 +52,7 @@ namespace API.Controllers.Auth
     [Route("UpdateProject")]
     [ProducesResponseType(typeof(Project), 200)] // Define the response type for successful update
      [ProducesResponseType(404)] // Define the response type for not found
-    public async Task<IActionResult> UpdateProject(int id, [FromBody] CreateProjectDto projectDto)
+    public async Task<IActionResult> UpdateProject(int id, [FromBody] CreateUpdateProjectDto projectDto)
     {
       try
       {

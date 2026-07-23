@@ -25,7 +25,7 @@
             this.dataContext = dataContext;
             this.mapper = mapper;
         }
-        public async Task<GeneralServiceResponseDto> CreateProjectAsync(CreateProjectDto projectDto)
+        public async Task<GeneralServiceResponseDto> CreateProjectAsync(CreateUpdateProjectDto projectDto)
         {
             try
             {
@@ -50,7 +50,7 @@
                 {
                     return ResponseHelper.CreateResponse(false, StatusCodes.Status404NotFound, "End Date must be after Start Date.");
                 }
-                var project = new CreateProjectDto
+                var project = new CreateUpdateProjectDto
                 {
                     ProjectName = projectDto.ProjectName,
                     ClientId = projectDto.ClientId,
@@ -71,7 +71,7 @@
             }
         }
 
-        public async Task<GeneralServiceResponseDto> UpdateProjectAsync(int projectId, CreateProjectDto projectDto)
+        public async Task<GeneralServiceResponseDto> UpdateProjectAsync(int projectId, CreateUpdateProjectDto projectDto)
         {
             try
             {
@@ -157,7 +157,7 @@
             return endDate > startDate;
         }
 
-        public Task<GeneralServiceResponseDto> UpdateProjectAsync(CreateProjectDto projectDto)
+        public Task<GeneralServiceResponseDto> UpdateProjectAsync(CreateUpdateProjectDto projectDto)
         {
             throw new NotImplementedException();
         }
