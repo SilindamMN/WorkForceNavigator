@@ -105,7 +105,7 @@
             }
 
         [HttpGet]
-        [Route("users/{username}")]
+        [Route("{username}")]
         public async Task<ActionResult<UserDetailsDto>> GetUserDetailsByUsernames([FromRoute] string username)
         {
             var user = await userService.GetUserDetailsByUserNameAsync(username);

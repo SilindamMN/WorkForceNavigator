@@ -100,7 +100,7 @@
         }
 
         [HttpGet]
-        [Route("ClientProjectDetails/{id}")]
+        [Route("clientdetails/{id}")]
         public async Task<ActionResult<List<ClientDetailDto>>> GetClientProject(int id)
         {
             var result = await clientService.GetClientProjectAsync(id);

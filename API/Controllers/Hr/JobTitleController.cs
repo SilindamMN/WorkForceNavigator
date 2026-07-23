@@ -84,7 +84,7 @@
             }
             return StatusCode(result.StatusCode, result.Message);
         }
-        [HttpGet("department/{departmentId}")]
+        [HttpGet("{departmentId}")]
         public async Task<IActionResult> GetJobTitleByDepartment(int departmentId, Seniority? seniority)
         {
             var result = await userJobTitleService.GetJobTitleByDepartmentAndSeniorityAsync(departmentId, seniority);
@@ -109,7 +109,7 @@
             return (JobTitleDto)jobTitle;
         }
 
-        [HttpPost("assign-job-title")]
+        [HttpPost("assign")]
         public async Task<IActionResult> AssignJobTitleToUser([FromBody] AssignJobTitleDto request)
         {
             var result = await userJobTitleService.AssignJobTitleToUserAsync(request); if (result.IsSucceed)
