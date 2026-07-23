@@ -151,7 +151,7 @@ var allocation = await dataContext.LeaveAllocations
       }
     }
 
-    public async Task<LeaveRequestDto> GetLeaveRequestsByIdAsync(int requestId)
+    public async Task<LeaveRequestDto?> GetLeaveRequestsByIdAsync(int requestId)
     {
       var leaveRequests = await (from request in dataContext.LeaveRequests
                                  join user in dataContext.Users on request.UserName equals user.UserName
@@ -163,7 +163,7 @@ var allocation = await dataContext.LeaveAllocations
                                    LastName = user.LastName,
                                    LeaveName = leaveType.Name,
                                    NumberOfDays = request.NumberOfDays,
-                                   UserName = user.UserName,
+                                   UserName = user.UserName ?? string.Empty,
                                    EndDate = request.EndDate,
                                    RequestedDate = request.StartDate,
                                    StartDate = request.StartDate,
