@@ -111,10 +111,15 @@
         {
             var userJobtitle = await (from u in dataContext.Users
                                       join j in dataContext.JobTitles on u.JobTitleId equals j.Id
+                                      join d in dataContext.Departments on j.DepartmentId equals d.Id
                                       where u.UserName == username
                                       select new JobTitleDto
                                       {
-                                          Title = j.Title
+                                          DepartmentName = d.DepartmentName,
+                                          Title = j.Title,
+                                          JobTitleId = j.Id,
+                                          Description = j.Description,
+                                          Seniority = u.Seniority.ToString(),
                                       }).FirstOrDefaultAsync();
                                 
             return userJobtitle;
