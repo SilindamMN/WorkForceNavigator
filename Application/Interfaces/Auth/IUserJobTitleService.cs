@@ -18,7 +18,6 @@
         Task<GeneralServiceResponseDto> AssignSeniorityToUserAsync(int userId);
         Task<JobTitleDto?> GetJobTitleForUserAsync(string username);
         Task<IEnumerable<UserDetailsDto>> GetUsersByJobTitleAsync(string title);
-        Task<IEnumerable<JobTitleDto>> GetJobTitlesAsync();
         Task<IEnumerable<JobTitleDto>> GetJobTitleByDepartmentAndSeniorityAsync(int departmentId, Seniority? seniority);
     }
 }

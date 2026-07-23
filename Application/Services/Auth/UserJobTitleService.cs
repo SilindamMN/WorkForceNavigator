@@ -130,9 +130,5 @@
             throw new NotImplementedException();
         }
 
-        public Task<IEnumerable<JobTitleDto>> GetJobTitlesAsync()
-        {
-            throw new NotImplementedException();
-        }
     }
 }

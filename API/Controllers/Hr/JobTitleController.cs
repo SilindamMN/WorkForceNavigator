@@ -37,7 +37,7 @@
         [HttpGet]
         public async Task<IActionResult> GetAllJobTitles()
         {
-            var result = await userJobTitleService.GetJobTitlesAsync();
+            var result = await _JobTitleService.GetAllAsync();
             return Ok(result);
         }
 
