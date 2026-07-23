@@ -8,7 +8,7 @@
     {
         Task<IEnumerable<JobTitleDto>> GetAllJobTitlesAsync();
         Task<JobTitleDto> GetJobTitleByIdAsync(int id);
-        Task<IEnumerable<JobTitleDto>> GetJobTitleByDepartmentAsync(int departmentId);
+        Task<IEnumerable<JobTitleDto?>> GetJobTitleByDepartmentAsync(int departmentId);
         Task<GeneralServiceResponseDto> CreateJobTitleAsync(UpdateCreateJobTitleDto jobTitleDto);
         Task<GeneralServiceResponseDto> UpdateJobTitleAsync(int id, UpdateCreateJobTitleDto jobTitleDto);
         Task<GeneralServiceResponseDto> DeleteJobTitleAsync(int id);

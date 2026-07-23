@@ -12,8 +12,8 @@
     {
         Task<IEnumerable<LeaveRequestDto>> GetAllLeaveRequestsAsync();
         Task<IEnumerable<LeaveRequestDto>> GetUpComingLeavesAsync();
-        Task<IEnumerable<LeaveRequestDto>> GetLeaveRequestsByUserAsync(string username);
-        Task<LeaveRequestDto> GetLeaveRequestsByIdAsync(int requestId);
+        Task<IEnumerable<LeaveRequestDto?>> GetLeaveRequestsByUserAsync(string username);
+        Task<LeaveRequestDto?> GetLeaveRequestsByIdAsync(int requestId);
         Task<GeneralServiceResponseDto> CreateLeaveRequestAsync(ClaimsPrincipal User, CreateLeaveRequestDto createLeaveRequestDto);
         Task<GeneralServiceResponseDto> UpdateLeaveRequestAsync(ClaimsPrincipal User, int leaveRequestId, UpdateLeaveRequestDto updateLeaveRequestDto);
         Task<GeneralServiceResponseDto> DeleteLeaveRequestAsync(ClaimsPrincipal User, int leaveRequestId);
