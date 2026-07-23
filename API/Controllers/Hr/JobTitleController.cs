@@ -60,7 +60,7 @@
             return StatusCode(result.StatusCode, result.Message);
         }
 
-        [HttpPut("{id}")]
+        [HttpPatch("{id}")]
         public async Task<IActionResult> UpdateJobTitle(int id, [FromBody] UpdateCreateJobTitleDto updateJobTitleDto)
         {
             var result = await _JobTitleUpdateService.UpdateAsync(id, updateJobTitleDto);

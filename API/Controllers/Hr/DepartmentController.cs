@@ -76,7 +76,7 @@ namespace API.Controllers.Hr
       return StatusCode(result.StatusCode, result.Message);
     }
 
-        [HttpPut("update/{id}")]
+        [HttpPatch("{id}")]
         public async Task<IActionResult> UpdateDepartment(int id, [FromBody] UpdateDepartmentDto updateDepartmentDto)
     {
       var result = await updateDepartmentService.UpdateAsync(id, updateDepartmentDto);

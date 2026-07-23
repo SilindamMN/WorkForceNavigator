@@ -62,8 +62,8 @@
             return Ok(usernames);
         }
 
-        [HttpPut]
-        [Route("update")]
+        [HttpPatch]
+        [Route("{id}")]
         public async Task<IActionResult> UpdateUserDetails(string updateUsername, int departmentId, [FromBody] UpdateUserDetailsDto userDetailsDto)
         {
             var updateResult = await userService.UpdateUserDetailsAsync(updateUsername, departmentId, userDetailsDto);
