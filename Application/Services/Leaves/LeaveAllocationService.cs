@@ -123,10 +123,10 @@
       return mapper.Map<IEnumerable<EmployeeLeaveAllocationDto>>(leaveAllocations);
     }
 
-    public async Task<IEnumerable<LeaveAllocationDto>> GetLeaveAllocationsByLeaveTypeAsync(string LeaveName)
+    public async Task<IEnumerable<LeaveAllocationDto>> GetLeaveAllocationsByLeaveTypeAsync(string leaveName)
     {
       var allocation = await dataContext.LeaveAllocations
-          .Where(z => z.LeaveType.Name == LeaveName)
+          .Where(z => z.LeaveType.Name == leaveName)
           .FirstOrDefaultAsync();
 
       if (allocation is null)
@@ -137,7 +137,7 @@
       var leaveAllocations = await (from la in dataContext.LeaveAllocations
                                     join u in dataContext.LeaveTypes on la.LeaveTypeId equals u.Id
                                     join user in dataContext.Users on la.Employee.UserName equals user.UserName
-                                    where (la.LeaveType.Name).Equals(LeaveName)
+                                    where (la.LeaveType.Name).Equals(leaveName)
                                     select new LeaveAllocationDto
                                     {
                                       Username = user.UserName,

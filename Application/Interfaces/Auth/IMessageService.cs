@@ -11,8 +11,8 @@
 
     public interface IMessageService
   {
-    Task<GeneralServiceResponseDto> CreateNewMessageAsync(ClaimsPrincipal User, CreateMessageDto createMessageDto);
+    Task<GeneralServiceResponseDto> CreateNewMessageAsync(ClaimsPrincipal user, CreateMessageDto createMessageDto);
     Task<IEnumerable<GetMessageDto>> GetMessagesAsync();
-    Task<IEnumerable<GetMessageDto>> GetMyMessageAsync(ClaimsPrincipal User);
+    Task<IEnumerable<GetMessageDto>> GetMyMessageAsync(ClaimsPrincipal user);
   }
 }

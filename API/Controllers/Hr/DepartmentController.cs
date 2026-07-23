@@ -66,9 +66,9 @@ namespace API.Controllers.Hr
     }
 
     [HttpPost("CreateDepartment")]
-    public async Task<IActionResult> CreateDepartment([FromBody] DepartmentDto DepartmentDto)
+    public async Task<IActionResult> CreateDepartment([FromBody] DepartmentDto departmentDto)
     {
-      var result = await _DepartmentService.CreateAsync(DepartmentDto);
+      var result = await _DepartmentService.CreateAsync(departmentDto);
       if (result.IsSucceed)
       {
         return Ok(result.Message);

@@ -11,9 +11,9 @@
 
     public interface ITimesheetService
   {
-    Task<GeneralServiceResponseDto> TimesheetEntryAsync(ClaimsPrincipal User, TimesheetCreateModifyDto TimesheetEntry);
+    Task<GeneralServiceResponseDto> TimesheetEntryAsync(ClaimsPrincipal user, TimesheetCreateModifyDto timesheetEntry);
     Task<int> GetTotalTimeSpentByDateAsync(ClaimsPrincipal User, DateTime date);
-    Task<IEnumerable<TimesheetDetailDto>> GetTimesheetEntriesAsync(ClaimsPrincipal User,DateTime date);
+    Task<IEnumerable<TimesheetDetailDto>> GetTimesheetEntriesAsync(ClaimsPrincipal user,DateTime date);
     Task<IEnumerable<TimesheetDetailDto>> GetWeeklyTimesheetEntriesAsync(ClaimsPrincipal User);
     Task<DailyProjectTotalDto> GetDailyProjectHoursAsync(ClaimsPrincipal user, DateTime date);
     Task<IEnumerable<DailyProjectTotalDto>> GetWeeklyProjectHoursAsync(ClaimsPrincipal user,int weekOffSet);

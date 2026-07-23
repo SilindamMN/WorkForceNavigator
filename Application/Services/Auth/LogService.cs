@@ -34,18 +34,18 @@
       return mapper.Map<IEnumerable<GetLogDto>>(logs);
     }
 
-    public async Task<IEnumerable<GetLogDto>> getMyLogsAsync(ClaimsPrincipal User)
+    public async Task<IEnumerable<GetLogDto>> getMyLogsAsync(ClaimsPrincipal user)
     {
-      var logs = await dataContext.Logs.Where(u=>u.Username==User.Identity.Name).OrderByDescending(x => x.CreatedAt).ToListAsync();
+      var logs = await dataContext.Logs.Where(u=>u.Username==user.Identity.Name).OrderByDescending(x => x.CreatedAt).ToListAsync();
       return mapper.Map<IEnumerable<GetLogDto>>(logs);
     }
 
-    public async Task<GeneralServiceResponseDto> SaveNewLogAsync(string UserName, string Description)
+    public async Task<GeneralServiceResponseDto> SaveNewLogAsync(string userName, string description)
     {
       var newLog = new Log()
       {
-        Username = UserName,
-        Description = Description
+        Username = userName,
+        Description = description
       };
       await dataContext.Logs.AddAsync(newLog);
       await dataContext.SaveChangesAsync();

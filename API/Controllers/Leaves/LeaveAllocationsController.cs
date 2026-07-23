@@ -34,9 +34,9 @@
 
         [HttpGet]
         [Route("leave-name")]
-        public async Task<ActionResult<IEnumerable<LeaveAllocationDto>>> GetUserAllocationByLeaveNamesync(string Leavename)
+        public async Task<ActionResult<IEnumerable<LeaveAllocationDto>>> GetUserAllocationByLeaveNamesync(string leavename)
         {
-            var allocations = await leaveAllocationService.GetLeaveAllocationsByLeaveTypeAsync(Leavename);
+            var allocations = await leaveAllocationService.GetLeaveAllocationsByLeaveTypeAsync(leavename);
 
             if (allocations == null)
             {
