@@ -70,7 +70,7 @@ namespace API.Controllers.Auth
             }
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("{id:int}")]
         public async Task<IActionResult> GetProjectById(int id)
         {
             var result = await genericService.GetByIdAsync(id);
@@ -80,7 +80,7 @@ namespace API.Controllers.Auth
             }
             return Ok(result);
         }
-        [HttpGet("{username}")]
+        [HttpGet("by-username/{username}")]
         public async Task<ActionResult<IEnumerable<UserProjectsDto>>> GetUserProject(string username)
         {
             try
