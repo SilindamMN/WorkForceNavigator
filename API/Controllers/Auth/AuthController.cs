@@ -13,6 +13,7 @@
 
     [Route("api/auth")]
     [ApiController]
+    [Authorize(Roles =StaticUserRoles.USER)]
     public class AuthController : ControllerBase
     {
         private readonly IAuthService authService;
@@ -43,6 +44,7 @@
 
         [HttpPost]
         [Route("seed-roles")]
+        [Authorize(Roles =StaticUserRoles.ADMIN)]
         public async Task<IActionResult> SeedRoles()
         {
             var seedResults = await authService.SeedRolesAsync();
@@ -51,6 +53,7 @@
 
         [HttpPost]
         [Route("register")]
+        [AllowAnonymous]
         public async Task<IActionResult> Register([FromBody] RegisterDto registerDto)
         {
             var registerResult = await authService.RegisterAsync(registerDto);
@@ -63,6 +66,7 @@
 
         [HttpPost]
         [Route("login")]
+        [AllowAnonymous]
         public async Task<IActionResult> Login([FromBody] LoginDto loginDto)
         {
             var loginResult = await authService.LoginAsync(loginDto);
@@ -73,7 +77,7 @@
             return Ok(loginResult);
         }
         [HttpPatch("{id}")]
-        //[Authorize(Roles =StaticUserRoles.OwnerAdmin)]
+        [Authorize(Roles =StaticUserRoles.ADMIN)]
         public async Task<IActionResult> UpdateRole([FromBody] UpdateRoleDto updateRoleDto)
         {
             var updateRoleResult = await authService.UpdateRoleAsync(User, updateRoleDto);
@@ -90,7 +94,7 @@
         [HttpGet("me")]
         public async Task<ActionResult<LoginServiceResponseDto>> Me([FromBody] MeDto token)
         {
-            var me = await authService.MeAsync(token);
+            var me = await authService.MeAsync(User);
             if (me is null)
             {
                 return Ok(me);

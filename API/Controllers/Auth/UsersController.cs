@@ -13,6 +13,7 @@
 
     [Route("api/users")]
     [ApiController]
+    [Authorize]
     public class UsersController : ControllerBase
     {
         private readonly IUserService userService;
@@ -64,6 +65,7 @@
 
         [HttpPatch]
         [Route("{id}")]
+        [Authorize(Roles =StaticUserRoles.ADMIN)]
         public async Task<IActionResult> UpdateUserDetails(string updateUsername, int departmentId, [FromBody] UpdateUserDetailsDto userDetailsDto)
         {
             var updateResult = await userService.UpdateUserDetailsAsync(updateUsername, departmentId, userDetailsDto);

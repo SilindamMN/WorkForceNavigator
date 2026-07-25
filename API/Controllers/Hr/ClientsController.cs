@@ -6,6 +6,7 @@
     using Application.Interfaces;
     using Application.Interfaces.Hr;
     using Application.Services.Auth;
+    using Domain.Constants;
     using Domain.Enties;
     using Domain.Enties.Hr;
     using Domain.Enties.Leaves;
@@ -14,9 +15,10 @@
 
     [ApiController]
     [Route("api/clients")]
+    [Authorize(Roles = StaticUserRoles.USER)]
     public class ClientController : ControllerBase
     {
-        private readonly IGenericService<Client,CreateUpdateClientDto> _ClientService;
+        private readonly IGenericService<Client, CreateUpdateClientDto> _ClientService;
         private readonly IClientService clientService;
 
         public ClientController(
@@ -50,6 +52,7 @@
         }
 
         [HttpPost]
+        [Authorize(Roles = StaticUserRoles.ADMIN)]
         public async Task<IActionResult> CreateClient([FromBody] CreateUpdateClientDto client)
         {
             var result = await _ClientService.CreateAsync(client);
@@ -61,6 +64,7 @@
         }
 
         [HttpPatch("{id}")]
+        [Authorize(Roles = StaticUserRoles.ADMIN)]
         public async Task<IActionResult> UpdateClient(int id, [FromBody] CreateUpdateClientDto updateClientDto)
         {
             var result = await _ClientService.UpdateAsync(id, updateClientDto);
@@ -75,6 +79,7 @@
         }
 
         [HttpDelete("{id}")]
+        [Authorize(Roles = StaticUserRoles.ADMIN)]
         public async Task<IActionResult> SoftDeleteClient(int id)
         {
             var result = await _ClientService.SoftDeleteAsync(id);
@@ -86,6 +91,7 @@
         }
 
         [HttpDelete("{id}/undo")]
+        [Authorize(Roles = StaticUserRoles.ADMIN)]
         public async Task<IActionResult> UnSoftDeleteClient(int id)
         {
             var result = await _ClientService.UndoSoftDeleteAsync(id);

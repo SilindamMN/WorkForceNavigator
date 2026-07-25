@@ -7,6 +7,7 @@
     using Application.Interfaces;
     using Application.Interfaces.Auth;
     using Application.Services.Auth;
+    using Domain.Constants;
     using Domain.Constants.Enums;
     using Domain.Dtos.General;
     using Domain.Enties.hr;
@@ -18,6 +19,7 @@
 
     [ApiController]
     [Route("api/jobtitles")]
+    [Authorize(Roles =StaticUserRoles.USER)]
     public class JobTitleController : ControllerBase
     {
         private readonly IGenericService<JobTitle, JobTitleDto> _JobTitleService;
@@ -49,6 +51,7 @@
         }
 
         [HttpPost("create")]
+        [Authorize(Roles =StaticUserRoles.ADMIN)]
         public async Task<IActionResult> CreateJobTitle([FromBody] UpdateCreateJobTitleDto jobTitleDto)
         {
             var result = await _JobTitleUpdateService.CreateAsync(jobTitleDto);
@@ -61,6 +64,7 @@
         }
 
         [HttpPatch("{id}")]
+        [Authorize(Roles =StaticUserRoles.ADMIN)]
         public async Task<IActionResult> UpdateJobTitle(int id, [FromBody] UpdateCreateJobTitleDto updateJobTitleDto)
         {
             var result = await _JobTitleUpdateService.UpdateAsync(id, updateJobTitleDto);
@@ -75,6 +79,7 @@
         }
 
         [HttpDelete("{id}")]
+        [Authorize(Roles =StaticUserRoles.ADMIN)]
         public async Task<IActionResult> SoftDeleteJobTitle(int id)
         {
             var result = await _JobTitleService.SoftDeleteAsync(id);
@@ -93,6 +98,7 @@
         }
 
         [HttpDelete("{id}/undo")]
+        [Authorize(Roles =StaticUserRoles.ADMIN)]
         public async Task<IActionResult> UnSoftDeleteJobTitle(int id)
         {
             var result = await _JobTitleService.UndoSoftDeleteAsync(id);
@@ -111,6 +117,7 @@
         }
 
         [HttpPost("assign")]
+        [Authorize(Roles =StaticUserRoles.ADMIN)]
         public async Task<IActionResult> AssignJobTitleToUser([FromBody] AssignJobTitleDto request)
         {
             var result = await userJobTitleService.AssignJobTitleToUserAsync(request); if (result.IsSucceed)

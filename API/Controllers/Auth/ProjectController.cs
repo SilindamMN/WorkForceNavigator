@@ -6,11 +6,14 @@ namespace API.Controllers.Auth
     using Application.Interfaces.Works;
     using Application.Services;
     using Application.Services.Auth;
+    using Domain.Constants;
     using Domain.Enties.Work;
+    using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
 
     [Route("api/projects")]
     [ApiController]
+    [Authorize(Roles = StaticUserRoles.USER)]
     public class ProjectController : ControllerBase
     {
         private readonly IProjectService projectService;
@@ -37,6 +40,7 @@ namespace API.Controllers.Auth
         }
 
         [HttpPost("create")]
+        [Authorize(Roles = StaticUserRoles.ADMIN)]
         public async Task<IActionResult> CreateNewProject([FromBody] CreateUpdateProjectDto projectDto)
         {
             var result = await projectService.CreateProjectAsync(projectDto);
@@ -47,7 +51,8 @@ namespace API.Controllers.Auth
             return StatusCode(result.StatusCode, result.Message);
         }
 
-      [HttpPatch("{id}")]
+        [HttpPatch("{id}")]
+        [Authorize(Roles = StaticUserRoles.ADMIN)]
 
         public async Task<IActionResult> UpdateProject(int id, [FromBody] CreateUpdateProjectDto projectDto)
         {
