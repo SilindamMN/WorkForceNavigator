@@ -26,13 +26,6 @@
             this.mapper = mapper;
         }
 
-        [HttpGet]
-        [Route("up-coming")]
-        public async Task<ActionResult<IEnumerable<LeaveRequestDto>>> GetLeaveRequests()
-        {
-            var logs = await leaveRequestService.GetUpComingLeavesAsync();
-            return Ok(logs);
-        }
         [HttpPost]
         [Authorize]
         [Route("create")]
