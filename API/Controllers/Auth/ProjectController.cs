@@ -26,6 +26,7 @@ namespace API.Controllers.Auth
         }
 
         [HttpGet]
+        [Authorize(Roles = StaticUserRoles.USER)]
         public async Task<ActionResult<IEnumerable<ProjectDto>>> GetProjects()
         {
             try
@@ -73,6 +74,7 @@ namespace API.Controllers.Auth
         }
 
         [HttpGet("{id:int}")]
+        [Authorize(Roles = StaticUserRoles.USER)]
         public async Task<IActionResult> GetProjectById(int id)
         {
             var result = await genericService.GetByIdAsync(id);
@@ -83,6 +85,7 @@ namespace API.Controllers.Auth
             return Ok(result);
         }
         [HttpGet("by-username/{username}")]
+        [Authorize(Roles = StaticUserRoles.USER)]
         public async Task<ActionResult<IEnumerable<UserProjectsDto>>> GetUserProject(string username)
         {
             try

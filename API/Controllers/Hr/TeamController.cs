@@ -14,7 +14,6 @@
 
     [ApiController]
     [Route("api/teams")]
-    [Authorize(Roles =StaticUserRoles.USER)]
     public class TeamController : ControllerBase
     {
         private readonly IGenericService<Team, TeamDto> _teamService;
@@ -28,6 +27,7 @@
         }
 
         [HttpGet]
+        [Authorize(Roles = StaticUserRoles.USER)]
         public async Task<IActionResult> GetAllTeams()
         {
             var result = await _teamService.GetAllAsync();
@@ -35,6 +35,7 @@
         }
 
         [HttpGet("{id:int}")]
+        [Authorize(Roles = StaticUserRoles.USER)]
         public async Task<IActionResult> GetTeamById(int id)
         {
             var result = await _teamService.GetByIdAsync(id);
@@ -45,6 +46,7 @@
             return Ok(result);
         }
         [HttpGet("user/{userId}")]
+        [Authorize(Roles = StaticUserRoles.USER)]
         public async Task<IActionResult> GetTeamByUserIdAsync(string userId)
         {
             var result = await teamInterface.GetTeamByUserIdAsync(userId);
@@ -120,6 +122,7 @@
             return StatusCode(response.StatusCode, response);
         }
         [HttpGet("available")]
+        [Authorize(Roles = StaticUserRoles.USER)]
         public async Task<IActionResult> GetAvailableTeamsByDepartmentIdAsync([FromQuery] int departmentId)
         {
             var result = await teamInterface.GetAvailableTeamsByDepartmentIdAsync(departmentId);
@@ -133,6 +136,7 @@
         }
 
         [HttpGet("withdetails")]
+        [Authorize(Roles = StaticUserRoles.USER)]
         public async Task<ActionResult<IEnumerable<TeamMemberDetailsDto>>> GetAllTeamsWithMembers()
         {
             var teams = await teamInterface.GetAllTeamsWithMembersAsync();

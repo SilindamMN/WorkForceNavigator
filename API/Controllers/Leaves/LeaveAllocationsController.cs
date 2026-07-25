@@ -11,7 +11,6 @@
 
     [ApiController]
     [Route("api/leave-allocations")]
-    [Authorize(Roles =StaticUserRoles.USER)]
     public class LeaveAllocationController : ControllerBase
     {
         private readonly ILeaveAllocationService leaveAllocationService;
@@ -23,6 +22,7 @@
 
         [HttpGet]
         [Route("username")]
+        [Authorize(Roles = StaticUserRoles.USER)]
         public async Task<ActionResult<IEnumerable<EmployeeLeaveAllocationDto>>> GetUserAllocationByUserNamesync(string userName)
         {
             var allocations = await leaveAllocationService.GetLeaveAllocationsByUsernameAsync(userName);
@@ -37,6 +37,7 @@
 
         [HttpGet]
         [Route("leave-name")]
+        [Authorize(Roles = StaticUserRoles.USER)]
         public async Task<ActionResult<IEnumerable<LeaveAllocationDto>>> GetUserAllocationByLeaveNamesync(string leavename)
         {
             var allocations = await leaveAllocationService.GetLeaveAllocationsByLeaveTypeAsync(leavename);
@@ -51,6 +52,7 @@
 
         [HttpGet]
         [Route("mine")]
+        [Authorize(Roles = StaticUserRoles.USER)]
         public async Task<ActionResult<IEnumerable<EmployeeLeaveAllocationDto>>> GetMyAllocationsync()
         {
             var allocations = await leaveAllocationService.GetMyLeavesAllocationsAsync(User);
@@ -63,6 +65,7 @@
         }
 
         [HttpGet("all")]
+        [Authorize(Roles = StaticUserRoles.USER)]
         public async Task<IActionResult> GetLeaveAllocations()
         {
             var result = await leaveAllocationService.GetLeaveAllocationsAsync();

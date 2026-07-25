@@ -15,7 +15,6 @@
 
     [ApiController]
     [Route("api/clients")]
-    [Authorize(Roles = StaticUserRoles.USER)]
     public class ClientController : ControllerBase
     {
         private readonly IGenericService<Client, CreateUpdateClientDto> _ClientService;
@@ -30,6 +29,7 @@
         }
 
         [HttpGet]
+        [Authorize(Roles = StaticUserRoles.USER)]
         public async Task<IActionResult> GetAllClients()
         {
             var result = await _ClientService.GetAllAsync();
@@ -38,6 +38,7 @@
         }
 
         [HttpGet("{id}")]
+        [Authorize(Roles = StaticUserRoles.USER)]
         public async Task<IActionResult> GetClientById(int id)
         {
             var result = await _ClientService.GetByIdAsync(id);
@@ -104,6 +105,7 @@
 
         [HttpGet]
         [Route("clientdetails/{id}")]
+        [Authorize(Roles = StaticUserRoles.USER)]
         public async Task<ActionResult<List<ClientDetailDto>>> GetClientProject(int id)
         {
             var result = await clientService.GetClientProjectAsync(id);

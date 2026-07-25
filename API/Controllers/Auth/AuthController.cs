@@ -13,7 +13,6 @@
 
     [Route("api/auth")]
     [ApiController]
-    [Authorize(Roles =StaticUserRoles.USER)]
     public class AuthController : ControllerBase
     {
         private readonly IAuthService authService;
@@ -28,6 +27,7 @@
         }
 
         [HttpGet]
+        [Authorize(Roles = StaticUserRoles.USER)]
         [Route("jobtitle/{username}")]
         public async Task<ActionResult<JobTitleDto>> GetJobTitleByUsername([FromRoute] string username)
         {
@@ -92,6 +92,7 @@
         }
 
         [HttpGet("me")]
+        [Authorize(Roles = StaticUserRoles.USER)]
         public async Task<ActionResult<LoginServiceResponseDto>> Me([FromBody] MeDto token)
         {
             var me = await authService.MeAsync(token);
@@ -107,6 +108,7 @@
 
         [HttpGet]
         [Route("{username}")]
+        [Authorize(Roles = StaticUserRoles.USER)]
         public async Task<ActionResult<UserDetailsDto>> GetUserDetailsByUsernames([FromRoute] string username)
         {
             var user = await userService.GetUserDetailsByUserNameAsync(username);

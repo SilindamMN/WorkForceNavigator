@@ -11,7 +11,6 @@
 
     [Route("api/timesheet")]
     [ApiController]
-    [Authorize(Roles =StaticUserRoles.USER)]
     public class TimesheetController : ControllerBase
     {
         private readonly ITimesheetService timesheetService;
@@ -23,6 +22,7 @@
 
         [HttpPost]
         [Route("create")]
+        [Authorize(Roles = StaticUserRoles.USER)]
         public async Task<IActionResult> CreateTimesheetEntry([FromBody] TimesheetCreateModifyDto timesheetEntry)
         {
             var result = await timesheetService.TimesheetEntryAsync(User, timesheetEntry);
@@ -35,6 +35,7 @@
 
         [HttpGet]
         [Route("by-date")]
+        [Authorize(Roles = StaticUserRoles.USER)]
         public async Task<ActionResult<IEnumerable<TimesheetDetailDto>>> GetTimeSheetByDate(DateTime date)
         {
             DateTime dates = date.Date;
@@ -49,6 +50,7 @@
 
         [HttpGet]
         [Route("weekly")]
+        [Authorize(Roles = StaticUserRoles.USER)]
         public async Task<ActionResult<IEnumerable<TimesheetDetailDto>>> GetWeeklyTimesheetEntries()
         {
             var timesheets = await timesheetService.GetWeeklyTimesheetEntriesAsync(User);
@@ -61,6 +63,7 @@
         }
         [Route("daily")]
         [HttpGet]
+        [Authorize(Roles = StaticUserRoles.USER)]
         public async Task<ActionResult<IEnumerable<DailyProjectTotalDto>>> GetDailyProjectHours(DateTime date)
         {
             var timesheets = await timesheetService.GetDailyProjectHoursAsync(User, date);
@@ -74,6 +77,7 @@
 
         [HttpGet]
         [Route("week-off-set")]
+        [Authorize(Roles = StaticUserRoles.USER)]
         public async Task<ActionResult<IEnumerable<DailyProjectTotalDto>>> GetWeeklyProjectHours(int weekOffSet)
         {
             var timesheets = await timesheetService.GetWeeklyProjectHoursAsync(User, weekOffSet);

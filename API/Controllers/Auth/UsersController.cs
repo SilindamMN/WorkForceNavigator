@@ -13,7 +13,6 @@
 
     [Route("api/users")]
     [ApiController]
-    [Authorize]
     public class UsersController : ControllerBase
     {
         private readonly IUserService userService;
@@ -27,6 +26,7 @@
 
         [HttpGet]
         [Route("jobtitle/{username}")]
+        [Authorize(Roles = StaticUserRoles.USER)]
         public async Task<ActionResult<JobTitleDto>> GetJobTitleByUsername([FromRoute] string username)
         {
             var user = await userJobTitleService.GetJobTitleForUserAsync(username);
@@ -34,6 +34,7 @@
         }
 
         [HttpGet]
+        [Authorize(Roles = StaticUserRoles.USER)]
         public async Task<ActionResult<IEnumerable<UserInfoResult>>> GetUsersList()
         {
             var userList = await userService.GetUserListAsync();
@@ -42,6 +43,7 @@
 
         [HttpGet]
         [Route("users/{username}")]
+        [Authorize(Roles = StaticUserRoles.USER)]
         public async Task<ActionResult<UserDetailsDto>> GetUserDetailsByUsernames([FromRoute] string username)
         {
             var user = await userService.GetUserDetailsByUserNameAsync(username);
@@ -50,6 +52,7 @@
 
         [HttpGet]
         [Route("{username}")]
+        [Authorize(Roles = StaticUserRoles.USER)]
         public async Task<ActionResult<UserDetailsDto>> GetUserExtraDetailsByUsername([FromRoute] string username)
         {
             var user = await userService.GetUserExtraDetailsByUserNameAsync(username);
@@ -57,6 +60,7 @@
         }
         [HttpGet]
         [Route("usernames")]
+        [Authorize(Roles = StaticUserRoles.USER)]
         public async Task<ActionResult<IEnumerable<string>>> GetUsernameList()
         {
             var usernames = await userService.GetUsernamesListAsync();
