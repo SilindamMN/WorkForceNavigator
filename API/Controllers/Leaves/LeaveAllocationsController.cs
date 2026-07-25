@@ -6,9 +6,12 @@
     using Microsoft.AspNetCore.Identity;
     using Application.Dtos.Leaves.LeaveAllocation;
     using Application.Interfaces.Leaves;
+    using Microsoft.AspNetCore.Authorization;
+    using Domain.Constants;
 
     [ApiController]
     [Route("api/leave-allocations")]
+    [Authorize(Roles =StaticUserRoles.USER)]
     public class LeaveAllocationController : ControllerBase
     {
         private readonly ILeaveAllocationService leaveAllocationService;

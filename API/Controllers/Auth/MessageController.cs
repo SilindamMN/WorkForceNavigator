@@ -10,6 +10,7 @@
 
     [Route("api/messages")]
     [ApiController]
+    [Authorize(Roles =StaticUserRoles.USER)]
     public class MessageController : ControllerBase
     {
         private readonly IMessageService messageService;
@@ -20,7 +21,6 @@
         }
 
         [HttpPost]
-        [Authorize]
         [Route("create")]
         public async Task<IActionResult> CreateNewMessage([FromBody] CreateMessageDto createMessageDto)
         {
@@ -34,7 +34,6 @@
 
         [HttpGet]
         [Route("mine")]
-        [Authorize]
         public async Task<ActionResult<IEnumerable<GetMessageDto>>> GetMyMessage()
         {
             var messages = await messageService.GetMyMessageAsync(User);
@@ -42,7 +41,6 @@
         }
 
         [HttpGet]
-        [Authorize(Roles = StaticUserRoles.OwnerAdmin)]
         public async Task<ActionResult<IEnumerable<GetMessageDto>>> GetMessages()
         {
             var messages = await messageService.GetMessagesAsync();

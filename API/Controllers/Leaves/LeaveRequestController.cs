@@ -15,6 +15,7 @@
 
     [ApiController]
     [Route("api/leave-requests")]
+    [Authorize(Roles =StaticUserRoles.USER)]
     public class LeaveRequestController : ControllerBase
     {
         private readonly ILeaveRequestService leaveRequestService;
@@ -27,7 +28,7 @@
         }
 
         [HttpPost]
-        [Authorize]
+        [Authorize(Roles = StaticUserRoles.ADMIN)]
         [Route("create")]
         public async Task<IActionResult> CreateLeaveRequest([FromBody] CreateLeaveRequestDto createLeave)
         {
@@ -117,7 +118,6 @@
         }
 
         [HttpGet("upcoming")]
-        [Authorize]
         public async Task<ActionResult<IEnumerable<LeaveRequestDto>>> GetUpcomingLeaves()
         {
             try

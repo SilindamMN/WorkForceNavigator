@@ -8,6 +8,7 @@ namespace API.Controllers.Hr
     using Application.Interfaces.Hr;
     using Application.Services.Auth;
     using AutoMapper;
+    using Domain.Constants;
     using Domain.Enties.hr;
     using Domain.Enties.Leaves;
     using Microsoft.AspNetCore.Authorization;
@@ -15,6 +16,7 @@ namespace API.Controllers.Hr
 
     [ApiController]
     [Route("api/departments")]
+    [Authorize(Roles =StaticUserRoles.USER)]
     public class DepartmentController : ControllerBase
     {
         private readonly IGenericService<Department, DepartmentDto> _DepartmentService;
@@ -66,6 +68,7 @@ namespace API.Controllers.Hr
         }
 
         [HttpPost("create")]
+        [Authorize(Roles =StaticUserRoles.ADMIN)]
         public async Task<IActionResult> CreateDepartment([FromBody] DepartmentDto departmentDto)
         {
             var result = await _DepartmentService.CreateAsync(departmentDto);
@@ -77,6 +80,7 @@ namespace API.Controllers.Hr
         }
 
         [HttpPatch("{id}")]
+        [Authorize(Roles =StaticUserRoles.ADMIN)]
         public async Task<IActionResult> UpdateDepartment(int id, [FromBody] UpdateDepartmentDto updateDepartmentDto)
         {
             var result = await updateDepartmentService.UpdateAsync(id, updateDepartmentDto);
@@ -90,6 +94,7 @@ namespace API.Controllers.Hr
             }
         }
         [HttpDelete("{id}")]
+        [Authorize(Roles =StaticUserRoles.ADMIN)]
         public async Task<IActionResult> SoftDeleteDepartment(int id)
         {
             var result = await _DepartmentService.SoftDeleteAsync(id);
@@ -101,6 +106,7 @@ namespace API.Controllers.Hr
         }
 
         [HttpDelete("{id}/undo")]
+        [Authorize(Roles =StaticUserRoles.ADMIN)]
         public async Task<IActionResult> UnSoftDeleteDepartment(int id)
         {
             var result = await _DepartmentService.UndoSoftDeleteAsync(id);

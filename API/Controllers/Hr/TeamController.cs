@@ -6,6 +6,7 @@
     using Application.Interfaces;
     using Application.Interfaces.Hr;
     using Application.Services.Auth;
+    using Domain.Constants;
     using Domain.Enties.Hr;
     using Domain.Entities;
     using Microsoft.AspNetCore.Authorization;
@@ -13,6 +14,7 @@
 
     [ApiController]
     [Route("api/teams")]
+    [Authorize(Roles =StaticUserRoles.USER)]
     public class TeamController : ControllerBase
     {
         private readonly IGenericService<Team, TeamDto> _teamService;
@@ -55,6 +57,7 @@
 
 
         [HttpPost]
+        [Authorize(Roles =StaticUserRoles.ADMIN)]
         public async Task<IActionResult> CreateTeam([FromBody] TeamDto teamDto)
         {
             var result = await teamInterface.CreateTeam(teamDto);
@@ -66,6 +69,7 @@
         }
 
         [HttpPatch("{id}")]
+        [Authorize(Roles = StaticUserRoles.ADMIN)]
         public async Task<IActionResult> UpdateTeam(int id, [FromBody] TeamDto updateTeamDto)
         {
             var result = await _teamService.UpdateAsync(id, updateTeamDto);
@@ -77,6 +81,7 @@
         }
 
         [HttpDelete("{id}")]
+        [Authorize(Roles = StaticUserRoles.ADMIN)]
         public async Task<IActionResult> SoftDeleteTeam(int id)
         {
             var result = await _teamService.SoftDeleteAsync(id);
@@ -88,6 +93,7 @@
         }
 
         [HttpDelete("{id}/undo")]
+        [Authorize(Roles = StaticUserRoles.ADMIN)]
         public async Task<IActionResult> UnSoftDeleteTeam(int id)
         {
             var result = await _teamService.UndoSoftDeleteAsync(id);
@@ -99,6 +105,7 @@
         }
 
         [HttpPost("addmember")]
+        [Authorize(Roles = StaticUserRoles.ADMIN)]
         public async Task<IActionResult> AddTeamMember(CreateUserTeamDto createUserTeamDto)
         {
             var response = await teamInterface.UpdateTeamMembership(createUserTeamDto);
@@ -106,6 +113,7 @@
         }
 
         [HttpPost("remove-member")]
+        [Authorize(Roles = StaticUserRoles.ADMIN)]
         public async Task<IActionResult> RemoveTeamMember(CreateUserTeamDto createUserTeamDto)
         {
             var response = await teamInterface.UpdateTeamMembership(createUserTeamDto);

@@ -3,6 +3,7 @@
     using Application.Dtos.Work.Timesheet;
     using Application.Interfaces.Works;
     using Application.Services;
+    using Domain.Constants;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
@@ -10,6 +11,7 @@
 
     [Route("api/timesheet")]
     [ApiController]
+    [Authorize(Roles =StaticUserRoles.USER)]
     public class TimesheetController : ControllerBase
     {
         private readonly ITimesheetService timesheetService;
@@ -20,7 +22,6 @@
         }
 
         [HttpPost]
-        [Authorize]
         [Route("create")]
         public async Task<IActionResult> CreateTimesheetEntry([FromBody] TimesheetCreateModifyDto timesheetEntry)
         {
@@ -34,7 +35,6 @@
 
         [HttpGet]
         [Route("by-date")]
-        [Authorize]
         public async Task<ActionResult<IEnumerable<TimesheetDetailDto>>> GetTimeSheetByDate(DateTime date)
         {
             DateTime dates = date.Date;
@@ -49,7 +49,6 @@
 
         [HttpGet]
         [Route("weekly")]
-        [Authorize]
         public async Task<ActionResult<IEnumerable<TimesheetDetailDto>>> GetWeeklyTimesheetEntries()
         {
             var timesheets = await timesheetService.GetWeeklyTimesheetEntriesAsync(User);
@@ -62,7 +61,6 @@
         }
         [Route("daily")]
         [HttpGet]
-        [Authorize]
         public async Task<ActionResult<IEnumerable<DailyProjectTotalDto>>> GetDailyProjectHours(DateTime date)
         {
             var timesheets = await timesheetService.GetDailyProjectHoursAsync(User, date);
@@ -76,7 +74,6 @@
 
         [HttpGet]
         [Route("week-off-set")]
-        [Authorize]
         public async Task<ActionResult<IEnumerable<DailyProjectTotalDto>>> GetWeeklyProjectHours(int weekOffSet)
         {
             var timesheets = await timesheetService.GetWeeklyProjectHoursAsync(User, weekOffSet);
