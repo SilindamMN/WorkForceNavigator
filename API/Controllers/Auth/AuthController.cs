@@ -94,7 +94,7 @@
         [HttpGet("me")]
         public async Task<ActionResult<LoginServiceResponseDto>> Me([FromBody] MeDto token)
         {
-            var me = await authService.MeAsync(User);
+            var me = await authService.MeAsync(token);
             if (me is null)
             {
                 return Ok(me);
