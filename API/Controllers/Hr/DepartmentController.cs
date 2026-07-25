@@ -16,7 +16,6 @@ namespace API.Controllers.Hr
 
     [ApiController]
     [Route("api/departments")]
-    [Authorize(Roles =StaticUserRoles.USER)]
     public class DepartmentController : ControllerBase
     {
         private readonly IGenericService<Department, DepartmentDto> _DepartmentService;
@@ -33,6 +32,7 @@ namespace API.Controllers.Hr
         }
 
         [HttpGet]
+        [Authorize(Roles = StaticUserRoles.USER)]
         public async Task<IActionResult> GetAllDepartments()
         {
             var result = await _DepartmentService.GetAllAsync();
@@ -41,6 +41,7 @@ namespace API.Controllers.Hr
         }
 
         [HttpGet("{id}")]
+        [Authorize(Roles = StaticUserRoles.USER)]
         public async Task<IActionResult> GetDepartmentById(int id)
         {
             var result = await _DepartmentService.GetByIdAsync(id);
@@ -56,6 +57,7 @@ namespace API.Controllers.Hr
 
         [HttpGet]
         [Route("jobtitle/{id}")]
+        [Authorize(Roles = StaticUserRoles.USER)]
         public async Task<ActionResult<List<UserDetailJobTitle>>> GetDepartmentUserDetailJobTitle(int id)
         {
             var result = await departmentService.GetUserJobTitleTeamsListAsync(id);

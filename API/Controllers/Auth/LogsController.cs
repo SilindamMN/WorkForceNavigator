@@ -9,7 +9,6 @@
 
     [Route("api/logs")]
   [ApiController]
-    [Authorize(Roles= StaticUserRoles.USER)]
   public class LogsController : ControllerBase
   {
     private readonly ILogService logService;
@@ -29,7 +28,8 @@
 
     [HttpGet]
     [Route("mine")]
-    public async Task<ActionResult<IEnumerable<GetLogDto>>> GetMyLogs()
+        [Authorize(Roles = StaticUserRoles.USER)]
+        public async Task<ActionResult<IEnumerable<GetLogDto>>> GetMyLogs()
     {
       var logs = await logService.getMyLogsAsync(User);
       return Ok(logs);

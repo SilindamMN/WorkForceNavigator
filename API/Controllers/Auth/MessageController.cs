@@ -10,7 +10,6 @@
 
     [Route("api/messages")]
     [ApiController]
-    [Authorize(Roles =StaticUserRoles.USER)]
     public class MessageController : ControllerBase
     {
         private readonly IMessageService messageService;
@@ -22,6 +21,7 @@
 
         [HttpPost]
         [Route("create")]
+        [Authorize(Roles = StaticUserRoles.USER)]
         public async Task<IActionResult> CreateNewMessage([FromBody] CreateMessageDto createMessageDto)
         {
             var result = await messageService.CreateNewMessageAsync(User, createMessageDto);
@@ -34,6 +34,7 @@
 
         [HttpGet]
         [Route("mine")]
+        [Authorize(Roles = StaticUserRoles.USER)]
         public async Task<ActionResult<IEnumerable<GetMessageDto>>> GetMyMessage()
         {
             var messages = await messageService.GetMyMessageAsync(User);
@@ -41,6 +42,7 @@
         }
 
         [HttpGet]
+        [Authorize(Roles = StaticUserRoles.USER)]
         public async Task<ActionResult<IEnumerable<GetMessageDto>>> GetMessages()
         {
             var messages = await messageService.GetMessagesAsync();

@@ -15,7 +15,6 @@
 
     [ApiController]
     [Route("api/leave-requests")]
-    [Authorize(Roles =StaticUserRoles.USER)]
     public class LeaveRequestController : ControllerBase
     {
         private readonly ILeaveRequestService leaveRequestService;
@@ -42,6 +41,7 @@
 
         [HttpGet]
         [Route("by-username")]
+        [Authorize(Roles = StaticUserRoles.USER)]
         public async Task<ActionResult<IEnumerable<EmployeeLeaveAllocationDto>>> GetUserAllocationByUserNamesync(string userName)
         {
             var leaveRequests = await leaveRequestService.GetLeaveRequestsByUserAsync(userName);
@@ -56,7 +56,7 @@
 
         [HttpGet]
         [Route("mine")]
-        [Authorize]
+        [Authorize(Roles = StaticUserRoles.USER)]
         public async Task<ActionResult<IEnumerable<LeaveRequestDto>>> GetMyLeaveRequests()
         {
             var leaveRequests = await leaveRequestService.GetLeaveRequestsByUserAsync(User.Identity.Name);
@@ -72,6 +72,7 @@
 
         [HttpGet]
         [Route("{requestId}")]
+        [Authorize(Roles = StaticUserRoles.USER)]
         public async Task<ActionResult<LeaveRequestDto>> GetLeaveRequestById([FromRoute] int requestId)
         {
             var leaveRequests = await leaveRequestService.GetLeaveRequestsByIdAsync(requestId);
@@ -118,6 +119,7 @@
         }
 
         [HttpGet("upcoming")]
+        [Authorize(Roles = StaticUserRoles.USER)]
         public async Task<ActionResult<IEnumerable<LeaveRequestDto>>> GetUpcomingLeaves()
         {
             try

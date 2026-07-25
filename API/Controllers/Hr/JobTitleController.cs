@@ -19,7 +19,6 @@
 
     [ApiController]
     [Route("api/jobtitles")]
-    [Authorize(Roles =StaticUserRoles.USER)]
     public class JobTitleController : ControllerBase
     {
         private readonly IGenericService<JobTitle, JobTitleDto> _JobTitleService;
@@ -37,6 +36,7 @@
         }
 
         [HttpGet]
+        [Authorize(Roles = StaticUserRoles.USER)]
         public async Task<IActionResult> GetAllJobTitles()
         {
             var result = await _JobTitleService.GetAllAsync();
@@ -44,6 +44,7 @@
         }
 
         [HttpGet("{id}")]
+        [Authorize(Roles = StaticUserRoles.USER)]
         public async Task<IActionResult> GetJobTitleById(int id)
         {
             var result = await _JobTitleService.GetByIdAsync(id);
@@ -91,6 +92,7 @@
         }
 
         [HttpGet("department/{departmentId}")]
+        [Authorize(Roles = StaticUserRoles.USER)]
         public async Task<IActionResult> GetJobTitleByDepartment(int departmentId, Seniority? seniority)
         {
             var result = await userJobTitleService.GetJobTitleByDepartmentAndSeniorityAsync(departmentId, seniority);
@@ -110,6 +112,7 @@
         }
 
         [HttpGet("username/{username}")]
+        [Authorize(Roles = StaticUserRoles.USER)]
         public async Task<JobTitleDto> GetUserJobTitle(string userName)
         {
             var jobTitle = await userJobTitleService.GetJobTitleForUserAsync(userName);
