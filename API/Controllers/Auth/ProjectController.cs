@@ -56,7 +56,7 @@ namespace API.Controllers.Auth
                 var updatedProject = await genericService.UpdateAsync(id, projectDto);
                 if (updatedProject == null)
                 {
-                    return Cre("Project not found");
+                    return NotFound("Project not found");
                 }
 
                 return Ok(updatedProject);
