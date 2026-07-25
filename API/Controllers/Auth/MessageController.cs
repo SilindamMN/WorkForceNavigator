@@ -9,44 +9,44 @@
     using Microsoft.AspNetCore.Mvc;
 
     [Route("api/messages")]
-  [ApiController]
-  public class MessageController : ControllerBase
-  {
-    private readonly IMessageService messageService;
-
-    public MessageController(IMessageService messageService)
+    [ApiController]
+    public class MessageController : ControllerBase
     {
-      this.messageService = messageService;
-    }
+        private readonly IMessageService messageService;
 
-    [HttpPost]
-    [Authorize]
-    [Route("Create")]
-    public async Task<IActionResult> CreateNewMessage([FromBody] CreateMessageDto createMessageDto)
-    {
-      var result = await messageService.CreateNewMessageAsync(User, createMessageDto);
-      if (result.IsSucceed)
-      {
-        return Ok(result.Message);
-      }
-      return StatusCode(result.StatusCode, result.Message);
-    }
+        public MessageController(IMessageService messageService)
+        {
+            this.messageService = messageService;
+        }
 
-    [HttpGet]
-    [Route("mine")]
-    [Authorize]
-    public async Task<ActionResult<IEnumerable<GetMessageDto>>> GetMyMessage()
-    {
-      var messages = await messageService.GetMyMessageAsync(User);
-      return Ok(messages);
-    }
+        [HttpPost]
+        [Authorize]
+        [Route("create")]
+        public async Task<IActionResult> CreateNewMessage([FromBody] CreateMessageDto createMessageDto)
+        {
+            var result = await messageService.CreateNewMessageAsync(User, createMessageDto);
+            if (result.IsSucceed)
+            {
+                return Ok(result.Message);
+            }
+            return StatusCode(result.StatusCode, result.Message);
+        }
 
-    [HttpGet]
-    [Authorize(Roles = StaticUserRoles.OwnerAdmin)]
-    public async Task<ActionResult<IEnumerable<GetMessageDto>>> GetMessages()
-    {
-      var messages = await messageService.GetMessagesAsync();
-      return Ok(messages);
+        [HttpGet]
+        [Route("mine")]
+        [Authorize]
+        public async Task<ActionResult<IEnumerable<GetMessageDto>>> GetMyMessage()
+        {
+            var messages = await messageService.GetMyMessageAsync(User);
+            return Ok(messages);
+        }
+
+        [HttpGet]
+        [Authorize(Roles = StaticUserRoles.OwnerAdmin)]
+        public async Task<ActionResult<IEnumerable<GetMessageDto>>> GetMessages()
+        {
+            var messages = await messageService.GetMessagesAsync();
+            return Ok(messages);
+        }
     }
-  }
 }

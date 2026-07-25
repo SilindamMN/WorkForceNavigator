@@ -19,7 +19,7 @@
         private readonly IUserService userService;
         private readonly IUserJobTitleService userJobTitleService;
 
-        public AuthController(IAuthService authService,IUserService userService,IUserJobTitleService userJobTitleService)
+        public AuthController(IAuthService authService, IUserService userService, IUserJobTitleService userJobTitleService)
         {
             this.authService = authService;
             this.userService = userService;
@@ -72,9 +72,7 @@
             }
             return Ok(loginResult);
         }
-
-        [HttpPatch]
-        [Route("update")]
+        [HttpPatch("{id}")]
         //[Authorize(Roles =StaticUserRoles.OwnerAdmin)]
         public async Task<IActionResult> UpdateRole([FromBody] UpdateRoleDto updateRoleDto)
         {
@@ -89,27 +87,26 @@
             }
         }
 
-        [HttpPost]
-        [Route("me")]
+        [HttpGet("me")]
         public async Task<ActionResult<LoginServiceResponseDto>> Me([FromBody] MeDto token)
         {
-                var me = await authService.MeAsync(token);
-                if (me is null)
-                {
-                    return Ok(me);
-                }
-                else
-                {
-                    return Unauthorized("Invalid Token");
-                }
+            var me = await authService.MeAsync(token);
+            if (me is null)
+            {
+                return Ok(me);
             }
+            else
+            {
+                return Unauthorized("Invalid Token");
+            }
+        }
 
         [HttpGet]
         [Route("{username}")]
         public async Task<ActionResult<UserDetailsDto>> GetUserDetailsByUsernames([FromRoute] string username)
         {
             var user = await userService.GetUserDetailsByUserNameAsync(username);
-           
+
             if (user is not null)
             {
                 return Ok(user);

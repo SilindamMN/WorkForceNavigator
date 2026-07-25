@@ -50,7 +50,6 @@
         }
 
         [HttpPost]
-        [Route("create")]
         public async Task<IActionResult> CreateClient([FromBody] CreateUpdateClientDto client)
         {
             var result = await _ClientService.CreateAsync(client);
@@ -61,8 +60,7 @@
             return StatusCode(result.StatusCode, result.Message);
         }
 
-        [HttpPatch]
-        [Route("update")]
+        [HttpPatch("{id}")]
         public async Task<IActionResult> UpdateClient(int id, [FromBody] CreateUpdateClientDto updateClientDto)
         {
             var result = await _ClientService.UpdateAsync(id, updateClientDto);
@@ -76,8 +74,7 @@
             }
         }
 
-        [HttpDelete]
-        [Route("delete")]
+        [HttpDelete("{id}")]
         public async Task<IActionResult> SoftDeleteClient(int id)
         {
             var result = await _ClientService.SoftDeleteAsync(id);

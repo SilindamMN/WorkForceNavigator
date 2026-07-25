@@ -37,7 +37,6 @@ namespace API.Controllers.Auth
         }
 
         [HttpPost("create")]
-        [ProducesResponseType(typeof(Project), 201)] // Define the response type for successful creation
         public async Task<IActionResult> CreateNewProject([FromBody] CreateUpdateProjectDto projectDto)
         {
             var result = await projectService.CreateProjectAsync(projectDto);
@@ -48,10 +47,8 @@ namespace API.Controllers.Auth
             return StatusCode(result.StatusCode, result.Message);
         }
 
-        [HttpPatch]
-        [Route("update")]
-        [ProducesResponseType(typeof(Project), 200)] // Define the response type for successful update
-        [ProducesResponseType(404)] // Define the response type for not found
+      [HttpPatch("{id}")]
+
         public async Task<IActionResult> UpdateProject(int id, [FromBody] CreateUpdateProjectDto projectDto)
         {
             try
@@ -59,7 +56,7 @@ namespace API.Controllers.Auth
                 var updatedProject = await genericService.UpdateAsync(id, projectDto);
                 if (updatedProject == null)
                 {
-                    return NotFound("Project not found");
+                    return Cre("Project not found");
                 }
 
                 return Ok(updatedProject);

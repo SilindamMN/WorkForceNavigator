@@ -84,7 +84,7 @@
             }
             return StatusCode(result.StatusCode, result.Message);
         }
-        [HttpGet("{departmentId}")]
+        [HttpGet("department/{departmentId}")]
         public async Task<IActionResult> GetJobTitleByDepartment(int departmentId, Seniority? seniority)
         {
             var result = await userJobTitleService.GetJobTitleByDepartmentAndSeniorityAsync(departmentId, seniority);
