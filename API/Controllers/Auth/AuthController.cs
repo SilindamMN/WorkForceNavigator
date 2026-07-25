@@ -76,7 +76,7 @@
             }
             return Ok(loginResult);
         }
-        [HttpPatch("{id}")]
+        [HttpPatch]
         [Authorize(Roles =StaticUserRoles.ADMIN)]
         public async Task<IActionResult> UpdateRole([FromBody] UpdateRoleDto updateRoleDto)
         {
