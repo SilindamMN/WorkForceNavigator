@@ -1,5 +1,11 @@
 # 🚀 Company Management Platform
 
+
+LOGIN
+
+<img width="1862" height="858" alt="image" src="https://github.com/user-attachments/assets/ca7dc5b2-ee38-43e0-9583-8bd942059c3e" />
+
+
 **A backend API for streamlining company operations** — built with **ASP.NET Core (.NET 9)**, following **Domain-Driven Design (DDD)** and clean **OOP** architecture.
 
 ![.NET](https://img.shields.io/badge/-.NET%209-512BD4?style=for-the-badge&logo=dotnet&logoColor=white)
