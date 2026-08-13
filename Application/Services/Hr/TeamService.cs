@@ -66,32 +66,51 @@
                 return ResponseHelper.CreateResponse(true, StatusCodes.Status201Created, "Member added successfully.");
             
         }
+
+        public async Task<IEnumerable<TeamDto>> GetAllTeamsAsync()
+        {
+            var teams = await (from t in dataContext.Teams
+                               join d in dataContext.Departments on t.DepartmentId equals d.Id into departments
+                               from d in departments.DefaultIfEmpty()
+                               select new TeamDto
+                               {
+                                   TeamName = t.TeamName,
+                                   Description = t.Description,
+                                   DepartmentName = d.DepartmentName
+                               }).ToListAsync();
+
+            return teams;
+        }
+
         public async Task<IEnumerable<TeamMemberDetailsDto>> GetAllTeamsWithMembersAsync()
         {
-                var teamsWithMembers = await (from ut in dataContext.UserTeams
-                                              join u in dataContext.Users on ut.UserId equals u.Id
-                                              join t in dataContext.Teams on ut.TeamId equals t.Id
-                                              join jt in dataContext.JobTitles on u.JobTitleId equals jt.Id into jobTitles
-                                              from jt in dataContext.JobTitles.DefaultIfEmpty()
-                                              select new
+            var teamsWithMembers = await (from ut in dataContext.UserTeams
+                                          join u in dataContext.Users on ut.UserId equals u.Id
+                                          join t in dataContext.Teams on ut.TeamId equals t.Id
+                                          join d in dataContext.Departments on t.DepartmentId equals d.Id into departments
+                                          from d in departments.DefaultIfEmpty()
+                                          join jt in dataContext.JobTitles on u.JobTitleId equals jt.Id into jobTitles
+                                          from jt in jobTitles.DefaultIfEmpty()
+                                          select new
+                                          {
+                                              TeamName = t.TeamName,
+                                              DepartmentName = d.DepartmentName,
+                                              Member = new MemberDetails
                                               {
-                                                  TeamName = t.TeamName,
-                                                  Member = new MemberDetails
-                                                  {
-                                                      FirstName = u.FirstName,
-                                                      LastName = u.LastName,
-                                                      JobTitle = jt.Title
-                                                  }
-                                              }).ToListAsync();
+                                                  FirstName = u.FirstName,
+                                                  LastName = u.LastName,
+                                                  JobTitle = jt.Title
+                                              }
+                                          }).ToListAsync();
 
-                var teams = teamsWithMembers.GroupBy(t => new { t.TeamName, })
-                                            .Select(g => new TeamMemberDetailsDto
-                                            {
-                                                TeamLeader = g.Key.TeamName,
-                                                TeamName = g.Key.TeamName,
-                                                MemberDetails = g.Select(m => m.Member).ToList()
-                                            }).ToList();
-                return teams;
+            var teams = teamsWithMembers.GroupBy(t => new { t.TeamName, t.DepartmentName })
+                                        .Select(g => new TeamMemberDetailsDto
+                                        {
+                                            DepartmentName = g.Key.DepartmentName,
+                                            TeamName = g.Key.TeamName,
+                                            MemberDetails = g.Select(m => m.Member).ToList()
+                                        }).ToList();
+            return teams;
         }
 
         public async Task<GeneralServiceResponseDto> CreateTeam(TeamDto teamDto)
@@ -101,21 +120,6 @@
                 if (existingTeam != null)
                 {
                     return ResponseHelper.CreateResponse(false, StatusCodes.Status400BadRequest, "A team with this name already exists.");
-                }
-                var teamLeader = await userManager.FindByNameAsync(teamDto.TeamLeader);
-
-                if (teamLeader == null)
-                {
-                    return ResponseHelper.CreateResponse(false, StatusCodes.Status400BadRequest, "User Name not found or invalid.");
-                }
-
-                if (!await IsUserManager(teamDto.TeamLeader))
-                {
-                    return ResponseHelper.CreateResponse(false, StatusCodes.Status403Forbidden, "The assigned user does not qualify to be team leader");
-                }
-                if (await IsUserTeamLeaderInAnyTeam(teamDto.TeamLeader))
-                {
-                    return ResponseHelper.CreateResponse(false, StatusCodes.Status400BadRequest, "User is already a team leader of another team.");
                 }
 
                 var newTeam = new Team
@@ -127,28 +131,6 @@
                 await dataContext.Teams.AddAsync(newTeam);
                 await dataContext.SaveChangesAsync();
 
-                var createdTeam = await dataContext.Teams.FindAsync(newTeam.Id);
-
-                if (createdTeam == null)
-                {
-                    return ResponseHelper.CreateResponse(false, StatusCodes.Status500InternalServerError, "Failed to retrieve the newly created team.");
-                }
-
-                var userId = await GetUserIdAsync(teamDto.TeamLeader);
-
-                if (userId == null)
-                {
-                    return ResponseHelper.CreateResponse(false, StatusCodes.Status404NotFound, "User not found.");
-                }
-
-                var newUserTeamRecord = new UserTeam
-                {
-                    UserId = userId, // Assuming TeamLeader is the userId
-                    TeamId = createdTeam.Id
-                };
-                await dataContext.UserTeams.AddAsync(newUserTeamRecord);
-
-                await dataContext.SaveChangesAsync();
 
             return ResponseHelper.CreateResponse(true, StatusCodes.Status201Created, "Team created successfully.");   
         }
@@ -176,14 +158,6 @@
                 .Select(x => x.TeamId)
                 .Distinct()
                 .CountAsync() >= 3;
-        }
-
-        // Private method to check if the user is already a team leader in any team
-        private async Task<bool> IsUserTeamLeaderInAnyTeam(string username)
-        {
-            // Count the number of teams the user is a team leader of
-            var teamLeaderCount = await dataContext.Teams.CountAsync(t => t.TeamName == username);
-            return teamLeaderCount > 0;
         }
 
         private async Task<bool> IsUserInTeam(string userId, int teamId)

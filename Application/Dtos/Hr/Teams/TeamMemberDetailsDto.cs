@@ -6,7 +6,7 @@
     public class TeamMemberDetailsDto
   {
     public string TeamName { get; set; } = string.Empty;
-        public string TeamLeader { get; set; } = string.Empty;
+        public string DepartmentName { get; set; } = string.Empty;
     public List<Project> Projects { get; set; } = new List<Project>();
 
     public List<MemberDetails>? MemberDetails { get; set; }

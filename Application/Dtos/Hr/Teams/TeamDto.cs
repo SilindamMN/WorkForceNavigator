@@ -10,7 +10,7 @@
   public class TeamDto
   {
     public string TeamName { get; set; } = string.Empty;
-        public string TeamLeader { get; set; } = string.Empty;
+        public string DepartmentName { get; set; } = string.Empty;
         public string Description { get; set; } = string.Empty;
   }
 }

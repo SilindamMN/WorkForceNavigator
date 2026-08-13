@@ -30,7 +30,7 @@
         [Authorize(Roles = StaticUserRoles.USER)]
         public async Task<IActionResult> GetAllTeams()
         {
-            var result = await _teamService.GetAllAsync();
+            var result = await teamInterface.GetAllTeamsAsync();
             return Ok(result);
         }
 
