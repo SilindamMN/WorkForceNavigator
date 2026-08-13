@@ -27,7 +27,7 @@
         }
 
         [HttpPost]
-        [Authorize(Roles = StaticUserRoles.ADMIN)]
+        [Authorize(Roles = StaticUserRoles.USER)]
         [Route("create")]
         public async Task<IActionResult> CreateLeaveRequest([FromBody] CreateLeaveRequestDto createLeave)
         {
