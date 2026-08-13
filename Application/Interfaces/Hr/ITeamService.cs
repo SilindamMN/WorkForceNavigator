@@ -14,6 +14,7 @@
         Task<GeneralServiceResponseDto> UpdateTeamMembership(CreateUserTeamDto createUserTeamDto);
         Task<IEnumerable<TeamMemberDetailsDto>> GetAllTeamsWithMembersAsync();
         Task<GeneralServiceResponseDto> CreateTeam(TeamDto team);
+        Task<IEnumerable<TeamDto>> GetAllTeamsAsync();
         Task<IEnumerable<UserTeamListDto>> GetTeamByUserIdAsync(string userId);
         Task<IEnumerable<UserTeamListApplicableDto>> GetAvailableTeamsByDepartmentIdAsync(int departmentId);
     }

@@ -138,7 +138,7 @@
 //            {
 //              Id = i + 1,
 //              TeamName = $"Team {i + 1}",
-//              TeamLeader = saUsernames[i], // Assigning team leaders from the usernames
+//              DepartmentName = $"Department {i + 1}", // Assigning department name
 //              Description = $"Description for Team {i + 1}",
 //              CreatedAt = DateTime.Now,
 //              UpdatedAt = DateTime.Now,
