@@ -3,7 +3,9 @@
 
 LOGIN
 <img width="562" height="353" alt="image" src="https://github.com/user-attachments/assets/88a54de1-158b-49e5-bed7-29a1b1dff6e0" />
+
 REGISTER
+
 <img width="557" height="523" alt="image" src="https://github.com/user-attachments/assets/1dd07117-acb0-4599-a83c-1151f483882a" />
 
 **A backend API for streamlining company operations** — built with **ASP.NET Core (.NET 9)**, following **Domain-Driven Design (DDD)** and clean **OOP** architecture.
