@@ -12,8 +12,8 @@
   [JsonConverter(typeof(JsonStringEnumConverter))]
   public enum Status
   {
-    Approved,
-    Declined,
-    Pending
+    Approved = 0,
+    Declined =1,
+    Pending =2 
   }
   }
