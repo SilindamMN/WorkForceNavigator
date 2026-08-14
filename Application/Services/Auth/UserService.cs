@@ -89,7 +89,7 @@ namespace Application.Services.Auth
                 LastName = user.LastName,
                 TeamId = currentUserTeam?.TeamId,
                 TeamName = currentUserTeam?.TeamName ?? string.Empty,
-                DepartmentId = currentUserTeam?.DepartmentId,
+                DepartmentId = currentUserTeam?.DepartmentId ?? userTitle?.DepartmentId,
                 DepartmentName = currentUserTeam?.DepartmentName ?? string.Empty,
                 JobTitleId = user?.JobTitleId,
                 JobTitleName = userTitle?.Title ?? string.Empty,
