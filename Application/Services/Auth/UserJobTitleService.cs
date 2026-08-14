@@ -115,6 +115,7 @@
                                       where u.UserName == username
                                       select new JobTitleDto
                                       {
+                                          DepartmentId = d.Id,
                                           DepartmentName = d.DepartmentName,
                                           Title = j.Title,
                                           JobTitleId = j.Id,
