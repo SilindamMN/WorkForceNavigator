@@ -89,9 +89,9 @@
         [HttpPatch]
         [Route("{id}")]
         [Authorize(Roles = StaticUserRoles.ADMIN)]
-        public async Task<IActionResult> UpdateLeaveRequest(int leaveRequestId, [FromBody] UpdateLeaveRequestDto updateLeaveRequestDto)
+        public async Task<IActionResult> UpdateLeaveRequest(int id, [FromBody] UpdateLeaveRequestDto updateLeaveRequestDto)
         {
-            var updateLeaveRequest = await leaveRequestService.UpdateLeaveRequestAsync(User, leaveRequestId, updateLeaveRequestDto);
+            var updateLeaveRequest = await leaveRequestService.UpdateLeaveRequestAsync(User, id, updateLeaveRequestDto);
             if (updateLeaveRequest.IsSucceed)
             {
                 return Ok(updateLeaveRequest.Message);
