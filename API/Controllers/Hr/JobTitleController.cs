@@ -39,7 +39,7 @@
         [Authorize(Roles = StaticUserRoles.USER)]
         public async Task<IActionResult> GetAllJobTitles()
         {
-            var result = await _JobTitleService.GetAllAsync();
+            var result = await userJobTitleService.GetAllJobTitlesAsync();
             return Ok(result);
         }
 

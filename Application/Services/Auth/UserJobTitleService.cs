@@ -131,5 +131,23 @@
             throw new NotImplementedException();
         }
 
+        public async Task<IEnumerable<JobTitleDto>> GetAllJobTitlesAsync()
+        {
+            var jobTitles = await dataContext.JobTitles
+                .AsNoTracking()
+                .Include(jt => jt.Department)
+                .Select(jt => new JobTitleDto
+                {
+                    JobTitleId = jt.Id,
+                    Title = jt.Title,
+                    DepartmentId = jt.DepartmentId,
+                    DepartmentName = jt.Department.DepartmentName,
+                    Seniority = jt.Seniority.ToString(),
+                    Description = jt.Description
+                })
+                .ToListAsync();
+
+            return jobTitles;
+        }
     }
 }
