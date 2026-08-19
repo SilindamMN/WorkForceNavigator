@@ -77,7 +77,7 @@
             var result = await _teamService.UpdateAsync(id, updateTeamDto);
             if (result.IsSucceed)
             {
-                return Ok(result.Message);
+                return Ok(result);
             }
             return StatusCode(result.StatusCode, result.Message);
         }
