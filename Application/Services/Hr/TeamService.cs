@@ -75,7 +75,7 @@
                                where !t.IsDeleted
                                select new TeamDto
                                {
-                                   Id = d.Id,
+                                   Id = t.Id,
                                    TeamName = t.TeamName,
                                    Description = t.Description,
                                    DepartmentName = d.DepartmentName
