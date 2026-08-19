@@ -9,6 +9,6 @@
 
     public interface IClientService
   {
-    Task<IEnumerable<ClientDetailDto>> GetClientProjectAsync(int id);
+    Task<ClientDetailsDto> GetClientDetailsAsync(int id);
   }
 }
