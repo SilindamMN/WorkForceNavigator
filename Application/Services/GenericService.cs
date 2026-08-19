@@ -116,9 +116,11 @@ namespace Application.Services
 
         public async Task<TDto?> GetByIdAsync(int id)
         {
-            var entity = await dataContext.Set<TEntity>().FindAsync(id);
+            var entity = await dataContext.Set<TEntity>()
+                .Where(e => EF.Property<int>(e, "Id") == id && EF.Property<bool>(e, "IsDeleted") == false)
+                .FirstOrDefaultAsync();
 
-            if (entity == null || EF.Property<bool>(entity, "IsDeleted"))
+            if (entity == null)
                 return default;
 
             return mapper.Map<TDto>(entity);
