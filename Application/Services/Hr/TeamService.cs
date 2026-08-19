@@ -74,6 +74,7 @@
                                from d in departments.DefaultIfEmpty()
                                select new TeamDto
                                {
+                                   Id = d.Id,
                                    TeamName = t.TeamName,
                                    Description = t.Description,
                                    DepartmentName = d.DepartmentName
