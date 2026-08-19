@@ -46,43 +46,47 @@ namespace Application.Services
       }
     }
 
-    public async Task<GeneralServiceResponseDto> UpdateAsync(int id, TDto updatedEntityDto)
-    {
-      try
-      {
-        var getByIdResult = await GetByIdAsync(id);
-
-        if (getByIdResult is not null)
+        public async Task<GeneralServiceResponseDto> UpdateAsync(int id, TDto updatedEntityDto)
         {
-          var oldEntity = await dataContext.Set<TEntity>().FindAsync(id);
+            try
+            {
+                var getByIdResult = await GetByIdAsync(id);
 
-          if (oldEntity != null)
-          {
-            mapper.Map(updatedEntityDto, oldEntity);
-            await SaveAsync();
+                if (getByIdResult is null)
+                {
+                    return ResponseHelper.CreateResponse(false, StatusCodes.Status404NotFound, $"Entity with id {id} not found.");
+                }
 
-            var updatedDto = mapper.Map<TDto>(oldEntity);
-            return ResponseHelper.CreateResponse(true, 200, "Updated Successfullu");
-          }
-          else
-          {
-            return ResponseHelper.CreateResponse(false, StatusCodes.Status400BadRequest, "Entity with id {id} not found.");
-          }
+                var oldEntity = await dataContext.Set<TEntity>().FindAsync(id);
+
+                if (oldEntity == null)
+                {
+                    return ResponseHelper.CreateResponse(false, StatusCodes.Status404NotFound, $"Entity with id {id} not found.");
+                }
+
+                mapper.Map(updatedEntityDto, oldEntity, opts =>
+                    opts.Items["IgnoreNulls"] = true);
+
+                await SaveAsync();
+
+                var updatedDto = mapper.Map<TDto>(oldEntity);
+                return ResponseHelper.CreateResponse(true, 200, "Updated successfully.");
+            }
+            catch (DbUpdateConcurrencyException ex)
+            {
+                return ResponseHelper.CreateResponse(false, StatusCodes.Status409Conflict, $"Concurrency conflict updating id {id}: {ex.Message}");
+            }
+            catch (DbUpdateException ex)
+            {
+                return ResponseHelper.CreateResponse(false, StatusCodes.Status400BadRequest, $"Database error updating id {id}: {ex.InnerException?.Message ?? ex.Message}");
+            }
+            catch (Exception ex)
+            {
+                return ResponseHelper.CreateResponse(false, StatusCodes.Status500InternalServerError, $"Failed to update id {id}: {ex.Message}");
+            }
         }
-        else
-        {
-          // The GetByIdAsync failed to find the entity
-          return ResponseHelper.CreateResponse(false, StatusCodes.Status400BadRequest, "Failed for ${Id}");
-        }
-      }
-      catch (Exception ex)
-      {
-        // Log or handle the exception appropriately
-        return ResponseHelper.CreateResponse(false, StatusCodes.Status400BadRequest, "Failed for ${Id}");
-      }
-    }
 
-    public async Task<GeneralServiceResponseDto> SoftDeleteAsync(int id)
+        public async Task<GeneralServiceResponseDto> SoftDeleteAsync(int id)
     {
       try
       {
