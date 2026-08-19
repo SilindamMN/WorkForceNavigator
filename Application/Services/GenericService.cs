@@ -110,13 +110,16 @@ namespace Application.Services
       }
     }
 
-    public async Task<TDto> GetByIdAsync(int id)
-    {
-      var entity = await dataContext.Set<TEntity>().FindAsync(id);
-      return mapper.Map<TDto>(entity);
-    }
+        public async Task<TDto?> GetByIdAsync(int id)
+        {
+            var entity = await dataContext.Set<TEntity>().FindAsync(id);
 
-    private async Task SaveAsync()
+            if (entity == null || EF.Property<bool>(entity, "IsDeleted"))
+                return default;
+
+            return mapper.Map<TDto>(entity);
+        }
+        private async Task SaveAsync()
     {
       try
       {
