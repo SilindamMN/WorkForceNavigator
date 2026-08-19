@@ -6,8 +6,17 @@
   using System.Text;
   using System.Threading.Tasks;
 
-  public class ClientDetailDto
-  {
-    public string ProjectName { get; set; } = string.Empty.ToString();  
-  }
+    public class ClientDetailsDto
+    {
+        public int Id { get; set; }
+        public string ClientName { get; set; }
+        public string Email { get; set; }
+        public string Phone { get; set; }
+        public string Fax { get; set; }
+
+        public int DepartmentId { get; set; }
+        public string DepartmentName { get; set; }
+
+        public List<string> ProjectNames { get; set; } = new();
+    }
 }

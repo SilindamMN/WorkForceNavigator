@@ -3,6 +3,7 @@
     using System.Collections.Generic;
     using System.Threading.Tasks;
     using Application.Dtos.Hr.Clients;
+    using Application.Dtos.Hr.Teams;
     using Application.Interfaces;
     using Application.Interfaces.Hr;
     using Application.Services.Auth;
@@ -18,21 +19,24 @@
     public class ClientController : ControllerBase
     {
         private readonly IGenericService<Client, CreateUpdateClientDto> _ClientService;
+        private readonly IGenericService<Client, ClientDto> ClientList;
         private readonly IClientService clientService;
 
         public ClientController(
             IGenericService<Client, CreateUpdateClientDto> ClientService,
-            IClientService clientService)
+            IClientService clientService,
+            IGenericService<Client,ClientDto> ClientList)
         {
             _ClientService = ClientService;
             this.clientService = clientService;
+            this.ClientList = ClientList;
         }
 
         [HttpGet]
         [Authorize(Roles = StaticUserRoles.USER)]
         public async Task<IActionResult> GetAllClients()
         {
-            var result = await _ClientService.GetAllAsync();
+            var result = await ClientList.GetAllAsync();
 
             return Ok(result);
         }
@@ -41,7 +45,7 @@
         [Authorize(Roles = StaticUserRoles.USER)]
         public async Task<IActionResult> GetClientById(int id)
         {
-            var result = await _ClientService.GetByIdAsync(id);
+            var result = await clientService.GetClientDetailsAsync(id);
             if (result is null)
             {
                 return NotFound("leaveRequestId not found");
@@ -103,17 +107,17 @@
             return StatusCode(result.StatusCode, result.Message);
         }
 
-        [HttpGet]
-        [Route("clientdetails/{id}")]
-        [Authorize(Roles = StaticUserRoles.USER)]
-        public async Task<ActionResult<List<ClientDetailDto>>> GetClientProject(int id)
-        {
-            var result = await clientService.GetClientProjectAsync(id);
-            if (result == null || !result.Any())
-            {
-                return NotFound($"No details found for departmentId: {id}");
-            }
-            return Ok(result);
-        }
+        //[HttpGet]
+        //[Route("clientdetails/{id}")]
+        //[Authorize(Roles = StaticUserRoles.USER)]
+        //public async Task<ActionResult<List<ClientDetailDto>>> GetClientProject(int id)
+        //{
+        //    var result = await clientService.GetClientProjectAsync(id);
+        //    if (result == null || !result.Any())
+        //    {
+        //        return NotFound($"No details found for departmentId: {id}");
+        //    }
+        //    return Ok(result);
+        //}
     }
 }
