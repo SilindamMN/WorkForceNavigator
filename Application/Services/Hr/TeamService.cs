@@ -72,6 +72,7 @@
             var teams = await (from t in dataContext.Teams
                                join d in dataContext.Departments on t.DepartmentId equals d.Id into departments
                                from d in departments.DefaultIfEmpty()
+                               .Where(t => t.IsDeleted == false)
                                select new TeamDto
                                {
                                    Id = d.Id,
