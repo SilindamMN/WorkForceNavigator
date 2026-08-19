@@ -84,12 +84,12 @@
 
         [HttpDelete("{id}")]
         [Authorize(Roles = StaticUserRoles.ADMIN)]
-        public async Task<IActionResult> SoftDeleteTeam(int id)
+        public async Task<IActionResult> DeleteTeam(int id)
         {
             var result = await _teamService.SoftDeleteAsync(id);
             if (result.IsSucceed)
             {
-                return Ok(result.Message);
+                return Ok(result);      // was: Ok(result.Message)
             }
             return StatusCode(result.StatusCode, result.Message);
         }
