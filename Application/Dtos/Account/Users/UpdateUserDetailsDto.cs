@@ -8,14 +8,14 @@
     using System.Threading.Tasks;
 
     public class UpdateUserDetailsDto
-  {
+    {
         public string FirstName { get; set; } = string.Empty;
         public string LastName { get; set; } = string.Empty;
-    public Gender? Gender { get; set; }
+        public Gender? Gender { get; set; }
         public int JobTitleId { get; set; }
         public int? TeamId { get; set; }
         public Seniority? Seniority { get; set; }
         public decimal? Salary { get; set; }
         public string Phonenumber { get; set; } = string.Empty;
-  }
+    }
 }

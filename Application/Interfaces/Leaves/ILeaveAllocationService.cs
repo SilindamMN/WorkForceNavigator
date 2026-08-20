@@ -11,11 +11,11 @@ namespace Application.Interfaces.Leaves
     using System.Threading.Tasks;
 
     public interface ILeaveAllocationService
-  {
-    Task<IEnumerable<EmployeeLeaveAllocationDto>> GetLeaveAllocationsByUsernameAsync(string username);
-    Task<IEnumerable<EmployeeLeaveAllocationDto>> GetMyLeavesAllocationsAsync(ClaimsPrincipal user);
-    Task<IEnumerable<LeaveAllocationDto>> GetLeaveAllocationsAsync();
-    Task<IEnumerable<LeaveAllocationDto>> GetLeaveAllocationsByLeaveTypeAsync(string leaveName);
-    Task<GeneralServiceResponseDto> CreateLeaveAllocationAsync(string username);
-  }
+    {
+        Task<IEnumerable<EmployeeLeaveAllocationDto>> GetLeaveAllocationsByUsernameAsync(string username);
+        Task<IEnumerable<EmployeeLeaveAllocationDto>> GetMyLeavesAllocationsAsync(ClaimsPrincipal user);
+        Task<IEnumerable<LeaveAllocationDto>> GetLeaveAllocationsAsync();
+        Task<IEnumerable<LeaveAllocationDto>> GetLeaveAllocationsByLeaveTypeAsync(string leaveName);
+        Task<GeneralServiceResponseDto> CreateLeaveAllocationAsync(string username);
+    }
 }

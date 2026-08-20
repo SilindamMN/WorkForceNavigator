@@ -29,42 +29,42 @@
 
         public async Task<GeneralServiceResponseDto> UpdateTeamMembership(CreateUserTeamDto dto)
         {
-                var user = await userManager.FindByIdAsync(dto.UserId);
-                if (user == null)
-                    return ResponseHelper.CreateResponse(false, StatusCodes.Status400BadRequest, "User not found.");
+            var user = await userManager.FindByIdAsync(dto.UserId);
+            if (user == null)
+                return ResponseHelper.CreateResponse(false, StatusCodes.Status400BadRequest, "User not found.");
 
-                var team = await dataContext.Teams
-                    .FirstOrDefaultAsync(x => x.Id == dto.TeamId);
-                if (team == null)
-                    return ResponseHelper.CreateResponse(false, StatusCodes.Status404NotFound, "Team not found.");
+            var team = await dataContext.Teams
+                .FirstOrDefaultAsync(x => x.Id == dto.TeamId);
+            if (team == null)
+                return ResponseHelper.CreateResponse(false, StatusCodes.Status404NotFound, "Team not found.");
 
-                if (dto.IsRemove)
-                {
-                    var userTeams = await dataContext.UserTeams
-                        .Where(x => x.UserId == dto.UserId && x.TeamId == dto.TeamId)
-                        .ToListAsync();
-                    dataContext.UserTeams.RemoveRange(userTeams);
-                    dataContext.Users.Update(user);
-                    await dataContext.SaveChangesAsync();
-                    return ResponseHelper.CreateResponse(true, StatusCodes.Status200OK, "Member removed successfully.");
-                }
-
-                if (await IsUserInTeam(dto.UserId, dto.TeamId))
-                    return ResponseHelper.CreateResponse(false, StatusCodes.Status400BadRequest, "User already in this team.");
-
-                if (await IsUserInMaxTeams(dto.UserId))
-                    return ResponseHelper.CreateResponse(false, StatusCodes.Status400BadRequest, "User already in max 3 teams.");
-
-                var userTeam = new UserTeam
-                {
-                    UserId = dto.UserId,
-                    TeamId = dto.TeamId,
-                };
-
-                dataContext.UserTeams.Add(userTeam);
+            if (dto.IsRemove)
+            {
+                var userTeams = await dataContext.UserTeams
+                    .Where(x => x.UserId == dto.UserId && x.TeamId == dto.TeamId)
+                    .ToListAsync();
+                dataContext.UserTeams.RemoveRange(userTeams);
+                dataContext.Users.Update(user);
                 await dataContext.SaveChangesAsync();
-                return ResponseHelper.CreateResponse(true, StatusCodes.Status201Created, "Member added successfully.");
-            
+                return ResponseHelper.CreateResponse(true, StatusCodes.Status200OK, "Member removed successfully.");
+            }
+
+            if (await IsUserInTeam(dto.UserId, dto.TeamId))
+                return ResponseHelper.CreateResponse(false, StatusCodes.Status400BadRequest, "User already in this team.");
+
+            if (await IsUserInMaxTeams(dto.UserId))
+                return ResponseHelper.CreateResponse(false, StatusCodes.Status400BadRequest, "User already in max 3 teams.");
+
+            var userTeam = new UserTeam
+            {
+                UserId = dto.UserId,
+                TeamId = dto.TeamId,
+            };
+
+            dataContext.UserTeams.Add(userTeam);
+            await dataContext.SaveChangesAsync();
+            return ResponseHelper.CreateResponse(true, StatusCodes.Status201Created, "Member added successfully.");
+
         }
 
         public async Task<IEnumerable<TeamDto>> GetAllTeamsAsync()
@@ -114,38 +114,38 @@
 
         public async Task<GeneralServiceResponseDto> CreateTeam(TeamDto teamDto)
         {
-                var existingTeam = dataContext.Teams.FirstOrDefault(t => t.TeamName == teamDto.TeamName);
+            var existingTeam = dataContext.Teams.FirstOrDefault(t => t.TeamName == teamDto.TeamName);
 
-                if (existingTeam != null)
-                {
-                    return ResponseHelper.CreateResponse(false, StatusCodes.Status400BadRequest, "A team with this name already exists.");
-                }
+            if (existingTeam != null)
+            {
+                return ResponseHelper.CreateResponse(false, StatusCodes.Status400BadRequest, "A team with this name already exists.");
+            }
 
-                var newTeam = new Team
-                {
-                    TeamName = teamDto.TeamName,
-                    Description = teamDto.Description
-                };
+            var newTeam = new Team
+            {
+                TeamName = teamDto.TeamName,
+                Description = teamDto.Description
+            };
 
-                await dataContext.Teams.AddAsync(newTeam);
-                await dataContext.SaveChangesAsync();
+            await dataContext.Teams.AddAsync(newTeam);
+            await dataContext.SaveChangesAsync();
 
 
-            return ResponseHelper.CreateResponse(true, StatusCodes.Status201Created, "Team created successfully.");   
+            return ResponseHelper.CreateResponse(true, StatusCodes.Status201Created, "Team created successfully.");
         }
         private async Task<bool> IsUserManager(string username)
         {
-                // Retrieve the user by username
-                var user = await userManager.FindByNameAsync(username);
+            // Retrieve the user by username
+            var user = await userManager.FindByNameAsync(username);
 
-                if (user == null)
-                {
-                    // User not found
-                    return false;
-                }
+            if (user == null)
+            {
+                // User not found
+                return false;
+            }
 
-                // Check if the user has the Manager role
-                return await userManager.IsInRoleAsync(user, "Manager");
+            // Check if the user has the Manager role
+            return await userManager.IsInRoleAsync(user, "Manager");
         }
 
         // Private method to check if the user is already a member of the maximum allowed teams

@@ -9,10 +9,10 @@
     using System.Threading.Tasks;
 
     public class Department : BaseEntity<int>
-  {
+    {
         public string DepartmentName { get; set; } = string.Empty;
-        public string Description { get; set; } = string.Empty; 
-    public ICollection<JobTitle>? JobTitles { get; set; }
+        public string Description { get; set; } = string.Empty;
+        public ICollection<JobTitle>? JobTitles { get; set; }
         public ICollection<Client>? Clients { get; set; }
     }
 }

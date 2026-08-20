@@ -2,18 +2,18 @@
 
 namespace Application.Dtos.Account.Users
 {
-  public class RegisterDto
-  {
-    [Required(ErrorMessage = "Username Required")]
-    public string Username { get; set; } = string.Empty;
-    [Required(ErrorMessage = "FirstName Required")]
-    public string FirstName { get; set; } = string.Empty;
-    [Required(ErrorMessage = "LastName Required")]
-    public string LastName { get; set; } = string.Empty;
-    [Required(ErrorMessage = "Email Required")]
-    public string Email { get; set; } = string.Empty;
+    public class RegisterDto
+    {
+        [Required(ErrorMessage = "Username Required")]
+        public string Username { get; set; } = string.Empty;
+        [Required(ErrorMessage = "FirstName Required")]
+        public string FirstName { get; set; } = string.Empty;
+        [Required(ErrorMessage = "LastName Required")]
+        public string LastName { get; set; } = string.Empty;
+        [Required(ErrorMessage = "Email Required")]
+        public string Email { get; set; } = string.Empty;
 
-    [Required(ErrorMessage = "Password Required")]
-    public string Password { get; set; } = string.Empty;
-  }
+        [Required(ErrorMessage = "Password Required")]
+        public string Password { get; set; } = string.Empty;
+    }
 }
