@@ -37,7 +37,6 @@ namespace Persistence
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
-            // ---------------- Identity Mapping ----------------
             builder.Entity<ApplicationUser>().ToTable("Users");
             builder.Entity<IdentityUserClaim<string>>().ToTable("UserClaims");
             builder.Entity<IdentityUserLogin<string>>().ToTable("UserLogins");
@@ -45,7 +44,6 @@ namespace Persistence
             builder.Entity<IdentityRole<string>>().ToTable("Roles");
             builder.Entity<IdentityRoleClaim<string>>().ToTable("RoleClaims");
 
-            // ---------------- Department → JobTitle ----------------
             builder.Entity<JobTitle>()
                 .HasOne(x => x.Department)
                 .WithMany(c => c.JobTitles)
@@ -53,7 +51,6 @@ namespace Persistence
                 .OnDelete(DeleteBehavior.Restrict);
 
 
-            // ---------------- UserTeam (Many-to-Many) ----------------
             builder.Entity<UserTeam>()
                 .HasKey(ut => new { ut.UserId, ut.TeamId });
 
@@ -61,15 +58,15 @@ namespace Persistence
                 .HasOne(ut => ut.User)
                 .WithMany(u => u.UserTeams)
                 .HasForeignKey(ut => ut.UserId)
-                .OnDelete(DeleteBehavior.NoAction); // IMPORTANT FIX
+                .OnDelete(DeleteBehavior.NoAction);
 
             builder.Entity<UserTeam>()
                 .HasOne(ut => ut.Team)
                 .WithMany(t => t.UserTeams)
                 .HasForeignKey(ut => ut.TeamId)
-                .OnDelete(DeleteBehavior.NoAction); // IMPORTANT FIX
+                .OnDelete(DeleteBehavior.NoAction); 
 
-            // ---------------- Project Relations ----------------
+            
             builder.Entity<Project>()
     .HasOne(p => p.Client)
     .WithMany(c => c.Projects)
@@ -82,14 +79,12 @@ namespace Persistence
                 .HasForeignKey(p => p.TeamId)
                 .OnDelete(DeleteBehavior.Restrict);
 
-            // ---------------- Timesheet ----------------
             builder.Entity<TimesheetEntry>()
                 .HasOne(te => te.Project)
                 .WithMany(p => p.TimesheetEntries)
                 .HasForeignKey(te => te.ProjectId)
                 .OnDelete(DeleteBehavior.Restrict);
 
-            // ---------------- Decimal Fix ----------------
             builder.Entity<ApplicationUser>()
                 .Property(e => e.Salary)
                 .HasColumnType("decimal(18,2)");
