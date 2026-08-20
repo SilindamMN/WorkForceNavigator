@@ -135,11 +135,11 @@
             return Ok(result);
         }
 
-        [HttpGet("withdetails")]
+        [HttpGet("{teamId}/withdetails")]
         [Authorize(Roles = StaticUserRoles.USER)]
-        public async Task<ActionResult<IEnumerable<TeamMemberDetailsDto>>> GetAllTeamsWithMembers()
+        public async Task<ActionResult<IEnumerable<TeamMemberDetailsDto>>> GetAllTeamsWithMembers(int teamId)
         {
-            var teams = await teamInterface.GetAllTeamsWithMembersAsync();
+            var teams = await teamInterface.GetTeamsWithMembersAsync(teamId);
             return Ok(teams);
         }
     }
