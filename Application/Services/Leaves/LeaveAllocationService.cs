@@ -22,131 +22,131 @@
     using System.Threading.Tasks;
 
     public class LeaveAllocationService : ILeaveAllocationService
-  {
-    private readonly DataContext dataContext;
-    private readonly ILogService logService;
-    private readonly IMapper mapper;
-
-    public LeaveAllocationService(DataContext dataContext,ILogService logService,IMapper mapper)
     {
-      this.dataContext = dataContext;
-      this.logService = logService;
-      this.mapper = mapper;
-    }
-    public async Task<IEnumerable<LeaveAllocationDto>> GetLeaveAllocationsAsync()
-    {
-      var leaveAllocations = await (from la in dataContext.LeaveAllocations
-                                    join u in dataContext.Users on la.EmployeeId equals u.Id
-                                    select new LeaveAllocationDto
-                                    {
-                                       Username = u.UserName ?? string.Empty,
-                                      FirstName = u.FirstName,
-                                      LastName = u.LastName,
-                                      NumberOfDays = la.NumberOfDays,
-                                      LeaveName= la.LeaveType.Name
-                                    }).ToListAsync();
+        private readonly DataContext dataContext;
+        private readonly ILogService logService;
+        private readonly IMapper mapper;
 
-      return leaveAllocations;
-    }
+        public LeaveAllocationService(DataContext dataContext, ILogService logService, IMapper mapper)
+        {
+            this.dataContext = dataContext;
+            this.logService = logService;
+            this.mapper = mapper;
+        }
+        public async Task<IEnumerable<LeaveAllocationDto>> GetLeaveAllocationsAsync()
+        {
+            var leaveAllocations = await (from la in dataContext.LeaveAllocations
+                                          join u in dataContext.Users on la.EmployeeId equals u.Id
+                                          select new LeaveAllocationDto
+                                          {
+                                              Username = u.UserName ?? string.Empty,
+                                              FirstName = u.FirstName,
+                                              LastName = u.LastName,
+                                              NumberOfDays = la.NumberOfDays,
+                                              LeaveName = la.LeaveType.Name
+                                          }).ToListAsync();
 
-    public async Task<GeneralServiceResponseDto> CreateLeaveAllocationAsync(string username)
-    {
-      // Retrieve the user based on the username
-      var user = await dataContext.Users.FirstOrDefaultAsync(u => u.UserName == username);
+            return leaveAllocations;
+        }
 
-      if (user == null)
-      {
-        return ResponseHelper.CreateResponse(false, StatusCodes.Status400BadRequest, "User not found");
-      }
+        public async Task<GeneralServiceResponseDto> CreateLeaveAllocationAsync(string username)
+        {
+            // Retrieve the user based on the username
+            var user = await dataContext.Users.FirstOrDefaultAsync(u => u.UserName == username);
 
-      // Retrieve all leave types
-      var leaveTypes = await dataContext.LeaveTypes.ToListAsync();
+            if (user == null)
+            {
+                return ResponseHelper.CreateResponse(false, StatusCodes.Status400BadRequest, "User not found");
+            }
 
-      // Create leave allocations for each leave type for the user
-      var newAllocations = leaveTypes.Select(leaveType => new LeaveAllocation
-      {
-          EmployeeId = user.Id,
-          LeaveTypeId = leaveType.Id,
-        NumberOfDays = leaveType.DefaultDays, 
-                                              
-      }).ToList();
+            // Retrieve all leave types
+            var leaveTypes = await dataContext.LeaveTypes.ToListAsync();
 
-      dataContext.LeaveAllocations.AddRange(newAllocations);
-      await logService.SaveNewLogAsync(username, "Leaves Allocated");
-      await dataContext.SaveChangesAsync();
+            // Create leave allocations for each leave type for the user
+            var newAllocations = leaveTypes.Select(leaveType => new LeaveAllocation
+            {
+                EmployeeId = user.Id,
+                LeaveTypeId = leaveType.Id,
+                NumberOfDays = leaveType.DefaultDays,
 
-       return ResponseHelper.CreateResponse(true, StatusCodes.Status200OK, "LeaveAllocated Successfully");
-    }
+            }).ToList();
 
-    public async Task<IEnumerable<EmployeeLeaveAllocationDto>> GetLeaveAllocationsByUsernameAsync(string username)
-    {
+            dataContext.LeaveAllocations.AddRange(newAllocations);
+            await logService.SaveNewLogAsync(username, "Leaves Allocated");
+            await dataContext.SaveChangesAsync();
 
-      var employee = await dataContext.Users.FirstOrDefaultAsync(x => x.UserName == username);
+            return ResponseHelper.CreateResponse(true, StatusCodes.Status200OK, "LeaveAllocated Successfully");
+        }
 
-      if (employee == null)
-      {
-        return (IEnumerable<EmployeeLeaveAllocationDto>)ResponseHelper.CreateResponse(false, StatusCodes.Status400BadRequest, "User not found");
-      }
-      var leaveAllocations = await dataContext.LeaveAllocations
-          .Include(x => x.LeaveType) 
-          .Where(x => x.Employee.FirstName == username) 
-          .Select(x => new EmployeeLeaveAllocationDto
-          {
-              LeaveTypeId =x.LeaveTypeId,
-            NumberOfDays = x.NumberOfDays,
-            LeaveName = x.LeaveType.Name,
-          })
-          .ToListAsync();
-      return mapper.Map<IEnumerable<EmployeeLeaveAllocationDto>>(leaveAllocations);
-    }
+        public async Task<IEnumerable<EmployeeLeaveAllocationDto>> GetLeaveAllocationsByUsernameAsync(string username)
+        {
 
-    public async Task<IEnumerable<EmployeeLeaveAllocationDto>> GetMyLeavesAllocationsAsync(ClaimsPrincipal User)
-    {
-      var employee = await dataContext.Users.FirstOrDefaultAsync(x => x.UserName == User.Identity.Name);
-      if (employee == null)
-      {
-        return (IEnumerable<EmployeeLeaveAllocationDto>)ResponseHelper.CreateResponse(false, StatusCodes.Status400BadRequest, "User not found");
-      }
+            var employee = await dataContext.Users.FirstOrDefaultAsync(x => x.UserName == username);
+
+            if (employee == null)
+            {
+                return (IEnumerable<EmployeeLeaveAllocationDto>)ResponseHelper.CreateResponse(false, StatusCodes.Status400BadRequest, "User not found");
+            }
+            var leaveAllocations = await dataContext.LeaveAllocations
+                .Include(x => x.LeaveType)
+                .Where(x => x.Employee.FirstName == username)
+                .Select(x => new EmployeeLeaveAllocationDto
+                {
+                    LeaveTypeId = x.LeaveTypeId,
+                    NumberOfDays = x.NumberOfDays,
+                    LeaveName = x.LeaveType.Name,
+                })
+                .ToListAsync();
+            return mapper.Map<IEnumerable<EmployeeLeaveAllocationDto>>(leaveAllocations);
+        }
+
+        public async Task<IEnumerable<EmployeeLeaveAllocationDto>> GetMyLeavesAllocationsAsync(ClaimsPrincipal User)
+        {
+            var employee = await dataContext.Users.FirstOrDefaultAsync(x => x.UserName == User.Identity.Name);
+            if (employee == null)
+            {
+                return (IEnumerable<EmployeeLeaveAllocationDto>)ResponseHelper.CreateResponse(false, StatusCodes.Status400BadRequest, "User not found");
+            }
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
             var leaveAllocations = await dataContext.LeaveAllocations
-          .Include(x => x.LeaveType) 
-          .Where(x => x.Employee.UserName == User.Identity.Name) 
+          .Include(x => x.LeaveType)
+          .Where(x => x.Employee.UserName == User.Identity.Name)
           .Select(x => new EmployeeLeaveAllocationDto
           {
-            LeaveTypeId = x.LeaveTypeId,
-            NumberOfDays = x.NumberOfDays,
-            LeaveName = x.LeaveType.Name,
+              LeaveTypeId = x.LeaveTypeId,
+              NumberOfDays = x.NumberOfDays,
+              LeaveName = x.LeaveType.Name,
           })
           .ToListAsync();
 
-      return mapper.Map<IEnumerable<EmployeeLeaveAllocationDto>>(leaveAllocations);
+            return mapper.Map<IEnumerable<EmployeeLeaveAllocationDto>>(leaveAllocations);
+        }
+
+        public async Task<IEnumerable<LeaveAllocationDto>> GetLeaveAllocationsByLeaveTypeAsync(string leaveName)
+        {
+            var allocation = await dataContext.LeaveAllocations
+                .Where(z => z.LeaveType.Name == leaveName)
+                .FirstOrDefaultAsync();
+
+            if (allocation is null)
+            {
+                return (IEnumerable<LeaveAllocationDto>)ResponseHelper.CreateResponse(false, StatusCodes.Status400BadRequest, "No Leave Allocations for this ");
+            }
+
+            var leaveAllocations = await (from la in dataContext.LeaveAllocations
+                                          join u in dataContext.LeaveTypes on la.LeaveTypeId equals u.Id
+                                          join user in dataContext.Users on la.Employee.UserName equals user.UserName
+                                          where (la.LeaveType.Name).Equals(leaveName)
+                                          select new LeaveAllocationDto
+                                          {
+                                              Username = user.UserName,
+                                              FirstName = user.FirstName,
+                                              LastName = user.LastName,
+                                              NumberOfDays = la.NumberOfDays,
+                                              LeaveName = la.LeaveType.Name
+                                          }).ToListAsync();
+            return leaveAllocations;
+        }
     }
-
-    public async Task<IEnumerable<LeaveAllocationDto>> GetLeaveAllocationsByLeaveTypeAsync(string leaveName)
-    {
-      var allocation = await dataContext.LeaveAllocations
-          .Where(z => z.LeaveType.Name == leaveName)
-          .FirstOrDefaultAsync();
-
-      if (allocation is null)
-      {
-        return (IEnumerable<LeaveAllocationDto>)ResponseHelper.CreateResponse(false, StatusCodes.Status400BadRequest, "No Leave Allocations for this ");
-      }
-
-      var leaveAllocations = await (from la in dataContext.LeaveAllocations
-                                    join u in dataContext.LeaveTypes on la.LeaveTypeId equals u.Id
-                                    join user in dataContext.Users on la.Employee.UserName equals user.UserName
-                                    where (la.LeaveType.Name).Equals(leaveName)
-                                    select new LeaveAllocationDto
-                                    {
-                                      Username = user.UserName,
-                                      FirstName = user.FirstName,
-                                      LastName = user.LastName,
-                                      NumberOfDays = la.NumberOfDays,
-                                      LeaveName = la.LeaveType.Name
-                                    }).ToListAsync();
-      return leaveAllocations;
-    }
-  }
 }

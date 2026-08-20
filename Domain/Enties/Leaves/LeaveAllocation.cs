@@ -1,16 +1,16 @@
 ﻿namespace Domain.Enties.Leaves
 {
-  using Domain.Account;
-  using Domain.Entities;
-  using System;
-  using System.Collections.Generic;
+    using Domain.Account;
+    using Domain.Entities;
+    using System;
+    using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Linq;
     using System.Text;
     using System.Threading.Tasks;
 
-  public class LeaveAllocation : BaseEntity<int>
-  {
+    public class LeaveAllocation : BaseEntity<int>
+    {
         public required string EmployeeId { get; set; }
         [ForeignKey("EmployeeId")]
         public ApplicationUser? Employee { get; set; }
@@ -18,5 +18,5 @@
         public int LeaveTypeId { get; set; }
         [ForeignKey(nameof(LeaveTypeId))]
         public LeaveType? LeaveType { get; set; }
-  }
+    }
 }

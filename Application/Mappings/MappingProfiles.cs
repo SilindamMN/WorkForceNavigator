@@ -20,18 +20,18 @@
     using Domain.Enties.Work;
 
     public class MappingProfiles : Profile
-  {
-    public MappingProfiles()
     {
+        public MappingProfiles()
+        {
             CreateMap<Department, DepartmentDto>().ReverseMap();
-      CreateMap<Department, UpdateDepartmentDto>().ReverseMap();
-      CreateMap<Log, GetLogDto>().ReverseMap();
+            CreateMap<Department, UpdateDepartmentDto>().ReverseMap();
+            CreateMap<Log, GetLogDto>().ReverseMap();
             CreateMap<Message, GetMessageDto>().ReverseMap();
             CreateMap<JobTitle, JobTitleDto>().ReverseMap();
-      CreateMap<JobTitle, UpdateCreateJobTitleDto>().ReverseMap();
-      CreateMap<LeaveRequest, CreateLeaveRequestDto>().ReverseMap();
-      CreateMap<LeaveRequestDto, MyLeaveRequestDto>().ReverseMap();
-      CreateMap<LeaveAllocation, EmployeeLeaveAllocationDto>().ReverseMap();
+            CreateMap<JobTitle, UpdateCreateJobTitleDto>().ReverseMap();
+            CreateMap<LeaveRequest, CreateLeaveRequestDto>().ReverseMap();
+            CreateMap<LeaveRequestDto, MyLeaveRequestDto>().ReverseMap();
+            CreateMap<LeaveAllocation, EmployeeLeaveAllocationDto>().ReverseMap();
             CreateMap<Team, TeamDto>().ReverseMap();
             CreateMap<Team, UserTeamListApplicableDto>().ReverseMap();
             CreateMap<Team, CreateUserTeamDto>().ReverseMap();
@@ -39,13 +39,13 @@
             CreateMap<Client, ClientDto>().ReverseMap();
             CreateMap<Client, CreateUpdateClientDto>().ReverseMap();
             CreateMap<Project, CreateUpdateProjectDto>().ReverseMap();
-      CreateMap<Project, ProjectDto>().ReverseMap();
-      CreateMap<ApplicationUser, UserInfoResult>().ReverseMap();
-      CreateMap<TimesheetEntry,TimesheetDetailDto>().ReverseMap();
-      CreateMap<TimesheetEntry,TimesheetCreateModifyDto>().ReverseMap();
-      CreateMap<TimesheetCreateModifyDto, TimesheetEntry>()
-           .ForMember(dest => dest.TimesheetDate, opt => opt.MapFrom(src => src.TimesheetDate))
-           .ForMember(dest => dest.Username, opt => opt.Ignore()).ReverseMap(); 
+            CreateMap<Project, ProjectDto>().ReverseMap();
+            CreateMap<ApplicationUser, UserInfoResult>().ReverseMap();
+            CreateMap<TimesheetEntry, TimesheetDetailDto>().ReverseMap();
+            CreateMap<TimesheetEntry, TimesheetCreateModifyDto>().ReverseMap();
+            CreateMap<TimesheetCreateModifyDto, TimesheetEntry>()
+                 .ForMember(dest => dest.TimesheetDate, opt => opt.MapFrom(src => src.TimesheetDate))
+                 .ForMember(dest => dest.Username, opt => opt.Ignore()).ReverseMap();
+        }
     }
-  }
 }

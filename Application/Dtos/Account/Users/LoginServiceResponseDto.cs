@@ -7,8 +7,8 @@
     using System.Threading.Tasks;
 
     public class LoginServiceResponseDto
-  {
-    public string NewToken { get; set; } = string.Empty;
-    public UserInfoResult UserInfo { get; set; } = new UserInfoResult();
-  }
+    {
+        public string NewToken { get; set; } = string.Empty;
+        public UserInfoResult UserInfo { get; set; } = new UserInfoResult();
+    }
 }

@@ -18,33 +18,33 @@ namespace Application.Services
     public class GenericService<TEntity, TDto> : IGenericService<TEntity, TDto>
       where TEntity : class
       where TDto : class
-  {
-    private readonly DataContext dataContext;
-    private readonly IMapper mapper;
-
-    public GenericService(DataContext dataContext, IMapper mapper)
     {
-      this.dataContext = dataContext ?? throw new ArgumentNullException(nameof(dataContext));
-      this.mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
-    }
+        private readonly DataContext dataContext;
+        private readonly IMapper mapper;
 
-    public async Task<GeneralServiceResponseDto> CreateAsync(TDto entityDto)
-    {
-      try
-      {
-        var newEntity = mapper.Map<TEntity>(entityDto);
-        dataContext.Set<TEntity>().Add(newEntity);
-        await SaveAsync();
+        public GenericService(DataContext dataContext, IMapper mapper)
+        {
+            this.dataContext = dataContext ?? throw new ArgumentNullException(nameof(dataContext));
+            this.mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
+        }
 
-        var createdDto = mapper.Map<TDto>(newEntity);
-        return ResponseHelper.CreateResponse(true, 200, "Created Successfully");
-      }
-      catch (Exception ex)
-      {
-        // Log or handle the exception appropriately
-        return ResponseHelper.CreateResponse(false, StatusCodes.Status400BadRequest, "Failed to create entity");
-      }
-    }
+        public async Task<GeneralServiceResponseDto> CreateAsync(TDto entityDto)
+        {
+            try
+            {
+                var newEntity = mapper.Map<TEntity>(entityDto);
+                dataContext.Set<TEntity>().Add(newEntity);
+                await SaveAsync();
+
+                var createdDto = mapper.Map<TDto>(newEntity);
+                return ResponseHelper.CreateResponse(true, 200, "Created Successfully");
+            }
+            catch (Exception ex)
+            {
+                // Log or handle the exception appropriately
+                return ResponseHelper.CreateResponse(false, StatusCodes.Status400BadRequest, "Failed to create entity");
+            }
+        }
 
         public async Task<GeneralServiceResponseDto> UpdateAsync(int id, TDto updatedEntityDto)
         {
@@ -87,32 +87,32 @@ namespace Application.Services
         }
 
         public async Task<GeneralServiceResponseDto> SoftDeleteAsync(int id)
-    {
-      try
-      {
-        var entity = await dataContext.Set<TEntity>().FindAsync(id);
-
-        if (entity == null)
         {
-          return ResponseHelper.CreateResponse(false, StatusCodes.Status400BadRequest, "Not found  for ${Id}");
+            try
+            {
+                var entity = await dataContext.Set<TEntity>().FindAsync(id);
+
+                if (entity == null)
+                {
+                    return ResponseHelper.CreateResponse(false, StatusCodes.Status400BadRequest, "Not found  for ${Id}");
+                }
+
+                // Soft delete by setting the 'IsDeleted' property to true
+                entity.GetType().GetProperty("IsDeleted")?.SetValue(entity, true);
+
+                // Update the 'LastModified' property
+                entity.GetType().GetProperty("LastModified")?.SetValue(entity, DateTime.Now);
+
+                await dataContext.SaveChangesAsync();
+
+                return ResponseHelper.CreateResponse(true, 200, "Successfully");
+            }
+            catch (Exception ex)
+            {
+                // Log or handle the exception appropriately
+                return ResponseHelper.CreateResponse(false, StatusCodes.Status400BadRequest, "Failed for ${Id}");
+            }
         }
-
-        // Soft delete by setting the 'IsDeleted' property to true
-        entity.GetType().GetProperty("IsDeleted")?.SetValue(entity, true);
-
-        // Update the 'LastModified' property
-        entity.GetType().GetProperty("LastModified")?.SetValue(entity, DateTime.Now);
-
-        await dataContext.SaveChangesAsync();
-
-        return ResponseHelper.CreateResponse(true, 200, "Successfully");
-      }
-      catch (Exception ex)
-      {
-        // Log or handle the exception appropriately
-        return ResponseHelper.CreateResponse(false, StatusCodes.Status400BadRequest, "Failed for ${Id}");
-      }
-    }
 
         public async Task<TDto?> GetByIdAsync(int id)
         {
@@ -126,70 +126,70 @@ namespace Application.Services
             return mapper.Map<TDto>(entity);
         }
         private async Task SaveAsync()
-    {
-      try
-      {
-        await dataContext.SaveChangesAsync();
-      }
-      catch (Exception ex)
-      {
-        // Log or handle the exception appropriately
-        throw new Exception("Failed to save changes.", ex);
-      }
-    }
-
-    public async Task<GeneralServiceResponseDto> UndoSoftDeleteAsync(int id)
-    {
-      try
-      {
-        var entity = await dataContext.Set<TEntity>().FindAsync(id);
-
-        if (entity == null)
         {
-          return ResponseHelper.CreateResponse(false, StatusCodes.Status400BadRequest, "Not found  for ${Id}");
+            try
+            {
+                await dataContext.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                // Log or handle the exception appropriately
+                throw new Exception("Failed to save changes.", ex);
+            }
         }
 
-        // Soft delete by setting the 'IsDeleted' property to true
-        entity.GetType().GetProperty("IsDeleted")?.SetValue(entity, false);
+        public async Task<GeneralServiceResponseDto> UndoSoftDeleteAsync(int id)
+        {
+            try
+            {
+                var entity = await dataContext.Set<TEntity>().FindAsync(id);
 
-        // Update the 'LastModified' property
-        entity.GetType().GetProperty("LastModified")?.SetValue(entity, DateTime.Now);
+                if (entity == null)
+                {
+                    return ResponseHelper.CreateResponse(false, StatusCodes.Status400BadRequest, "Not found  for ${Id}");
+                }
 
-        await dataContext.SaveChangesAsync();
+                // Soft delete by setting the 'IsDeleted' property to true
+                entity.GetType().GetProperty("IsDeleted")?.SetValue(entity, false);
 
-        return ResponseHelper.CreateResponse(true, 200, "Successfully");
-      }
-      catch (Exception ex)
-      {
-        // Log or handle the exception appropriately
-        return ResponseHelper.CreateResponse(false, StatusCodes.Status400BadRequest, "Failed for ${Id}");
-      }
-    }
+                // Update the 'LastModified' property
+                entity.GetType().GetProperty("LastModified")?.SetValue(entity, DateTime.Now);
 
-    public async Task<IEnumerable<TDto>> GetAllAsync()
-    {
-      try
-      {
-        var entities = dataContext.Set<TEntity>()
-            .Where(e => EF.Property<bool>(e, "IsDeleted") == false)
-            .ToList();
+                await dataContext.SaveChangesAsync();
 
-        var dtos = mapper.Map<List<TDto>>(entities);
-        return dtos;
-      }
-      catch (Exception ex)
-      {
+                return ResponseHelper.CreateResponse(true, 200, "Successfully");
+            }
+            catch (Exception ex)
+            {
+                // Log or handle the exception appropriately
+                return ResponseHelper.CreateResponse(false, StatusCodes.Status400BadRequest, "Failed for ${Id}");
+            }
+        }
+
+        public async Task<IEnumerable<TDto>> GetAllAsync()
+        {
+            try
+            {
+                var entities = dataContext.Set<TEntity>()
+                    .Where(e => EF.Property<bool>(e, "IsDeleted") == false)
+                    .ToList();
+
+                var dtos = mapper.Map<List<TDto>>(entities);
+                return dtos;
+            }
+            catch (Exception ex)
+            {
                 // Log or handle the exception appropriately
                 return new List<TDto>();
             }
-    }
+        }
 
-    public async Task<IEnumerable<TEntity>> GetPagedAsync(int pageNumber, int pageSize)
-    {
-      return dataContext.Set<TEntity>()
-             .Skip((pageNumber - 1) * pageSize)
-             .Take(pageSize)
-             .ToList();
+        public async Task<IEnumerable<TEntity>> GetPagedAsync(int pageNumber, int pageSize)
+        {
+            return dataContext.Set<TEntity>()
+                   .Skip((pageNumber - 1) * pageSize)
+                   .Take(pageSize)
+                   .ToList();
+        }
     }
-  }
 }

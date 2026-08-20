@@ -10,14 +10,14 @@
     using System.Threading.Tasks;
 
     public class JobTitle : BaseEntity<int>
-  {
-    public string Title { get; set; } = string.Empty;
+    {
+        public string Title { get; set; } = string.Empty;
         public string Description { get; set; } = string.Empty;
-    public Seniority Seniority { get; set; }
+        public Seniority Seniority { get; set; }
 
-    public int DepartmentId { get; set; }
-    public Department? Department { get; set; } 
-    // Navigation property to Employee
-    public ICollection<ApplicationUser>? Users { get; set; }
-  }
+        public int DepartmentId { get; set; }
+        public Department? Department { get; set; }
+        // Navigation property to Employee
+        public ICollection<ApplicationUser>? Users { get; set; }
+    }
 }

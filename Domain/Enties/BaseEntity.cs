@@ -1,24 +1,24 @@
 ﻿namespace Domain.Entities
 {
-  using System;
-  using System.Collections.Generic;
-  using System.ComponentModel.DataAnnotations.Schema;
-  using System.Linq;
-  using System.Text;
-  using System.Threading.Tasks;
+    using System;
+    using System.Collections.Generic;
+    using System.ComponentModel.DataAnnotations.Schema;
+    using System.Linq;
+    using System.Text;
+    using System.Threading.Tasks;
 
-  public class BaseEntity<TID>
-  {
-        public TID Id { get; set; } =  default!;
+    public class BaseEntity<TID>
+    {
+        public TID Id { get; set; } = default!;
 
-    [Column(TypeName = "Date")]
-    public DateTime CreatedAt  { get; set; }
+        [Column(TypeName = "Date")]
+        public DateTime CreatedAt { get; set; }
 
-    [Column(TypeName = "Date")]
-    public DateTime UpdatedAt { get; set; }
+        [Column(TypeName = "Date")]
+        public DateTime UpdatedAt { get; set; }
 
-    public bool IsActive { get; set; } = true;
+        public bool IsActive { get; set; } = true;
 
-    public bool IsDeleted { get; set; } = false;
-  }
+        public bool IsDeleted { get; set; } = false;
+    }
 }

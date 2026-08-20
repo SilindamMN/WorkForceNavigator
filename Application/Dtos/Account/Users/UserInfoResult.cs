@@ -9,16 +9,16 @@
     using System.Threading.Tasks;
 
     public class UserInfoResult
-  {
-    public string Id { get; set; } = string.Empty.ToString();
-    public string FirstName { get; set; } = string.Empty.ToString();
-    public string LastName { get; set; } = string.Empty.ToString();
-    public string Email { get; set; } = string.Empty.ToString();
-    public string Username { get; set; } = string.Empty.ToString();
-    public DateTime CreatedAt { get; set; }
+    {
+        public string Id { get; set; } = string.Empty.ToString();
+        public string FirstName { get; set; } = string.Empty.ToString();
+        public string LastName { get; set; } = string.Empty.ToString();
+        public string Email { get; set; } = string.Empty.ToString();
+        public string Username { get; set; } = string.Empty.ToString();
+        public DateTime CreatedAt { get; set; }
         public int? DepartmentId { get; set; }
         public string DepartmentName { get; set; } = string.Empty.ToString();
-        public int? JobTitleId { get; set; } 
+        public int? JobTitleId { get; set; }
         public string JobTitleName { get; set; } = string.Empty.ToString();
         public int? TeamId { get; set; }
         public string TeamName { get; set; } = string.Empty.ToString();
@@ -26,6 +26,6 @@
         [JsonConverter(typeof(JsonStringEnumConverter))]
         public Seniority? Seniority { get; set; }
         public Gender? Gender { get; set; }
-    public IEnumerable<string>? Roles { get; set; }
-  }
+        public IEnumerable<string>? Roles { get; set; }
+    }
 }

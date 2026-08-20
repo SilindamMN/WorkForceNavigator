@@ -10,9 +10,9 @@
     using System.Threading.Tasks;
 
     public interface IMessageService
-  {
-    Task<GeneralServiceResponseDto> CreateNewMessageAsync(ClaimsPrincipal user, CreateMessageDto createMessageDto);
-    Task<IEnumerable<GetMessageDto>> GetMessagesAsync();
-    Task<IEnumerable<GetMessageDto>> GetMyMessageAsync(ClaimsPrincipal user);
-  }
+    {
+        Task<GeneralServiceResponseDto> CreateNewMessageAsync(ClaimsPrincipal user, CreateMessageDto createMessageDto);
+        Task<IEnumerable<GetMessageDto>> GetMessagesAsync();
+        Task<IEnumerable<GetMessageDto>> GetMyMessageAsync(ClaimsPrincipal user);
+    }
 }

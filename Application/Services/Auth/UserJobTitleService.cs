@@ -19,63 +19,63 @@
     using System.Threading.Tasks;
 
     public class UserJobTitleService : IUserJobTitleService
-  {
-    private readonly DataContext dataContext;
-
-    public UserJobTitleService(DataContext dataContext)
     {
-      this.dataContext = dataContext;
-    }
+        private readonly DataContext dataContext;
 
-    public async Task<GeneralServiceResponseDto> AssignJobTitleToUser(AssignJobTitleDto assignJobTitle)
-    {
-      var user = await dataContext.Users.FirstOrDefaultAsync(x => x.UserName == assignJobTitle.username);
-      user.JobTitleId = assignJobTitle.jobTitleId;
-      await dataContext.SaveChangesAsync();
-      return ResponseHelper.CreateResponse(true, 200, "JobTitle Assigned Successfully");
-    }
+        public UserJobTitleService(DataContext dataContext)
+        {
+            this.dataContext = dataContext;
+        }
 
-    public Task<IEnumerable<UserDetailsDto>> GetUsersByJobTitle(string title)
-    {
-      throw new NotImplementedException();
-    }
+        public async Task<GeneralServiceResponseDto> AssignJobTitleToUser(AssignJobTitleDto assignJobTitle)
+        {
+            var user = await dataContext.Users.FirstOrDefaultAsync(x => x.UserName == assignJobTitle.username);
+            user.JobTitleId = assignJobTitle.jobTitleId;
+            await dataContext.SaveChangesAsync();
+            return ResponseHelper.CreateResponse(true, 200, "JobTitle Assigned Successfully");
+        }
 
-    public async Task<JobTitleDto?> GetJobTitleForUser(string username)
-    {
-      var user = await dataContext.Users.SingleAsync(u => u.UserName == username);
+        public Task<IEnumerable<UserDetailsDto>> GetUsersByJobTitle(string title)
+        {
+            throw new NotImplementedException();
+        }
 
-     return user.JobTitleId.HasValue ? await GetJobTitleInfo(user.JobTitleId.Value) : null;
+        public async Task<JobTitleDto?> GetJobTitleForUser(string username)
+        {
+            var user = await dataContext.Users.SingleAsync(u => u.UserName == username);
 
-    }
+            return user.JobTitleId.HasValue ? await GetJobTitleInfo(user.JobTitleId.Value) : null;
 
-    private async Task<JobTitleDto?> GetJobTitleInfo(int jobTitleId)
-    {
-      return await (from jobTitle in dataContext.JobTitles
-                    join department in dataContext.Departments on jobTitle.DepartmentId equals department.Id
-                    where jobTitle.Id == jobTitleId
-                    select new JobTitleDto
-                    {
-                      Title = jobTitle.Title,
-                      DepartmentName = department.DepartmentName,
-                      Seniority = jobTitle.Seniority.ToString() 
-                    }).FirstOrDefaultAsync();
-    }
+        }
 
-    public async Task<IEnumerable<JobTitleDto>> GetJobTitles()
-    {
+        private async Task<JobTitleDto?> GetJobTitleInfo(int jobTitleId)
+        {
+            return await (from jobTitle in dataContext.JobTitles
+                          join department in dataContext.Departments on jobTitle.DepartmentId equals department.Id
+                          where jobTitle.Id == jobTitleId
+                          select new JobTitleDto
+                          {
+                              Title = jobTitle.Title,
+                              DepartmentName = department.DepartmentName,
+                              Seniority = jobTitle.Seniority.ToString()
+                          }).FirstOrDefaultAsync();
+        }
 
-      var jobTitlesWithDepartments = await dataContext.JobTitles
-      .Include(jt => jt.Department)
-      .Select(jt => new JobTitleDto
-      {
-        Title = jt.Title,
-        DepartmentName = jt.Department.DepartmentName,
-        Description = jt.Description,
-        Seniority = jt.Seniority.ToString()
-      })
-      .ToListAsync();
-      return jobTitlesWithDepartments;
-    }
+        public async Task<IEnumerable<JobTitleDto>> GetJobTitles()
+        {
+
+            var jobTitlesWithDepartments = await dataContext.JobTitles
+            .Include(jt => jt.Department)
+            .Select(jt => new JobTitleDto
+            {
+                Title = jt.Title,
+                DepartmentName = jt.Department.DepartmentName,
+                Description = jt.Description,
+                Seniority = jt.Seniority.ToString()
+            })
+            .ToListAsync();
+            return jobTitlesWithDepartments;
+        }
 
 
         public Task<GeneralServiceResponseDto> AssignSeniorityToUser(int jobtitleId)
@@ -122,7 +122,7 @@
                                           Description = j.Description,
                                           Seniority = u.Seniority.ToString(),
                                       }).FirstOrDefaultAsync();
-                                
+
             return userJobtitle;
         }
 

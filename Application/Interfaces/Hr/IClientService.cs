@@ -8,7 +8,7 @@
     using System.Threading.Tasks;
 
     public interface IClientService
-  {
-    Task<ClientDetailsDto> GetClientDetailsAsync(int id);
-  }
+    {
+        Task<ClientDetailsDto> GetClientDetailsAsync(int id);
+    }
 }

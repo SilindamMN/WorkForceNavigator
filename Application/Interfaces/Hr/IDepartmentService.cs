@@ -8,7 +8,7 @@
     using System.Threading.Tasks;
 
     public interface IDepartmentService
-  {
-    Task<IEnumerable<UserDetailJobTitle>> GetUserJobTitleTeamsListAsync(int id);
-  }
+    {
+        Task<IEnumerable<UserDetailJobTitle>> GetUserJobTitleTeamsListAsync(int id);
+    }
 }

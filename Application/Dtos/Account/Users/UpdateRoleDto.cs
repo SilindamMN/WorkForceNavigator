@@ -9,9 +9,9 @@
     using System.Threading.Tasks;
 
     public class UpdateRoleDto
-  {
-    [Required(ErrorMessage = "Username Required")]
-    public string Username { get; set; } = string.Empty;
-    public RoleType NewRole { get; set; }
-  }
+    {
+        [Required(ErrorMessage = "Username Required")]
+        public string Username { get; set; } = string.Empty;
+        public RoleType NewRole { get; set; }
+    }
 }

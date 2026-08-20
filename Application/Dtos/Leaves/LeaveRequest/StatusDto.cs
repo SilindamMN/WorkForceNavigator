@@ -10,8 +10,8 @@
     using System.Threading.Tasks;
 
     public class StatusDto
-  {
-    [JsonConverter(typeof(JsonStringEnumConverter))]
-    public Status status { get; set; }
-  }
+    {
+        [JsonConverter(typeof(JsonStringEnumConverter))]
+        public Status status { get; set; }
+    }
 }

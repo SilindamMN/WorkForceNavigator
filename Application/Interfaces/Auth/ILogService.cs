@@ -10,9 +10,9 @@
     using System.Threading.Tasks;
 
     public interface ILogService
-  {
-    Task <GeneralServiceResponseDto> SaveNewLogAsync(string userName, string description);
-    Task<IEnumerable<GetLogDto>> getLogsAsync();
-    Task<IEnumerable<GetLogDto>> getMyLogsAsync(ClaimsPrincipal user);
-  }
+    {
+        Task<GeneralServiceResponseDto> SaveNewLogAsync(string userName, string description);
+        Task<IEnumerable<GetLogDto>> getLogsAsync();
+        Task<IEnumerable<GetLogDto>> getMyLogsAsync(ClaimsPrincipal user);
+    }
 }
