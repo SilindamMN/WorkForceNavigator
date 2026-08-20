@@ -84,35 +84,32 @@
             return teams;
         }
 
-        public async Task<IEnumerable<TeamMemberDetailsDto>> GetAllTeamsWithMembersAsync()
+        public async Task<IEnumerable<TeamMemberDetailsDto>> GetTeamsWithMembersAsync(int teamId)
         {
-            var teamsWithMembers = await (from ut in dataContext.UserTeams
-                                          join u in dataContext.Users on ut.UserId equals u.Id
-                                          join t in dataContext.Teams on ut.TeamId equals t.Id
-                                          join d in dataContext.Departments on t.DepartmentId equals d.Id into departments
-                                          from d in departments.DefaultIfEmpty()
-                                          join jt in dataContext.JobTitles on u.JobTitleId equals jt.Id into jobTitles
-                                          from jt in jobTitles.DefaultIfEmpty()
-                                          select new
-                                          {
-                                              TeamName = t.TeamName,
-                                              DepartmentName = d.DepartmentName,
-                                              Member = new MemberDetails
-                                              {
-                                                  FirstName = u.FirstName,
-                                                  LastName = u.LastName,
-                                                  JobTitle = jt.Title
-                                              }
-                                          }).ToListAsync();
+            var members = await (from ut in dataContext.UserTeams
+                                 join u in dataContext.Users on ut.UserId equals u.Id
+                                 join jt in dataContext.JobTitles on u.JobTitleId equals jt.Id into jobTitles
+                                 from jt in jobTitles.DefaultIfEmpty()
+                                 where ut.TeamId == teamId
+                                 select new TeamMemberDto
+                                 {
+                                     FirstName = u.FirstName,
+                                     LastName = u.LastName,
+                                     JobTitle = jt.Title
+                                 }).ToListAsync();
 
-            var teams = teamsWithMembers.GroupBy(t => new { t.TeamName, t.DepartmentName })
-                                        .Select(g => new TeamMemberDetailsDto
-                                        {
-                                            DepartmentName = g.Key.DepartmentName,
-                                            TeamName = g.Key.TeamName,
-                                            MemberDetails = g.Select(m => m.Member).ToList()
-                                        }).ToList();
-            return teams;
+            var projectNames = await dataContext.Projects
+                .Where(p => p.TeamId == teamId && p.IsDeleted == false)
+                .Select(p => p.ProjectName)
+                .ToListAsync();
+
+            var result = new TeamMemberDetailsDto
+            {
+                Members = members,
+                ProjectList = projectNames
+            };
+
+            return new List<TeamMemberDetailsDto> { result };
         }
 
         public async Task<GeneralServiceResponseDto> CreateTeam(TeamDto teamDto)

@@ -12,7 +12,7 @@
     public interface ITeamService
     {
         Task<GeneralServiceResponseDto> UpdateTeamMembership(CreateUserTeamDto createUserTeamDto);
-        Task<IEnumerable<TeamMemberDetailsDto>> GetAllTeamsWithMembersAsync();
+        Task<IEnumerable<TeamMemberDetailsDto>> GetTeamsWithMembersAsync(int teamId);
         Task<GeneralServiceResponseDto> CreateTeam(TeamDto team);
         Task<IEnumerable<TeamDto>> GetAllTeamsAsync();
         Task<IEnumerable<UserTeamListDto>> GetTeamByUserIdAsync(string userId);
