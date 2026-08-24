@@ -15,9 +15,7 @@
     public interface IUserJobTitleService
     {
         Task<GeneralServiceResponseDto> AssignJobTitleToUserAsync(AssignJobTitleDto assignJobTitle);
-        Task<GeneralServiceResponseDto> AssignSeniorityToUserAsync(int userId);
         Task<JobTitleDto?> GetJobTitleForUserAsync(string username);
-        Task<IEnumerable<UserDetailsDto>> GetUsersByJobTitleAsync(string title);
         Task<IEnumerable<JobTitleDto>> GetJobTitleByDepartmentAndSeniorityAsync(int departmentId, Seniority? seniority);
         Task<IEnumerable<JobTitleDto>> GetAllJobTitlesAsync();
     }
