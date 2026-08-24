@@ -51,18 +51,14 @@
 
         public async Task<GeneralServiceResponseDto> CreateLeaveAllocationAsync(string username)
         {
-            // Retrieve the user based on the username
             var user = await dataContext.Users.FirstOrDefaultAsync(u => u.UserName == username);
 
             if (user == null)
             {
                 return ResponseHelper.CreateResponse(false, StatusCodes.Status400BadRequest, "User not found");
             }
-
-            // Retrieve all leave types
             var leaveTypes = await dataContext.LeaveTypes.ToListAsync();
 
-            // Create leave allocations for each leave type for the user
             var newAllocations = leaveTypes.Select(leaveType => new LeaveAllocation
             {
                 EmployeeId = user.Id,

@@ -20,6 +20,5 @@
         Task<IEnumerable<UserDetailsDto>> GetUsersByJobTitleAsync(string title);
         Task<IEnumerable<JobTitleDto>> GetJobTitleByDepartmentAndSeniorityAsync(int departmentId, Seniority? seniority);
         Task<IEnumerable<JobTitleDto>> GetAllJobTitlesAsync();
-
     }
 }

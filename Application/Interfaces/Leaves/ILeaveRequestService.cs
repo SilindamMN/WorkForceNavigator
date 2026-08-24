@@ -18,6 +18,5 @@
         Task<GeneralServiceResponseDto> UpdateLeaveRequestAsync(ClaimsPrincipal User, int leaveRequestId, UpdateLeaveRequestDto updateLeaveRequestDto);
         Task<GeneralServiceResponseDto> DeleteLeaveRequestAsync(ClaimsPrincipal User, int leaveRequestId);
         Task<GeneralServiceResponseDto> ProcessLeaveRequestAsync(ClaimsPrincipal User, int leaveRequestId, Status status);
-
     }
 }

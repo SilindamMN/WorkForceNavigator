@@ -134,7 +134,7 @@
         public async Task<IEnumerable<JobTitleDto>> GetAllJobTitlesAsync()
         {
             var jobTitles = await dataContext.JobTitles
-                .Where(x => x.IsDeleted == false) // Filter for active job titles
+                .Where(x => x.IsDeleted == false) 
                 .AsNoTracking()
                 .Include(jt => jt.Department)
                 .Select(jt => new JobTitleDto

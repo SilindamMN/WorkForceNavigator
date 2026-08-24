@@ -71,23 +71,17 @@
 
         public async Task<IEnumerable<TimesheetDetailDto>> GetWeeklyTimesheetEntriesAsync(ClaimsPrincipal User)
         {
-            // Get today's date
             DateTime today = DateTime.Today;
 
-            // Calculate the start and end dates of the week (Monday to Friday)
             DateTime startOfWeek = today.AddDays(-(int)today.DayOfWeek + (int)DayOfWeek.Monday);
             DateTime endOfWeek = startOfWeek.AddDays(4);
 
-            // Initialize a list to hold all timesheet entries for the week
             List<TimesheetDetailDto> weeklyTimesheetEntries = new List<TimesheetDetailDto>();
 
-            // Iterate over each day of the week from Monday to Friday
             for (DateTime day = startOfWeek; day <= endOfWeek; day = day.AddDays(1))
             {
-                // Fetch timesheet entries for the current day
                 var dailyEntries = await GetTimesheetEntriesAsync(User, day);
 
-                // Directly add the daily entries to the weekly list
                 weeklyTimesheetEntries.AddRange(dailyEntries);
             }
 
@@ -98,13 +92,11 @@
         {
             var username = user?.Identity?.Name;
 
-            // Retrieve the project and ensure it exists
             var project = await genericService.GetByIdAsync(timesheetEntryDto.ProjectId);
             if (project == null)
             {
                 return ResponseHelper.CreateResponse(false, 404, "Project not found.");
             }
-            //user can insert many entry for a specific day as much as they are less than 8 hours
             var hourSpent = await GetTotalTimeSpentByDateAsync(user, timesheetEntryDto.TimesheetDate);
             var updateHours = hourSpent + timesheetEntryDto.TimeSpent;
 
@@ -123,7 +115,6 @@
                 dataContext.TimesheetEntries.Add(map);
                 await dataContext.SaveChangesAsync();
 
-                // Return a success response
                 return ResponseHelper.CreateResponse(true, 200, "Timesheet entry successfully created.");
             }
             return ResponseHelper.CreateResponse(false, 501, "You can only work 8 hours per day " + "You have already worked " + hourSpent + "Hours");
