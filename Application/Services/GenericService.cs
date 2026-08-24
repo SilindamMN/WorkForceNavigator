@@ -41,7 +41,6 @@ namespace Application.Services
             }
             catch (Exception ex)
             {
-                // Log or handle the exception appropriately
                 return ResponseHelper.CreateResponse(false, StatusCodes.Status400BadRequest, "Failed to create entity");
             }
         }
@@ -97,10 +96,8 @@ namespace Application.Services
                     return ResponseHelper.CreateResponse(false, StatusCodes.Status400BadRequest, "Not found  for ${Id}");
                 }
 
-                // Soft delete by setting the 'IsDeleted' property to true
                 entity.GetType().GetProperty("IsDeleted")?.SetValue(entity, true);
 
-                // Update the 'LastModified' property
                 entity.GetType().GetProperty("LastModified")?.SetValue(entity, DateTime.Now);
 
                 await dataContext.SaveChangesAsync();
@@ -109,7 +106,6 @@ namespace Application.Services
             }
             catch (Exception ex)
             {
-                // Log or handle the exception appropriately
                 return ResponseHelper.CreateResponse(false, StatusCodes.Status400BadRequest, "Failed for ${Id}");
             }
         }
@@ -133,7 +129,6 @@ namespace Application.Services
             }
             catch (Exception ex)
             {
-                // Log or handle the exception appropriately
                 throw new Exception("Failed to save changes.", ex);
             }
         }
@@ -149,10 +144,8 @@ namespace Application.Services
                     return ResponseHelper.CreateResponse(false, StatusCodes.Status400BadRequest, "Not found  for ${Id}");
                 }
 
-                // Soft delete by setting the 'IsDeleted' property to true
                 entity.GetType().GetProperty("IsDeleted")?.SetValue(entity, false);
 
-                // Update the 'LastModified' property
                 entity.GetType().GetProperty("LastModified")?.SetValue(entity, DateTime.Now);
 
                 await dataContext.SaveChangesAsync();
@@ -161,7 +154,6 @@ namespace Application.Services
             }
             catch (Exception ex)
             {
-                // Log or handle the exception appropriately
                 return ResponseHelper.CreateResponse(false, StatusCodes.Status400BadRequest, "Failed for ${Id}");
             }
         }
@@ -179,7 +171,6 @@ namespace Application.Services
             }
             catch (Exception ex)
             {
-                // Log or handle the exception appropriately
                 return new List<TDto>();
             }
         }

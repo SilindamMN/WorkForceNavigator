@@ -61,7 +61,6 @@
             var roles = await userManager.GetRolesAsync(user);
             var userInfo = this.userService.GenerateUserInfoAsync(user, roles);
 
-            // await logService.SaveNewLog(user.UserName, "New Login");
             return new LoginServiceResponseDto { NewToken = newToken, UserInfo = await userInfo };
         }
 
@@ -149,13 +148,10 @@
                 return ResponseHelper.CreateResponse(false, StatusCodes.Status404NotFound, "Invalid UserName");
             }
             var userRoles = await userManager.GetRolesAsync(user);
-            //admin and owner can change
             if (User.IsInRole(StaticUserRoles.ADMIN))
             {
-                //user is admin
                 if (updateRoleDto.NewRole == RoleType.USER || updateRoleDto.NewRole == RoleType.MANAGER)
                 {
-                    //admin can change role for everyone except for owners and admins
                     if (userRoles.Any(r => r.Equals(StaticUserRoles.OWNER) || r.Equals(StaticUserRoles.OWNER)))
                     {
                         return ResponseHelper.CreateResponse(false, StatusCodes.Status403Forbidden, "You not allowed to change role for this user");

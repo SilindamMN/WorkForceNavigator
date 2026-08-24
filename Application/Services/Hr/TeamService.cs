@@ -133,20 +133,6 @@
 
             return ResponseHelper.CreateResponse(true, StatusCodes.Status201Created, "Team created successfully.");
         }
-        private async Task<bool> IsUserManager(string username)
-        {
-            // Retrieve the user by username
-            var user = await userManager.FindByNameAsync(username);
-
-            if (user == null)
-            {
-                // User not found
-                return false;
-            }
-
-            // Check if the user has the Manager role
-            return await userManager.IsInRoleAsync(user, "Manager");
-        }
 
         // Private method to check if the user is already a member of the maximum allowed teams
         private async Task<bool> IsUserInMaxTeams(string userId)
@@ -164,16 +150,6 @@
             return await dataContext.UserTeams
                 .AsNoTracking()
                 .AnyAsync(x => x.UserId == userId && x.TeamId == teamId);
-        }
-        private async Task<string> GetUserIdAsync(string userId)
-        {
-            var user = await userManager.FindByIdAsync(userId);
-
-            if (user == null)
-            {
-                user = await userManager.FindByIdAsync(userId);
-            }
-            return user.Id;
         }
 
         public async Task<IEnumerable<UserTeamListDto>> GetTeamByUserIdAsync(string userId)

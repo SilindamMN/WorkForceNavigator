@@ -29,23 +29,19 @@
         {
             try
             {
-                // Check if ProjectName exists
                 if (await ProjectExistsAsync(projectDto.ProjectName))
                 {
                     return ResponseHelper.CreateResponse(false, StatusCodes.Status404NotFound, $"Project Name{projectDto.ProjectName} does  exist.");
                 }
-                // Check if ClientId exists
                 if (!await ClientExistsAsync(projectDto.ClientId))
                 {
                     return ResponseHelper.CreateResponse(false, StatusCodes.Status404NotFound, $"Client with ID {projectDto.ClientId} does not exist.");
                 }
 
-                // Check if TeamId exists
                 if (!await TeamExistsAsync(projectDto.TeamId))
                 {
                     return ResponseHelper.CreateResponse(false, StatusCodes.Status404NotFound, $"Team with ID {projectDto.TeamId} does not exist.");
                 }
-                // Check if EndDate is after StartDate
                 if (!IsEndDateAfterStartDateAsync(projectDto.StartDate, projectDto.EndDate))
                 {
                     return ResponseHelper.CreateResponse(false, StatusCodes.Status404NotFound, "End Date must be after Start Date.");
@@ -66,7 +62,6 @@
             }
             catch (Exception ex)
             {
-                // Handle exceptions or rethrow as needed
                 throw new Exception("Failed to create project.", ex);
             }
         }
@@ -75,32 +70,26 @@
         {
             try
             {
-                // Check if the project exists
                 var existingProject = await dataContext.Projects.FindAsync(projectId);
                 if (existingProject == null)
                 {
                     return ResponseHelper.CreateResponse(false, 404, $"Project with ID {projectId} does not exist.");
                 }
 
-                // Check if ClientId exists
                 if (!await ClientExistsAsync(projectDto.ClientId))
                 {
                     return ResponseHelper.CreateResponse(false, StatusCodes.Status404NotFound, $"Client with ID {projectDto.ClientId} does not exist.");
                 }
 
-                // Check if TeamId exists
                 if (!await TeamExistsAsync(projectDto.TeamId))
                 {
                     return ResponseHelper.CreateResponse(false, StatusCodes.Status404NotFound, $"Team with ID {projectDto.TeamId} does not exist.");
                 }
-
-                // Check if EndDate is after StartDate
                 if (!IsEndDateAfterStartDateAsync(projectDto.StartDate, projectDto.EndDate))
                 {
                     return ResponseHelper.CreateResponse(false, StatusCodes.Status404NotFound, "End Date must be after Start Date.");
                 }
 
-                // Update the project properties
                 existingProject.ProjectName = projectDto.ProjectName;
                 existingProject.ClientId = projectDto.ClientId;
                 existingProject.Description = projectDto.Description;
@@ -108,7 +97,6 @@
                 existingProject.EndDate = projectDto.EndDate;
                 existingProject.TeamId = projectDto.TeamId;
 
-                // Save changes to the database
                 dataContext.Projects.Update(existingProject);
                 await dataContext.SaveChangesAsync();
 
@@ -116,7 +104,6 @@
             }
             catch (Exception ex)
             {
-                // Handle exceptions or rethrow as needed
                 throw new Exception("Failed to update project.", ex);
             }
         }
