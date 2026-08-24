@@ -20,7 +20,6 @@
         }
 
         [HttpPost]
-        [Route("create")]
         [Authorize(Roles = StaticUserRoles.USER)]
         public async Task<IActionResult> CreateNewMessage([FromBody] CreateMessageDto createMessageDto)
         {

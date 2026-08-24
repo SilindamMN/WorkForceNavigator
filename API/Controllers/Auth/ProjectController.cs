@@ -40,7 +40,7 @@ namespace API.Controllers.Auth
             }
         }
 
-        [HttpPost("create")]
+        [HttpPost]
         [Authorize(Roles = StaticUserRoles.ADMIN)]
         public async Task<IActionResult> CreateNewProject([FromBody] CreateUpdateProjectDto projectDto)
         {
@@ -84,7 +84,7 @@ namespace API.Controllers.Auth
             }
             return Ok(result);
         }
-        [HttpGet("by-username/{username}")]
+        [HttpGet("{username}")]
         [Authorize(Roles = StaticUserRoles.USER)]
         public async Task<ActionResult<IEnumerable<UserProjectsDto>>> GetUserProject(string username)
         {

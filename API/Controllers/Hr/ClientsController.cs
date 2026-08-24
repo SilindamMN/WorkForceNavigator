@@ -95,7 +95,7 @@
             return StatusCode(result.StatusCode, result.Message);
         }
 
-        [HttpDelete("{id}/undo")]
+        [HttpDelete("{id}")]
         [Authorize(Roles = StaticUserRoles.ADMIN)]
         public async Task<IActionResult> UnSoftDeleteClient(int id)
         {
@@ -106,18 +106,5 @@
             }
             return StatusCode(result.StatusCode, result.Message);
         }
-
-        //[HttpGet]
-        //[Route("clientdetails/{id}")]
-        //[Authorize(Roles = StaticUserRoles.USER)]
-        //public async Task<ActionResult<List<ClientDetailDto>>> GetClientProject(int id)
-        //{
-        //    var result = await clientService.GetClientProjectAsync(id);
-        //    if (result == null || !result.Any())
-        //    {
-        //        return NotFound($"No details found for departmentId: {id}");
-        //    }
-        //    return Ok(result);
-        //}
     }
 }

@@ -23,7 +23,7 @@
             this.userService = userService;
             this.userJobTitleService = userJobTitleService;
         }
-
+        //THIS NEEDS TO BE MOVED TO THE HR MODULE AND NOT BE IN THE AUTH MODULE
         [HttpGet]
         [Route("jobtitle/{username}")]
         [Authorize(Roles = StaticUserRoles.USER)]
@@ -42,7 +42,7 @@
         }
 
         [HttpGet]
-        [Route("users/{username}")]
+        [Route("{username}")]
         [Authorize(Roles = StaticUserRoles.USER)]
         public async Task<ActionResult<UserDetailsDto>> GetUserDetailsByUsernames([FromRoute] string username)
         {

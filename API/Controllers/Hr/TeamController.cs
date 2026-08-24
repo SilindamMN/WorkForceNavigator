@@ -45,7 +45,7 @@
             }
             return Ok(result);
         }
-        [HttpGet("user/{userId}")]
+        [HttpGet("{userId}")]
         [Authorize(Roles = StaticUserRoles.USER)]
         public async Task<IActionResult> GetTeamByUserIdAsync(string userId)
         {
@@ -94,7 +94,7 @@
             return StatusCode(result.StatusCode, result.Message);
         }
 
-        [HttpDelete("{id}/undo")]
+        [HttpDelete("{id}")]
         [Authorize(Roles = StaticUserRoles.ADMIN)]
         public async Task<IActionResult> UnSoftDeleteTeam(int id)
         {
@@ -135,7 +135,7 @@
             return Ok(result);
         }
 
-        [HttpGet("{teamId}/withdetails")]
+        [HttpGet("{teamId}")]
         [Authorize(Roles = StaticUserRoles.USER)]
         public async Task<ActionResult<IEnumerable<TeamMemberDetailsDto>>> GetAllTeamsWithMembers(int teamId)
         {
