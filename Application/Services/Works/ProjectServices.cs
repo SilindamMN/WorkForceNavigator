@@ -144,11 +144,6 @@
             return endDate > startDate;
         }
 
-        public Task<GeneralServiceResponseDto> UpdateProjectAsync(CreateUpdateProjectDto projectDto)
-        {
-            throw new NotImplementedException();
-        }
-
         public async Task<IEnumerable<UserProjectsDto>> GetUserProjectAsync(string username)
         {
             var projects = await (from project in dataContext.Projects

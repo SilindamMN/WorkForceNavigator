@@ -1,21 +1,14 @@
 ﻿namespace Application.Services.Auth
 {
-    using Application.Dtos.Account.Users;
     using Application.Dtos.Hr.JobTitles;
     using Application.Helpers;
     using Application.Interfaces.Auth;
-    using Domain.Account;
     using Domain.Constants.Enums;
     using Domain.Dtos.General;
-    using Domain.Enties;
-    using Domain.Enties.hr;
     using Microsoft.EntityFrameworkCore;
     using Persistence;
-    using System;
     using System.Collections.Generic;
     using System.Linq;
-    using System.Security.Claims;
-    using System.Text;
     using System.Threading.Tasks;
 
     public class UserJobTitleService : IUserJobTitleService
@@ -25,19 +18,6 @@
         public UserJobTitleService(DataContext dataContext)
         {
             this.dataContext = dataContext;
-        }
-
-        public async Task<GeneralServiceResponseDto> AssignJobTitleToUser(AssignJobTitleDto assignJobTitle)
-        {
-            var user = await dataContext.Users.FirstOrDefaultAsync(x => x.UserName == assignJobTitle.username);
-            user.JobTitleId = assignJobTitle.jobTitleId;
-            await dataContext.SaveChangesAsync();
-            return ResponseHelper.CreateResponse(true, 200, "JobTitle Assigned Successfully");
-        }
-
-        public Task<IEnumerable<UserDetailsDto>> GetUsersByJobTitle(string title)
-        {
-            throw new NotImplementedException();
         }
 
         public async Task<JobTitleDto?> GetJobTitleForUser(string username)
@@ -78,11 +58,6 @@
         }
 
 
-        public Task<GeneralServiceResponseDto> AssignSeniorityToUser(int jobtitleId)
-        {
-            throw new Exception("JobTitleId is null for the user.");
-        }
-
         public async Task<IEnumerable<JobTitleDto>> GetJobTitleByDepartmentAndSeniorityAsync(int departmentId, Seniority? seniority)
         {
             return await dataContext.JobTitles
@@ -97,15 +72,15 @@
                 }).ToListAsync();
         }
 
-        public Task<GeneralServiceResponseDto> AssignJobTitleToUserAsync(AssignJobTitleDto assignJobTitle)
-        {
-            throw new NotImplementedException();
+            public async Task<GeneralServiceResponseDto> AssignJobTitleToUserAsync(AssignJobTitleDto assignJobTitle)
+            {
+
+            var user = await dataContext.Users.FirstOrDefaultAsync(x => x.UserName == assignJobTitle.username);
+            user.JobTitleId = assignJobTitle.jobTitleId;
+            await dataContext.SaveChangesAsync();
+            return ResponseHelper.CreateResponse(true, 200, "JobTitle Assigned Successfully");
         }
 
-        public Task<GeneralServiceResponseDto> AssignSeniorityToUserAsync(int userId)
-        {
-            throw new NotImplementedException();
-        }
 
         public async Task<JobTitleDto?> GetJobTitleForUserAsync(string username)
         {
@@ -125,12 +100,6 @@
 
             return userJobtitle;
         }
-
-        public Task<IEnumerable<UserDetailsDto>> GetUsersByJobTitleAsync(string title)
-        {
-            throw new NotImplementedException();
-        }
-
         public async Task<IEnumerable<JobTitleDto>> GetAllJobTitlesAsync()
         {
             var jobTitles = await dataContext.JobTitles
