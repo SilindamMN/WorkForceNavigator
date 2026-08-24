@@ -56,7 +56,7 @@ namespace API.Controllers.Hr
         }
 
         [HttpGet]
-        [Route("jobtitle/{id}")]
+        [Route("{id}")]
         [Authorize(Roles = StaticUserRoles.USER)]
         public async Task<ActionResult<List<UserDetailJobTitle>>> GetDepartmentUserDetailJobTitle(int id)
         {
@@ -69,7 +69,7 @@ namespace API.Controllers.Hr
             return Ok(result);
         }
 
-        [HttpPost("create")]
+        [HttpPost]
         [Authorize(Roles =StaticUserRoles.ADMIN)]
         public async Task<IActionResult> CreateDepartment([FromBody] DepartmentDto departmentDto)
         {
@@ -107,7 +107,7 @@ namespace API.Controllers.Hr
             return StatusCode(result.StatusCode, result.Message);
         }
 
-        [HttpDelete("{id}/undo")]
+        [HttpDelete("{id}")]
         [Authorize(Roles =StaticUserRoles.ADMIN)]
         public async Task<IActionResult> UnSoftDeleteDepartment(int id)
         {

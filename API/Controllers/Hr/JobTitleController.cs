@@ -51,7 +51,7 @@
             return Ok(result);
         }
 
-        [HttpPost("create")]
+        [HttpPost]
         [Authorize(Roles =StaticUserRoles.ADMIN)]
         public async Task<IActionResult> CreateJobTitle([FromBody] UpdateCreateJobTitleDto jobTitleDto)
         {
@@ -99,7 +99,7 @@
             return Ok(result);
         }
 
-        [HttpDelete("{id}/undo")]
+        [HttpDelete("{id}")]
         [Authorize(Roles =StaticUserRoles.ADMIN)]
         public async Task<IActionResult> UnSoftDeleteJobTitle(int id)
         {
@@ -111,7 +111,7 @@
             return StatusCode(result.StatusCode, result.Message);
         }
 
-        [HttpGet("username/{username}")]
+        [HttpGet("{username}")]
         [Authorize(Roles = StaticUserRoles.USER)]
         public async Task<JobTitleDto> GetUserJobTitle(string userName)
         {

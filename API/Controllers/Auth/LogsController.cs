@@ -8,31 +8,31 @@
     using Microsoft.AspNetCore.Mvc;
 
     [Route("api/logs")]
-  [ApiController]
-  public class LogsController : ControllerBase
-  {
-    private readonly ILogService logService;
-
-    public LogsController(ILogService logService)
+    [ApiController]
+    public class LogsController : ControllerBase
     {
-      this.logService = logService;
-    }
+        private readonly ILogService logService;
 
-    [HttpGet]
-    [Authorize(Roles = StaticUserRoles.ADMIN)]
-    public async Task<ActionResult<IEnumerable<GetLogDto>>> GetLogs()
-    {
-      var logs = await logService.getLogsAsync();
-      return Ok(logs);
-    }
+        public LogsController(ILogService logService)
+        {
+            this.logService = logService;
+        }
 
-    [HttpGet]
-    [Route("mine")]
+        [HttpGet]
+        [Authorize(Roles = StaticUserRoles.ADMIN)]
+        public async Task<ActionResult<IEnumerable<GetLogDto>>> GetLogs()
+        {
+            var logs = await logService.getLogsAsync();
+            return Ok(logs);
+        }
+
+        [HttpGet]
+        [Route("mine")]
         [Authorize(Roles = StaticUserRoles.USER)]
         public async Task<ActionResult<IEnumerable<GetLogDto>>> GetMyLogs()
-    {
-      var logs = await logService.getMyLogsAsync(User);
-      return Ok(logs);
+        {
+            var logs = await logService.getMyLogsAsync(User);
+            return Ok(logs);
+        }
     }
-  }
 }
