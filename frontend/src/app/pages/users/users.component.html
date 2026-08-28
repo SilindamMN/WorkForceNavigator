@@ -1,1 +1,8 @@
-<p>users works!</p>
+<app-basic-table-three
+  title="Users"
+  [name]="'Users'"
+  [columns]="columns"
+  [data]="users"
+  (view)="viewUser($event)"
+  (delete)="deleteUser($event)"
+></app-basic-table-three>
