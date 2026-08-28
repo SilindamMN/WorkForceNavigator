@@ -3,6 +3,10 @@
   [name]="'Users'"
   [columns]="columns"
   [data]="users"
-  (view)="viewUser($event)"
+  [canAdd]="isAdmin"
+  [canEdit]="isAdmin"
+  [canDelete]="isAdmin"
+  (add)="createUser()"
+  (edit)="editUser($event)"
   (delete)="deleteUser($event)"
 ></app-basic-table-three>
