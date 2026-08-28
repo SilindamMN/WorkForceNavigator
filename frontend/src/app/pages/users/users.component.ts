@@ -1,9 +1,12 @@
-import { CommonModule } from '@angular/common';
 import { Component, inject, OnInit } from '@angular/core';
-import { TableColumn, BasicTableThreeComponent } from '../../shared/components/tables/basic-tables/basic-table-three/basic-table-three.component';
+
+import {
+  TableColumn,
+  BasicTableThreeComponent
+} from '../../shared/components/tables/basic-tables/basic-table-three/basic-table-three.component';
+
 import { UsersService } from '../../shared/services/users.service';
 import { UserDto } from '../../models/user';
-
 
 @Component({
   selector: 'app-users',
@@ -17,6 +20,8 @@ export class UsersComponent implements OnInit {
 
   users: UserDto[] = [];
 
+  isAdmin = false;
+
   columns: TableColumn[] = [
     { key: 'firstName', label: 'First Name' },
     { key: 'lastName', label: 'Last Name' },
@@ -27,6 +32,10 @@ export class UsersComponent implements OnInit {
   ];
 
   ngOnInit(): void {
+    const roles = JSON.parse(
+      localStorage.getItem('userInfo') || '[]'
+    );
+    this.isAdmin = roles.roles.includes('ADMIN');
     this.loadUsers();
   }
 
@@ -36,8 +45,12 @@ export class UsersComponent implements OnInit {
     });
   }
 
-  viewUser(user: any): void {
-    console.log('View User:', user);
+  createUser(): void {
+    console.log('Create User');
+  }
+
+  editUser(user: any): void {
+    console.log('Edit User:', user);
   }
 
   deleteUser(user: any): void {

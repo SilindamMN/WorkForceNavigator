@@ -35,6 +35,15 @@ export class BasicTableThreeComponent {
 
   @Output() delete = new EventEmitter<any>();
   @Input () title: string = '';
+  @Input() canAdd: boolean = true;
+@Input() canEdit: boolean = true;
+@Input() canDelete: boolean = true;
+
+@Output() add = new EventEmitter<void>();
+@Output() edit = new EventEmitter<any>();
+
+
+
 
   currentPage = 1;
 
@@ -97,11 +106,13 @@ export class BasicTableThreeComponent {
   }
 
 
-  handleView(item: any): void {
+handleAdd(): void {
+  this.add.emit();
+}
 
-    this.view.emit(item);
-  }
-
+handleEdit(item: any): void {
+  this.edit.emit(item);
+}
 
   handleDelete(item: any): void {
 
