@@ -94,17 +94,6 @@
             return StatusCode(result.StatusCode, result.Message);
         }
 
-        [HttpDelete("{id}")]
-        [Authorize(Roles = StaticUserRoles.ADMIN)]
-        public async Task<IActionResult> UnSoftDeleteTeam(int id)
-        {
-            var result = await _teamService.UndoSoftDeleteAsync(id);
-            if (result.IsSucceed)
-            {
-                return Ok(result.Message);
-            }
-            return StatusCode(result.StatusCode, result.Message);
-        }
 
         [HttpPost("addmember")]
         [Authorize(Roles = StaticUserRoles.ADMIN)]

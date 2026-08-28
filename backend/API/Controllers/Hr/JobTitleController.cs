@@ -99,18 +99,6 @@
             return Ok(result);
         }
 
-        [HttpDelete("{id}")]
-        [Authorize(Roles =StaticUserRoles.ADMIN)]
-        public async Task<IActionResult> UnSoftDeleteJobTitle(int id)
-        {
-            var result = await _JobTitleService.UndoSoftDeleteAsync(id);
-            if (result.IsSucceed)
-            {
-                return Ok(result.Message);
-            }
-            return StatusCode(result.StatusCode, result.Message);
-        }
-
         [HttpGet("{username}")]
         [Authorize(Roles = StaticUserRoles.USER)]
         public async Task<JobTitleDto> GetUserJobTitle(string userName)

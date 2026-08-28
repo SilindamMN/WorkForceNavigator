@@ -56,7 +56,7 @@ namespace API.Controllers.Hr
         }
 
         [HttpGet]
-        [Route("{id}")]
+        [Route("department-userdetails{id}")]
         [Authorize(Roles = StaticUserRoles.USER)]
         public async Task<ActionResult<List<UserDetailJobTitle>>> GetDepartmentUserDetailJobTitle(int id)
         {
@@ -100,18 +100,6 @@ namespace API.Controllers.Hr
         public async Task<IActionResult> SoftDeleteDepartment(int id)
         {
             var result = await _DepartmentService.SoftDeleteAsync(id);
-            if (result.IsSucceed)
-            {
-                return Ok(result.Message);
-            }
-            return StatusCode(result.StatusCode, result.Message);
-        }
-
-        [HttpDelete("{id}")]
-        [Authorize(Roles =StaticUserRoles.ADMIN)]
-        public async Task<IActionResult> UnSoftDeleteDepartment(int id)
-        {
-            var result = await _DepartmentService.UndoSoftDeleteAsync(id);
             if (result.IsSucceed)
             {
                 return Ok(result.Message);

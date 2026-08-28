@@ -51,7 +51,7 @@
         }
 
         [HttpGet]
-        [Route("{username}")]
+        [Route("extradetails/{username}")]
         [Authorize(Roles = StaticUserRoles.USER)]
         public async Task<ActionResult<UserDetailsDto>> GetUserExtraDetailsByUsername([FromRoute] string username)
         {

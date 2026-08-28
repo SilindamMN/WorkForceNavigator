@@ -94,17 +94,5 @@
             }
             return StatusCode(result.StatusCode, result.Message);
         }
-
-        [HttpDelete("{id}")]
-        [Authorize(Roles = StaticUserRoles.ADMIN)]
-        public async Task<IActionResult> UnSoftDeleteClient(int id)
-        {
-            var result = await _ClientService.UndoSoftDeleteAsync(id);
-            if (result.IsSucceed)
-            {
-                return Ok(result.Message);
-            }
-            return StatusCode(result.StatusCode, result.Message);
-        }
     }
 }
