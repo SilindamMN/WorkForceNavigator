@@ -4,11 +4,19 @@ import { ButtonComponent } from '../../../ui/button/button.component';
 import { BadgeComponent } from '../../../ui/badge/badge.component';
 import { LabelComponent } from "../../../form/label/label.component";
 import { InputFieldComponent } from "../../../form/input/input-field.component";
+import { SelectComponent } from "../../../form/select/select.component";
 import { ModalComponent } from '../../../ui/modal/modal.component';
+
+export interface TableColumnOption {
+  value: string;
+  label: string;
+}
 
 export interface TableColumn {
   key: string;
   label: string;
+  type?: 'text' | 'select';
+  options?: TableColumnOption[];
 }
 
 @Component({
@@ -20,7 +28,8 @@ export interface TableColumn {
     BadgeComponent,
     ModalComponent,
     LabelComponent,
-    InputFieldComponent
+    InputFieldComponent,
+    SelectComponent
   ],
   templateUrl: './basic-table-three.component.html',
   styles: ``
@@ -122,6 +131,14 @@ export class BasicTableThreeComponent implements OnInit {
   onFieldChange(key: string, event: Event): void {
     const input = event.target as HTMLInputElement;
     this.formData[key] = input.value;
+  }
+
+  onSelectFieldChange(key: string, value: string): void {
+    this.formData[key] = value;
+  }
+
+  isSelectColumn(column: TableColumn): boolean {
+    return column.type === 'select';
   }
 
   getBadgeColor(status: string): 'success' | 'warning' | 'error' {

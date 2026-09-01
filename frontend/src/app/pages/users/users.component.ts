@@ -26,9 +26,17 @@ export class UsersComponent implements OnInit {
     { key: 'firstName', label: 'First Name' },
     { key: 'lastName', label: 'Last Name' },
     { key: 'email', label: 'Email' },
-    { key: 'username', label: 'Username' },
-    { key: 'jobTitle', label: 'Job Title' },
-    { key: 'gender', label: 'Gender' }
+    { key: 'username', label: 'Username' },{
+    key: 'jobTitle',
+    label: 'Job Title',
+    type: 'select',
+    options: [
+      { value: 'Driver', label: 'Driver' },
+      { value: 'Cook', label: 'Cook' },
+      { value: 'Teacher', label: 'Teacher' }
+    ]
+  },
+  { key: 'gender', label: 'Gender' }
   ];
 
   ngOnInit(): void {
