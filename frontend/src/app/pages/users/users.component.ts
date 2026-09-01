@@ -7,6 +7,7 @@ import {
 
 import { UsersService } from '../../shared/services/users.service';
 import { UserDto } from '../../models/user';
+import { JobtiteserviceService } from '../../shared/services/jobtiteservice.service';
 
 @Component({
   selector: 'app-users',
@@ -17,6 +18,7 @@ import { UserDto } from '../../models/user';
 export class UsersComponent implements OnInit {
 
   usersService = inject(UsersService);
+  jobTitleService = inject(JobtiteserviceService);
 
   users: UserDto[] = [];
 
@@ -26,30 +28,62 @@ export class UsersComponent implements OnInit {
     { key: 'firstName', label: 'First Name' },
     { key: 'lastName', label: 'Last Name' },
     { key: 'email', label: 'Email' },
-    { key: 'username', label: 'Username' },{
-    key: 'jobTitle',
-    label: 'Job Title',
-    type: 'select',
-    options: [
-      { value: 'Driver', label: 'Driver' },
-      { value: 'Cook', label: 'Cook' },
-      { value: 'Teacher', label: 'Teacher' }
-    ]
-  },
-  { key: 'gender', label: 'Gender' }
+    { key: 'username', label: 'Username' },
+
+    {
+      key: 'jobTitleName',
+      label: 'Job Title',
+      type: 'select',
+      valueKey: 'jobTitleId',
+      options: []
+    },
+
+    { key: 'gender', label: 'Gender' }
   ];
 
   ngOnInit(): void {
+
     const roles = JSON.parse(
-      localStorage.getItem('userInfo') || '[]'
+      localStorage.getItem('userInfo') || '{}'
     );
-    this.isAdmin = roles.roles.includes('ADMIN');
+
+    this.isAdmin = roles.roles?.includes('ADMIN') ?? false;
+
     this.loadUsers();
+    this.getJobTitles();
+  }
+
+  getJobTitles(): void {
+
+    this.jobTitleService.getAll().subscribe(jobTitles => {
+
+      const jobTitleColumn = this.columns.find(
+        column => column.key === 'jobTitleName'
+      );
+
+      if (!jobTitleColumn) {
+        return;
+      }
+
+      jobTitleColumn.options = jobTitles.map(jobTitle => ({
+        value: jobTitle.jobTitleId.toString(),
+        label: jobTitle.title
+      }));
+
+      console.log(
+        'JOB TITLE OPTIONS:',
+        jobTitleColumn.options
+      );
+    });
   }
 
   loadUsers(): void {
+
     this.usersService.getAll().subscribe(data => {
+
       this.users = data;
+
+      console.log('USERS:', this.users);
     });
   }
 
@@ -57,19 +91,36 @@ export class UsersComponent implements OnInit {
     console.log('Create User');
   }
 
-  editUser(user: any): void {
+  editUser(user: UserDto): void {
+
     console.log('Edit User:', user);
+
+    console.log(
+      'Existing Job Title:',
+      'ID:',
+      user.jobTitleId
+    );
   }
 
-  deleteUser(user: any): void {
+  deleteUser(user: UserDto): void {
     console.log('Delete User:', user);
   }
 
   handleSave(event: { mode: 'add' | 'edit'; data: any }): void {
+
+    console.log('SAVE DATA:', event.data);
+
     if (event.mode === 'add') {
-      this.usersService.create(event.data).subscribe(() => this.loadUsers());
+
+      this.usersService
+        .create(event.data)
+        .subscribe(() => this.loadUsers());
+
     } else {
-      this.usersService.update(event.data.id, event.data).subscribe(() => this.loadUsers());
+
+      this.usersService
+        .update(event.data.id, event.data)
+        .subscribe(() => this.loadUsers());
     }
   }
 }
