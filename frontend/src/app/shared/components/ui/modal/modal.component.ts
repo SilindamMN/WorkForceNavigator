@@ -27,6 +27,7 @@ export class ModalComponent {
   constructor(private el: ElementRef) {}
 
   ngOnInit() {
+    this.isOpen = false;
     if (this.isOpen) {
       document.body.style.overflow = 'hidden';
     }

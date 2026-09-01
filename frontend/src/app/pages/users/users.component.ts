@@ -56,4 +56,12 @@ export class UsersComponent implements OnInit {
   deleteUser(user: any): void {
     console.log('Delete User:', user);
   }
+
+  handleSave(event: { mode: 'add' | 'edit'; data: any }): void {
+    if (event.mode === 'add') {
+      this.usersService.create(event.data).subscribe(() => this.loadUsers());
+    } else {
+      this.usersService.update(event.data.id, event.data).subscribe(() => this.loadUsers());
+    }
+  }
 }
