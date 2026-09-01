@@ -283,6 +283,7 @@
 
   </div>
 
+
   <!-- Modal -->
   <app-modal [isOpen]="modalOpen" (close)="closeModal()" className="max-w-[700px] m-4">
     <div
@@ -301,8 +302,22 @@
             @for (column of columns; track column.key) {
             <div>
               <app-label>{{ column.label }}</app-label>
-              <app-input-field type="text" [value]="formData[column.key]"
-                (input)="onFieldChange(column.key, $event)" />
+
+              @if (isSelectColumn(column)) {
+              <app-select
+                [options]="column.options ?? []"
+                [value]="formData[column.key]"
+                placeholder="Select {{ column.label }}"
+                (valueChange)="onSelectFieldChange(column.key, $event)"
+              ></app-select>
+              } @else {
+              <app-input-field
+                type="text"
+                [value]="formData[column.key]"
+                (input)="onFieldChange(column.key, $event)"
+              />
+              }
+
             </div>
             }
           </div>
