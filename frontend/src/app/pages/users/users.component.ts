@@ -8,6 +8,7 @@ import {
 import { UsersService } from '../../shared/services/users.service';
 import { UserDto } from '../../models/user';
 import { JobtiteserviceService } from '../../shared/services/jobtiteservice.service';
+import { GenderOptions } from '../../models/Constant/enums/gender';
 
 @Component({
   selector: 'app-users',
@@ -37,8 +38,15 @@ export class UsersComponent implements OnInit {
       valueKey: 'jobTitleId',
       options: []
     },
-
-    { key: 'gender', label: 'Gender' }
+{
+  key: 'gender',
+  label: 'Gender',
+  type: 'select',
+  options: GenderOptions.map(gender => ({
+    value: gender,
+    label: gender
+  }))
+}
   ];
 
   ngOnInit(): void {
