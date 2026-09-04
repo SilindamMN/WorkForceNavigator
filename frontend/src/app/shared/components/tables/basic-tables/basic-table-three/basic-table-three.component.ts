@@ -28,16 +28,6 @@ export interface TableColumn {
   type?: 'text' | 'select';
 
   options?: TableColumnOption[];
-
-  /**
-   * Used when a select column displays one property
-   * but saves another property.
-   *
-   * Example:
-   *
-   * key: 'jobTitleName'
-   * valueKey: 'jobTitleId'
-   */
   valueKey?: string;
 }
 
