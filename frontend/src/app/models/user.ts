@@ -14,6 +14,7 @@ export interface User {
 
 // DTO without id and createdAt
 export interface UserDto {
+  id?: any;
   departmentId?: number | null;
   jobTitleId?: number | null;
   teamId?: number | null;
@@ -24,8 +25,8 @@ export interface UserDto {
   phoneNumber?: string | null;
   salary?: string | null;
   jobTitle?: string | null;
-  gender?: string | null;
-  roles: string[];  
+  gender?: Gender | null;
+  roles: string[];
 }
 
 export interface UpdateUserDetailsDto {

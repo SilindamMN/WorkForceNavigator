@@ -222,45 +222,13 @@ export class BasicTableThreeComponent implements OnInit {
   }
 
   handleSave(): void {
+  console.log('SAVE BUTTON CLICKED');
 
-    /**
-     * Convert select values back to numbers
-     * before sending them to the API.
-     */
-    this.columns.forEach(column => {
-
-      if (
-        column.type === 'select' &&
-        column.valueKey
-      ) {
-
-        const value =
-          this.formData[column.valueKey];
-
-        if (
-          value !== null &&
-          value !== undefined &&
-          value !== ''
-        ) {
-
-          this.formData[column.valueKey] =
-            Number(value);
-        }
-      }
-    });
-
-    console.log(
-      'FINAL SAVE DATA:',
-      this.formData
-    );
-
-    this.save.emit({
-      mode: this.modalMode,
-      data: this.formData
-    });
-
-    this.modalOpen = false;
-  }
+  this.save.emit({
+    mode: this.modalMode,
+    data: this.formData
+  });
+}
 
   onFieldChange(
     key: string,

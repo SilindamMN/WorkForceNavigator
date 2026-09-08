@@ -297,38 +297,29 @@
               @if (isSelectColumn(column)) {
 
                 <app-select
-
                   [options]="column.options ?? []"
-
                   [value]="getSelectValue(column)"
-
                   placeholder="Select {{ column.label }}"
-
                   (valueChange)="
                     onSelectFieldChange(
                       column,
                       $event
                     )
                   "
-
                 ></app-select>
 
 
               } @else {
 
                 <app-input-field
-
                   type="text"
-
                   [value]="formData[column.key] ?? ''"
-
                   (input)="
                     onFieldChange(
                       column.key,
                       $event
                     )
                   "
-
                 />
 
               }
@@ -361,8 +352,9 @@
         </app-button>
 
         <app-button
-          type="submit"
+          type="button"
           variant="primary"
+          (click)="handleSave()"
         >
           Save
         </app-button>

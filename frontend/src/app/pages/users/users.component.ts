@@ -112,23 +112,16 @@ export class UsersComponent implements OnInit {
 
   deleteUser(user: UserDto): void {
     console.log('Delete User:', user);
+  }handleSave(event: { mode: 'add' | 'edit'; data: UserDto }): void {
+
+  if (event.mode === 'add') {
+    this.usersService.create(event.data).subscribe(() => {
+      this.loadUsers();
+    });
+  } else {
+    this.usersService.update(event.data).subscribe(() => {
+      this.loadUsers();
+    });
   }
-
-  handleSave(event: { mode: 'add' | 'edit'; data: any }): void {
-
-    console.log('SAVE DATA:', event.data);
-
-    if (event.mode === 'add') {
-
-      this.usersService
-        .create(event.data)
-        .subscribe(() => this.loadUsers());
-
-    } else {
-
-      this.usersService
-        .update(event.data.id, event.data)
-        .subscribe(() => this.loadUsers());
-    }
-  }
+}
 }
