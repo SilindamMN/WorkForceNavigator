@@ -3,29 +3,42 @@
          dark:border-white/[0.05] dark:bg-white/[0.03]"
 >
 
+  <!-- ========================================= -->
   <!-- HEADER -->
+  <!-- ========================================= -->
+
   <div
     class="flex flex-col gap-2 px-5 mb-4
-           sm:flex-row sm:items-center sm:justify-between sm:px-6"
+           sm:flex-row sm:items-center
+           sm:justify-between sm:px-6"
   >
 
     <div>
+
       <h3
-        class="text-lg font-semibold text-gray-800 dark:text-white/90"
+        class="text-lg font-semibold
+               text-gray-800
+               dark:text-white/90"
       >
         {{ title }}
       </h3>
+
     </div>
 
+
     <div class="flex gap-3">
+
+      <!-- SEARCH -->
 
       <input
         type="text"
         placeholder="Search..."
         [value]="searchTerm"
         (input)="onSearch($event)"
-        class="h-10 rounded-lg border border-gray-300
-               bg-white px-4 text-sm text-gray-800
+        class="h-10 rounded-lg
+               border border-gray-300
+               bg-white px-4
+               text-sm text-gray-800
                outline-none
                focus:border-brand-500
                dark:border-gray-700
@@ -33,9 +46,13 @@
                dark:text-white"
       />
 
+
+      <!-- ADD -->
+
       @if (canAdd) {
 
         <app-button
+          type="button"
           variant="primary"
           (click)="handleAdd()"
         >
@@ -49,7 +66,10 @@
   </div>
 
 
+  <!-- ========================================= -->
   <!-- TABLE -->
+  <!-- ========================================= -->
+
   <div class="overflow-x-auto">
 
     <table class="min-w-full">
@@ -57,11 +77,15 @@
       <thead>
 
         <tr
-          class="border-b border-gray-100
+          class="border-b
+                 border-gray-100
                  dark:border-white/[0.05]"
         >
 
-          @for (column of columns; track column.key) {
+          @for (
+            column of columns;
+            track column.key
+          ) {
 
             <th
               class="px-5 py-3 text-left
@@ -74,6 +98,7 @@
             </th>
 
           }
+
 
           @if (canEdit || canDelete) {
 
@@ -96,10 +121,14 @@
 
       <tbody>
 
-        @for (item of currentItems; track item.id) {
+        @for (
+          item of currentItems;
+          track item.id
+        ) {
 
           <tr
-            class="border-b border-gray-100
+            class="border-b
+                   border-gray-100
                    dark:border-white/[0.05]"
           >
 
@@ -128,9 +157,12 @@
 
                 <div class="flex gap-2">
 
+                  <!-- EDIT -->
+
                   @if (canEdit) {
 
                     <app-button
+                      type="button"
                       variant="outline"
                       size="sm"
                       (click)="handleEdit(item)"
@@ -140,9 +172,13 @@
 
                   }
 
+
+                  <!-- DELETE -->
+
                   @if (canDelete) {
 
                     <app-button
+                      type="button"
                       variant="outline"
                       size="sm"
                       (click)="handleDelete(item)"
@@ -169,10 +205,15 @@
   </div>
 
 
+  <!-- ========================================= -->
   <!-- PAGINATION -->
+  <!-- ========================================= -->
+
   <div
-    class="flex items-center justify-between
-           border-t border-gray-100
+    class="flex items-center
+           justify-between
+           border-t
+           border-gray-100
            px-5 py-4
            dark:border-white/[0.05]"
   >
@@ -181,7 +222,8 @@
       type="button"
       (click)="goToPage(currentPage - 1)"
       [disabled]="currentPage === 1"
-      class="rounded-lg border
+      class="rounded-lg
+             border
              border-gray-300
              px-3 py-2
              text-sm
@@ -191,18 +233,22 @@
       Previous
     </button>
 
+
     <span
-      class="text-sm text-gray-600
+      class="text-sm
+             text-gray-600
              dark:text-gray-400"
     >
       Page {{ currentPage }} of {{ totalPages }}
     </span>
 
+
     <button
       type="button"
       (click)="goToPage(currentPage + 1)"
       [disabled]="currentPage === totalPages"
-      class="rounded-lg border
+      class="rounded-lg
+             border
              border-gray-300
              px-3 py-2
              text-sm
@@ -217,7 +263,10 @@
 </div>
 
 
+
+<!-- ========================================= -->
 <!-- MODAL -->
+<!-- ========================================= -->
 
 <app-modal
   [isOpen]="modalOpen"
@@ -226,7 +275,9 @@
 >
 
   <div
-    class="no-scrollbar relative w-full
+    class="no-scrollbar
+           relative
+           w-full
            max-w-[700px]
            overflow-y-auto
            rounded-3xl
@@ -236,37 +287,50 @@
            lg:p-11"
   >
 
+    <!-- MODAL HEADER -->
+
     <div class="px-2 pr-14">
 
       <h4
-        class="mb-2 text-2xl font-semibold
+        class="mb-2
+               text-2xl
+               font-semibold
                text-gray-800
                dark:text-white/90"
       >
-        {{ modalMode === 'add'
-          ? 'Add ' + name
-          : 'Edit ' + name
+
+        {{
+          modalMode === 'add'
+            ? 'Add ' + name
+            : 'Edit ' + name
         }}
+
       </h4>
 
+
       <p
-        class="mb-6 text-sm
+        class="mb-6
+               text-sm
                text-gray-500
                dark:text-gray-400"
       >
-        {{ modalMode === 'add'
-          ? 'Enter the details below.'
-          : 'Update the details below.'
+
+        {{
+          modalMode === 'add'
+            ? 'Enter the details below.'
+            : 'Update the details below.'
         }}
+
       </p>
 
     </div>
 
 
-    <form
-      class="flex flex-col"
-      (ngSubmit)="handleSave()"
-    >
+    <!-- ========================================= -->
+    <!-- FORM -->
+    <!-- ========================================= -->
+
+    <form class="flex flex-col">
 
       <div
         class="custom-scrollbar
@@ -276,7 +340,8 @@
       >
 
         <div
-          class="grid grid-cols-1
+          class="grid
+                 grid-cols-1
                  gap-x-6
                  gap-y-5
                  sm:grid-cols-2"
@@ -289,31 +354,52 @@
 
             <div>
 
+              <!-- LABEL -->
+
               <app-label>
+
                 {{ column.label }}
+
               </app-label>
 
 
-              @if (isSelectColumn(column)) {
+              <!-- SELECT -->
+
+              @if (
+                isSelectColumn(column)
+              ) {
 
                 <app-select
-                  [options]="column.options ?? []"
-                  [value]="getSelectValue(column)"
-                  placeholder="Select {{ column.label }}"
+                  [options]="
+                    column.options ?? []
+                  "
+                  [value]="
+                    getSelectValue(column)
+                  "
+                  placeholder="
+                    Select {{ column.label }}
+                  "
                   (valueChange)="
                     onSelectFieldChange(
                       column,
                       $event
                     )
                   "
-                ></app-select>
+                >
+                </app-select>
+
+              }
 
 
-              } @else {
+              <!-- TEXT INPUT -->
+
+              @else {
 
                 <app-input-field
                   type="text"
-                  [value]="formData[column.key] ?? ''"
+                  [value]="
+                    formData[column.key] ?? ''
+                  "
                   (input)="
                     onFieldChange(
                       column.key,
@@ -333,15 +419,20 @@
       </div>
 
 
+      <!-- ========================================= -->
       <!-- BUTTONS -->
+      <!-- ========================================= -->
 
       <div
-        class="flex items-center
+        class="flex
+               items-center
                justify-end
                gap-3
                px-2
                mt-6"
       >
+
+        <!-- CANCEL -->
 
         <app-button
           type="button"
@@ -350,6 +441,9 @@
         >
           Cancel
         </app-button>
+
+
+        <!-- SAVE -->
 
         <app-button
           type="button"

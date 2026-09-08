@@ -6,31 +6,63 @@ import {
 } from '../../shared/components/tables/basic-tables/basic-table-three/basic-table-three.component';
 
 import { UsersService } from '../../shared/services/users.service';
-import { UserDto } from '../../models/user';
-import { JobtiteserviceService } from '../../shared/services/jobtiteservice.service';
-import { GenderOptions } from '../../models/Constant/enums/gender';
+
+import {
+  UserDto,
+  UpdateUserDetailsDto
+} from '../../models/user';
+
+import {
+  JobtiteserviceService
+} from '../../shared/services/jobtiteservice.service';
+
+import {
+  GenderOptions
+} from '../../models/Constant/enums/gender';
+
+import { Seniority } from '../../models/Constant/enums/seniority';
+
+import { JobTitle } from '../../models/jobtitle';
 
 @Component({
   selector: 'app-users',
   standalone: true,
-  imports: [BasicTableThreeComponent],
+  imports: [
+    BasicTableThreeComponent
+  ],
   templateUrl: './users.component.html'
 })
 export class UsersComponent implements OnInit {
 
   usersService = inject(UsersService);
-  jobTitleService = inject(JobtiteserviceService);
+
+  jobTitleService = inject(
+    JobtiteserviceService
+  );
+
+  jobTitles: JobTitle[] = [];
 
   users: UserDto[] = [];
 
   isAdmin = false;
 
   columns: TableColumn[] = [
-    { key: 'firstName', label: 'First Name' },
-    { key: 'lastName', label: 'Last Name' },
-    { key: 'email', label: 'Email' },
-    { key: 'username', label: 'Username' },
-
+    {
+      key: 'firstName',
+      label: 'First Name'
+    },
+    {
+      key: 'lastName',
+      label: 'Last Name'
+    },
+    {
+      key: 'email',
+      label: 'Email'
+    },
+    {
+      key: 'username',
+      label: 'Username'
+    },
     {
       key: 'jobTitleName',
       label: 'Job Title',
@@ -38,90 +70,231 @@ export class UsersComponent implements OnInit {
       valueKey: 'jobTitleId',
       options: []
     },
-{
-  key: 'gender',
-  label: 'Gender',
-  type: 'select',
-  options: GenderOptions.map(gender => ({
-    value: gender,
-    label: gender
-  }))
-}
+    {
+      key: 'gender',
+      label: 'Gender',
+      type: 'select',
+      options: GenderOptions.map(gender => ({
+        value: gender,
+        label: gender
+      }))
+    }
   ];
 
   ngOnInit(): void {
 
-    const roles = JSON.parse(
+    const userInfo = JSON.parse(
       localStorage.getItem('userInfo') || '{}'
     );
 
-    this.isAdmin = roles.roles?.includes('ADMIN') ?? false;
+    this.isAdmin =
+      userInfo.roles?.includes('ADMIN') ?? false;
 
     this.loadUsers();
-    this.getJobTitles();
   }
 
-  getJobTitles(): void {
+  getJobTitleByDepartmentId(
+    departmentId: number,
+    seniority: Seniority
+  ): void {
 
-    this.jobTitleService.getAll().subscribe(jobTitles => {
+    this.jobTitleService
+      .getJobTitleByDepartmentId(
+        departmentId,
+        seniority
+      )
+      .subscribe({
+        next: (data) => {
 
-      const jobTitleColumn = this.columns.find(
-        column => column.key === 'jobTitleName'
-      );
+          console.log(
+            'JOB TITLES FOR DEPARTMENT:',
+            data
+          );
 
-      if (!jobTitleColumn) {
-        return;
-      }
+          this.jobTitles = data;
 
-      jobTitleColumn.options = jobTitles.map(jobTitle => ({
-        value: jobTitle.jobTitleId.toString(),
-        label: jobTitle.title
-      }));
+          const field = this.columns.find(
+            column =>
+              column.key === 'jobTitleName'
+          );
 
-      console.log(
-        'JOB TITLE OPTIONS:',
-        jobTitleColumn.options
-      );
-    });
+          if (!field) {
+            return;
+          }
+
+          field.options = data.map(
+            (jobTitle: JobTitle) => ({
+              value:
+                jobTitle.jobTitleId.toString(),
+
+              label:
+                jobTitle.title
+            })
+          );
+        },
+
+        error: (error) => {
+
+          console.error(
+            'ERROR GETTING JOB TITLES BY DEPARTMENT:',
+            error
+          );
+        }
+      });
   }
 
   loadUsers(): void {
 
-    this.usersService.getAll().subscribe(data => {
+    this.usersService
+      .getAll()
+      .subscribe({
+        next: (data) => {
 
-      this.users = data;
+          this.users = data;
 
-      console.log('USERS:', this.users);
-    });
+          console.log(
+            'USERS:',
+            this.users
+          );
+        },
+
+        error: (error) => {
+
+          console.error(
+            'ERROR LOADING USERS:',
+            error
+          );
+        }
+      });
   }
 
   createUser(): void {
-    console.log('Create User');
-  }
-
-  editUser(user: UserDto): void {
-
-    console.log('Edit User:', user);
 
     console.log(
-      'Existing Job Title:',
-      'ID:',
-      user.jobTitleId
+      'CREATE USER CLICKED'
     );
   }
 
-  deleteUser(user: UserDto): void {
-    console.log('Delete User:', user);
-  }handleSave(event: { mode: 'add' | 'edit'; data: UserDto }): void {
+  editUser(
+    user: UserDto
+  ): void {
 
-  if (event.mode === 'add') {
-    this.usersService.create(event.data).subscribe(() => {
-      this.loadUsers();
-    });
-  } else {
-    this.usersService.update(event.data).subscribe(() => {
-      this.loadUsers();
-    });
+    console.log(
+      'EDIT USER:',
+      user
+    );
+
+    console.log(
+      'DEPARTMENT ID:',
+      user.departmentId
+    );
+
+    console.log(
+      'SENIORITY:',
+      user.seniority
+    );
+
+    if (
+      user.departmentId &&
+      user.seniority
+    ) {
+
+      this.getJobTitleByDepartmentId(
+        user.departmentId,
+        user.seniority
+      );
+    }
   }
-}
+
+  deleteUser(
+    user: UserDto
+  ): void {
+
+    console.log(
+      'DELETE USER:',
+      user
+    );
+  }
+
+  handleSave(
+    event: {
+      mode: 'add' | 'edit';
+      data: UserDto;
+    }
+  ): void {
+
+    if (
+      event.mode === 'add'
+    ) {
+
+      this.usersService
+        .create(event.data)
+        .subscribe({
+          next: () => {
+
+            this.loadUsers();
+          },
+
+          error: (error) => {
+
+            console.error(
+              'CREATE USER FAILED:',
+              error
+            );
+          }
+        });
+
+      return;
+    }
+
+    const dto: UpdateUserDetailsDto = {
+
+      firstName:
+        event.data.firstName,
+
+      lastName:
+        event.data.lastName,
+
+      gender:
+        event.data.gender ?? '',
+
+      jobTitleId:
+        Number(
+          event.data.jobTitleId
+        ),
+
+      teamId:
+        event.data.teamId,
+
+      salary:
+        event.data.salary
+          ? Number(event.data.salary)
+          : 0,
+
+      phonenumber:
+        event.data.phoneNumber ?? ''
+    };
+
+    this.usersService
+      .updateUserDetails(
+        event.data.username,
+        event.data.departmentId ?? 0,
+        event.data.id,
+        dto
+      )
+      .subscribe({
+        next: () => {
+
+          this.loadUsers();
+        },
+
+        error: (error) => {
+
+          console.error(
+            'UPDATE USER FAILED:',
+            error
+          );
+        }
+      });
+  }
 }

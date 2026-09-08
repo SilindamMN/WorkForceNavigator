@@ -20,13 +20,9 @@ export interface TableColumnOption {
 }
 
 export interface TableColumn {
-
   key: string;
-
   label: string;
-
   type?: 'text' | 'select';
-
   options?: TableColumnOption[];
   valueKey?: string;
 }
@@ -70,11 +66,10 @@ export class BasicTableThreeComponent implements OnInit {
 
   @Output() delete = new EventEmitter<any>();
 
-  @Output() save =
-    new EventEmitter<{
-      mode: 'add' | 'edit';
-      data: any;
-    }>();
+  @Output() save = new EventEmitter<{
+    mode: 'add' | 'edit';
+    data: any;
+  }>();
 
   currentPage = 1;
 
@@ -86,9 +81,15 @@ export class BasicTableThreeComponent implements OnInit {
 
   formData: any = {};
 
+
   ngOnInit(): void {
     this.modalOpen = false;
   }
+
+
+  // =========================================
+  // FILTER
+  // =========================================
 
   get filteredData(): any[] {
 
@@ -96,7 +97,8 @@ export class BasicTableThreeComponent implements OnInit {
       return this.data;
     }
 
-    const search = this.searchTerm.toLowerCase();
+    const search =
+      this.searchTerm.toLowerCase();
 
     return this.data.filter(item =>
       this.columns.some(column =>
@@ -107,26 +109,43 @@ export class BasicTableThreeComponent implements OnInit {
     );
   }
 
+
+  // =========================================
+  // TOTAL PAGES
+  // =========================================
+
   get totalPages(): number {
 
     return Math.max(
       1,
       Math.ceil(
-        this.filteredData.length / this.itemsPerPage
+        this.filteredData.length /
+        this.itemsPerPage
       )
     );
   }
 
+
+  // =========================================
+  // CURRENT ITEMS
+  // =========================================
+
   get currentItems(): any[] {
 
     const start =
-      (this.currentPage - 1) * this.itemsPerPage;
+      (this.currentPage - 1) *
+      this.itemsPerPage;
 
     return this.filteredData.slice(
       start,
       start + this.itemsPerPage
     );
   }
+
+
+  // =========================================
+  // SEARCH
+  // =========================================
 
   onSearch(event: Event): void {
 
@@ -138,6 +157,11 @@ export class BasicTableThreeComponent implements OnInit {
     this.currentPage = 1;
   }
 
+
+  // =========================================
+  // PAGINATION
+  // =========================================
+
   goToPage(page: number): void {
 
     if (
@@ -148,7 +172,14 @@ export class BasicTableThreeComponent implements OnInit {
     }
   }
 
+
+  // =========================================
+  // ADD
+  // =========================================
+
   handleAdd(): void {
+
+    console.log('ADD BUTTON CLICKED');
 
     this.modalMode = 'add';
 
@@ -159,31 +190,41 @@ export class BasicTableThreeComponent implements OnInit {
     this.add.emit();
   }
 
+
+  // =========================================
+  // EDIT
+  // =========================================
+
   handleEdit(item: any): void {
+
+    console.log(
+      'EDIT BUTTON CLICKED:',
+      item
+    );
 
     this.modalMode = 'edit';
 
-    /**
-     * Copy the complete user object.
+    /*
+     * Copy the complete object.
      *
-     * Example:
-     *
-     * {
-     *   jobTitleId: 154,
-     *   jobTitleName: "Procurement Assistant"
-     * }
+     * This is important because it keeps
+     * the user's ID for update.
      */
     this.formData = {
       ...item
     };
 
-    /**
-     * For select fields we need to make sure
-     * the value stored in formData matches
-     * the value used by the dropdown.
+
+    /*
+     * Convert select values to strings.
      *
-     * jobTitleName is displayed.
-     * jobTitleId is selected.
+     * Example:
+     *
+     * jobTitleId: 154
+     *
+     * becomes:
+     *
+     * jobTitleId: "154"
      */
     this.columns.forEach(column => {
 
@@ -195,40 +236,121 @@ export class BasicTableThreeComponent implements OnInit {
         const value =
           this.formData[column.valueKey];
 
-        if (value !== null && value !== undefined) {
+        if (
+          value !== null &&
+          value !== undefined
+        ) {
 
-          this.formData[column.valueKey] =
-            value.toString();
+          this.formData[
+            column.valueKey
+          ] = value.toString();
         }
       }
     });
 
+
     console.log(
-      'FORM DATA AFTER EDIT:',
+      'FORM DATA FOR EDIT:',
       this.formData
     );
+
 
     this.modalOpen = true;
 
     this.edit.emit(item);
   }
 
+
+  // =========================================
+  // DELETE
+  // =========================================
+
   handleDelete(item: any): void {
+
+    console.log(
+      'DELETE BUTTON CLICKED:',
+      item
+    );
+
     this.delete.emit(item);
   }
 
+
+  // =========================================
+  // CLOSE MODAL
+  // =========================================
+
   closeModal(): void {
+
+    console.log('MODAL CLOSED');
+
     this.modalOpen = false;
   }
 
-  handleSave(): void {
-  console.log('SAVE BUTTON CLICKED');
 
-  this.save.emit({
-    mode: this.modalMode,
-    data: this.formData
-  });
-}
+  // =========================================
+  // SAVE
+  // =========================================
+
+  handleSave(): void {
+
+    console.log(
+      '================================'
+    );
+
+    console.log(
+      'SAVE BUTTON CLICKED'
+    );
+
+    console.log(
+      'MODE:',
+      this.modalMode
+    );
+
+    console.log(
+      'FORM DATA:',
+      this.formData
+    );
+
+    console.log(
+      '================================'
+    );
+
+
+    /*
+     * Make sure we actually have data.
+     */
+    if (!this.formData) {
+
+      console.error(
+        'FORM DATA IS EMPTY'
+      );
+
+      return;
+    }
+
+
+    /*
+     * Send data to UsersComponent.
+     */
+    this.save.emit({
+      mode: this.modalMode,
+      data: {
+        ...this.formData
+      }
+    });
+
+
+    /*
+     * Close modal.
+     */
+    this.modalOpen = false;
+  }
+
+
+  // =========================================
+  // INPUT CHANGE
+  // =========================================
 
   onFieldChange(
     key: string,
@@ -238,23 +360,68 @@ export class BasicTableThreeComponent implements OnInit {
     const input =
       event.target as HTMLInputElement;
 
-    this.formData[key] = input.value;
+    this.formData[key] =
+      input.value;
+
+    console.log(
+      'FIELD CHANGED:',
+      key,
+      input.value
+    );
   }
+
+
+  // =========================================
+  // SELECT CHANGE
+  // =========================================
 
   onSelectFieldChange(
     column: TableColumn,
     value: string
   ): void {
 
+    console.log(
+      'SELECT CHANGED:',
+      column.key,
+      value
+    );
+
+
     if (column.valueKey) {
 
-      this.formData[column.valueKey] = value;
+      /*
+       * Example:
+       *
+       * jobTitleName -> displayed
+       * jobTitleId   -> saved
+       */
+      this.formData[
+        column.valueKey
+      ] = value;
 
     } else {
 
-      this.formData[column.key] = value;
+      /*
+       * Example:
+       *
+       * gender -> saved
+       */
+      this.formData[
+        column.key
+      ] = value;
     }
+
+
+    console.log(
+      'FORM DATA AFTER SELECT:',
+      this.formData
+    );
   }
+
+
+  // =========================================
+  // SELECT CHECK
+  // =========================================
 
   isSelectColumn(
     column: TableColumn
@@ -263,27 +430,44 @@ export class BasicTableThreeComponent implements OnInit {
     return column.type === 'select';
   }
 
+
+  // =========================================
+  // SELECT VALUE
+  // =========================================
+
   getSelectValue(
     column: TableColumn
   ): string {
 
     const key =
-      column.valueKey ?? column.key;
+      column.valueKey ??
+      column.key;
 
     const value =
       this.formData[key];
 
-    return value !== null &&
-      value !== undefined
-      ? value.toString()
-      : '';
+    if (
+      value === null ||
+      value === undefined
+    ) {
+      return '';
+    }
+
+    return value.toString();
   }
+
+
+  // =========================================
+  // BADGE COLOR
+  // =========================================
 
   getBadgeColor(
     status: string
   ): 'success' | 'warning' | 'error' {
 
-    switch (status?.toLowerCase()) {
+    switch (
+      status?.toLowerCase()
+    ) {
 
       case 'success':
       case 'active':
@@ -307,10 +491,19 @@ export class BasicTableThreeComponent implements OnInit {
     }
   }
 
+
+  // =========================================
+  // STATUS COLUMN
+  // =========================================
+
   isStatusColumn(
     column: TableColumn
   ): boolean {
 
-    return column.key.toLowerCase() === 'status';
+    return (
+      column.key.toLowerCase() ===
+      'status'
+    );
   }
+
 }
