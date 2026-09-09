@@ -55,7 +55,7 @@
       </div>
 
 
-      <!-- LEAVE TYPE / TITLE -->
+      <!-- LEAVE TYPE -->
 
       <div class="mt-8">
 
@@ -67,27 +67,47 @@
           Leave Type
         </label>
 
-        <input
-          id="event-title"
-          type="text"
-          [(ngModel)]="eventTitle"
-          [disabled]="!!selectedEvent"
-          class="dark:bg-dark-900 h-11 w-full
-                 rounded-lg border border-gray-300
-                 bg-transparent px-4 py-2.5
-                 text-sm text-gray-800
-                 shadow-theme-xs
-                 focus:border-brand-300
-                 focus:outline-hidden
-                 focus:ring-3
-                 focus:ring-brand-500/10
-                 dark:border-gray-700
-                 dark:bg-gray-900
-                 dark:text-white/90
-                 dark:placeholder:text-white/30
-                 disabled:bg-gray-100
-                 dark:disabled:bg-gray-800"
-        />
+        @if (selectedEvent) {
+
+          <input
+            id="event-title"
+            type="text"
+            [(ngModel)]="eventTitle"
+            disabled
+            class="dark:bg-dark-900 h-11 w-full
+                   rounded-lg border border-gray-300
+                   bg-gray-100 px-4 py-2.5
+                   text-sm text-gray-800
+                   dark:border-gray-700
+                   dark:bg-gray-800
+                   dark:text-white/90"
+          />
+
+        } @else {
+
+          <select
+            id="event-leave-type"
+            [(ngModel)]="selectedLeaveTypeId"
+            class="dark:bg-dark-900 h-11 w-full
+                   rounded-lg border border-gray-300
+                   bg-transparent px-4 py-2.5
+                   text-sm text-gray-800
+                   shadow-theme-xs
+                   focus:border-brand-300
+                   focus:outline-hidden
+                   focus:ring-3
+                   focus:ring-brand-500/10
+                   dark:border-gray-700
+                   dark:bg-gray-900
+                   dark:text-white/90"
+          >
+            <option [ngValue]="0" disabled>Select leave type</option>
+            @for (type of leaveTypes; track type.leaveTypeId) {
+              <option [ngValue]="type.leaveTypeId">{{ type.leaveName }}</option>
+            }
+          </select>
+
+        }
 
       </div>
 

@@ -31,7 +31,10 @@ import {
   UpdateLeaveRequestDto
 } from '../../models/leaverequest';
 
+import { LeaveAllocationDto } from '../../models/leaveallocation';
+
 import { LeaverequestService } from '../../shared/services/leaverequest.service';
+import { LeaveAllocationsService } from '../../shared/services/leaveallocations.service'; // adjust path if different
 
 interface CalendarEvent extends EventInput {
   extendedProps: {
@@ -63,8 +66,11 @@ export class CalendarComponent implements OnInit {
   calendarComponent!: FullCalendarComponent;
 
   leaveRequestsService = inject(LeaverequestService);
+  leaveAllocationsService = inject(LeaveAllocationsService);
 
   leaveRequests: LeaveRequest[] = [];
+
+  leaveTypes: LeaveAllocationDto[] = [];
 
   events: CalendarEvent[] = [];
 
@@ -86,6 +92,8 @@ export class CalendarComponent implements OnInit {
 
   eventLevel = '';
 
+  selectedLeaveTypeId = 0;
+
   calendarsEvents: Record<string, string> = {
     Danger: 'danger',
     Success: 'success',
@@ -95,15 +103,11 @@ export class CalendarComponent implements OnInit {
 
   calendarOptions!: CalendarOptions;
 
- ngOnInit(): void {
-  console.log('CALENDAR COMPONENT INITIALIZED');
-
-  this.initializeCalendar();
-
-  console.log('CALLING LOAD LEAVE REQUESTS');
-
-  this.loadLeaveRequests();
-}
+  ngOnInit(): void {
+    this.initializeCalendar();
+    this.loadLeaveRequests();
+    this.loadLeaveTypes();
+  }
 
   // ============================================================
   // LOAD LEAVE REQUESTS
@@ -133,6 +137,35 @@ export class CalendarComponent implements OnInit {
             error
           );
 
+        }
+      });
+  }
+
+  // ============================================================
+  // LOAD LEAVE TYPES
+  // ============================================================
+
+  loadLeaveTypes(): void {
+
+    const userInfoJson = localStorage.getItem('userInfo');
+
+    if (!userInfoJson) {
+      return;
+    }
+
+    const userInfo = JSON.parse(userInfoJson);
+
+    this.leaveAllocationsService
+      .getLeaveAllocationsByUsername(userInfo.username)
+      .subscribe({
+        next: (data: LeaveAllocationDto[]) => {
+          this.leaveTypes = data;
+        },
+        error: (error) => {
+          console.error(
+            'Failed to load leave types',
+            error
+          );
         }
       });
   }
@@ -496,75 +529,78 @@ export class CalendarComponent implements OnInit {
   // CREATE LEAVE REQUEST
   // ============================================================
 
- createEvent(): void {
-  const request: CreateLeaveRequestDto = {
-    leaveTypeId: this.getLeaveTypeId(),
+  createEvent(): void {
+    const request: CreateLeaveRequestDto = {
+      leaveTypeId: this.selectedLeaveTypeId,
 
-    startDate: this.toDate(this.eventStartDate),
+      startDate: this.toDate(this.eventStartDate),
 
-    endDate: this.toDate(this.eventEndDate)
-  };
+      endDate: this.toDate(this.eventEndDate)
+    };
 
-  console.log('Creating leave request:', request);
+    console.log('Creating leave request:', request);
 
-  this.leaveRequestsService
-    .createLeaveRequest(request)
-    .subscribe({
-      next: () => {
-        this.loadLeaveRequests();
-        this.closeModal();
-      },
-      error: (error) => {
-        console.error(
-          'Failed to create leave request',
-          error
-        );
-      }
-    });
-}
+    this.leaveRequestsService
+      .createLeaveRequest(request)
+      .subscribe({
+        next: () => {
+          this.loadLeaveRequests();
+          this.closeModal();
+        },
+        error: (error) => {
+          console.error(
+            'Failed to create leave request',
+            error
+          );
+        }
+      });
+  }
+
   toDate(eventStartDate: string): Date {
     throw new Error('Method not implemented.');
   }
+
   // ============================================================
   // UPDATE LEAVE REQUEST
   // ============================================================
 
- updateEvent(): void {
-  if (!this.selectedEvent) {
-    return;
+  updateEvent(): void {
+    if (!this.selectedEvent) {
+      return;
+    }
+
+    const leaveRequestId = Number(
+      this.selectedEvent.extendedProps.leaveRequestId ??
+      this.selectedEvent.id
+    );
+
+    const request: UpdateLeaveRequestDto = {
+      startDate: this.toDate(this.eventStartDate),
+      endDate: this.toDate(this.eventEndDate),
+      comment: ''
+    };
+
+    console.log('Updating leave request:', request);
+
+    this.leaveRequestsService
+      .updateLeaveRequest(
+        leaveRequestId,
+        request
+      )
+      .subscribe({
+        next: () => {
+          this.loadLeaveRequests();
+          this.closeModal();
+        },
+        error: (error) => {
+          console.error(
+            'Failed to update leave request',
+            error
+          );
+        }
+      });
   }
 
-  const leaveRequestId = Number(
-    this.selectedEvent.extendedProps.leaveRequestId ??
-    this.selectedEvent.id
-  );
-
-  const request: UpdateLeaveRequestDto = {
-    startDate: this.toDate(this.eventStartDate),
-    endDate: this.toDate(this.eventEndDate),
-    comment: ''
-  };
-
-  console.log('Updating leave request:', request);
-
-  this.leaveRequestsService
-    .updateLeaveRequest(
-      leaveRequestId,
-      request
-    )
-    .subscribe({
-      next: () => {
-        this.loadLeaveRequests();
-        this.closeModal();
-      },
-      error: (error) => {
-        console.error(
-          'Failed to update leave request',
-          error
-        );
-      }
-    });
-}
   // ============================================================
   // DELETE
   // ============================================================
@@ -636,6 +672,8 @@ export class CalendarComponent implements OnInit {
     this.eventEndDate = '';
 
     this.eventLevel = '';
+
+    this.selectedLeaveTypeId = 0;
 
     this.selectedEvent = null;
   }
