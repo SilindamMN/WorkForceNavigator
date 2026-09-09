@@ -1,11 +1,6 @@
-<div
-  class="rounded-2xl border border-gray-200
-         bg-white dark:border-gray-800
-         dark:bg-white/[0.03]"
->
+<div class="rounded-2xl border border-gray-200 bg-white dark:border-gray-800 dark:bg-white/[0.03]">
 
   <!-- CALENDAR -->
-
   <div class="custom-calendar">
     <full-calendar
       #calendar
@@ -14,33 +9,20 @@
   </div>
 
   <!-- MODAL -->
-
   <app-modal
     [isOpen]="isOpen"
     (close)="closeModal()"
     className="max-w-[700px] p-6 lg:p-10"
   >
-
-    <div
-      class="flex flex-col px-2
-             overflow-y-auto custom-scrollbar"
-    >
+    <div class="flex flex-col px-2 overflow-y-auto custom-scrollbar">
 
       <!-- HEADER -->
-
       <div>
-        <h5
-          class="mb-2 font-semibold text-gray-800
-                 modal-title text-theme-xl
-                 dark:text-white/90 lg:text-2xl"
-        >
+        <h5 class="mb-2 font-semibold text-gray-800 modal-title text-theme-xl dark:text-white/90 lg:text-2xl">
           {{ selectedEvent ? 'Edit Leave Request' : 'Request Leave' }}
         </h5>
 
-        <p
-          class="text-sm text-gray-500
-                 dark:text-gray-400"
-        >
+        <p class="text-sm text-gray-500 dark:text-gray-400">
           {{
             selectedEvent
               ? 'Update this leave request'
@@ -50,31 +32,16 @@
       </div>
 
       <!-- LEAVE TYPE -->
-
       <div class="mt-8">
-        <label
-          class="mb-1.5 block text-sm
-                 font-medium text-gray-700
-                 dark:text-gray-400"
-        >
+        <label for="event-leave-type" class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">
           Leave Type
         </label>
 
         <select
           id="event-leave-type"
+          name="selectedLeaveTypeId"
           [(ngModel)]="selectedLeaveTypeId"
-          class="dark:bg-dark-900 h-11 w-full
-                 rounded-lg border border-gray-300
-                 bg-transparent px-4 py-2.5
-                 text-sm text-gray-800
-                 shadow-theme-xs
-                 focus:border-brand-300
-                 focus:outline-hidden
-                 focus:ring-3
-                 focus:ring-brand-500/10
-                 dark:border-gray-700
-                 dark:bg-gray-900
-                 dark:text-white/90"
+          class="pointer-events-auto relative z-10 h-11 w-full rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-sm text-gray-800 shadow-theme-xs focus:border-brand-300 focus:outline-none focus:ring-3 focus:ring-brand-500/10 dark:border-gray-700 dark:bg-gray-900 dark:text-white/90"
         >
           <option [ngValue]="0" disabled>Select leave type</option>
           @for (type of leaveTypes; track type.leaveTypeId) {
@@ -84,219 +51,117 @@
       </div>
 
       <!-- START DATE -->
-
       <div class="mt-6">
-        <label
-          class="mb-1.5 block text-sm
-                 font-medium text-gray-700
-                 dark:text-gray-400"
-        >
+        <label for="event-start-date" class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">
           Start Date
         </label>
 
         <input
           id="event-start-date"
+          name="eventStartDate"
           type="date"
           [(ngModel)]="eventStartDate"
-          class="dark:bg-dark-900 h-11 w-full
-                 appearance-none rounded-lg
-                 border border-gray-300
-                 bg-transparent px-4 py-2.5
-                 text-sm text-gray-800
-                 shadow-theme-xs
-                 focus:border-brand-300
-                 focus:outline-hidden
-                 focus:ring-3
-                 focus:ring-brand-500/10
-                 dark:border-gray-700
-                 dark:bg-gray-900
-                 dark:text-white/90"
+          (click)="openDatePicker($event)"
+          class="pointer-events-auto relative z-10 h-11 w-full rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-sm text-gray-800 shadow-theme-xs focus:border-brand-300 focus:outline-none focus:ring-3 focus:ring-brand-500/10 dark:border-gray-700 dark:bg-gray-900 dark:text-white/90"
         />
       </div>
 
       <!-- END DATE -->
-
       <div class="mt-6">
-        <label
-          class="mb-1.5 block text-sm
-                 font-medium text-gray-700
-                 dark:text-gray-400"
-        >
+        <label for="event-end-date" class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">
           End Date
         </label>
 
         <input
           id="event-end-date"
+          name="eventEndDate"
           type="date"
+          [min]="eventStartDate"
           [(ngModel)]="eventEndDate"
-          class="dark:bg-dark-900 h-11 w-full
-                 appearance-none rounded-lg
-                 border border-gray-300
-                 bg-transparent px-4 py-2.5
-                 text-sm text-gray-800
-                 shadow-theme-xs
-                 focus:border-brand-300
-                 focus:outline-hidden
-                 focus:ring-3
-                 focus:ring-brand-500/10
-                 dark:border-gray-700
-                 dark:bg-gray-900
-                 dark:text-white/90"
+          (click)="openDatePicker($event)"
+          class="pointer-events-auto relative z-10 h-11 w-full rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-sm text-gray-800 shadow-theme-xs focus:border-brand-300 focus:outline-none focus:ring-3 focus:ring-brand-500/10 dark:border-gray-700 dark:bg-gray-900 dark:text-white/90"
         />
       </div>
 
       <!-- STATUS (Read-only) -->
-
       @if (selectedEvent) {
         <div class="mt-6">
-          <label
-            class="mb-1.5 block text-sm
-                   font-medium text-gray-700
-                   dark:text-gray-400"
-          >
+          <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">
             Status
           </label>
 
           <input
             type="text"
+            name="eventStatus"
             [value]="selectedEvent.extendedProps.status"
             disabled
-            class="dark:bg-dark-900 h-11 w-full
-                   rounded-lg border
-                   border-gray-300
-                   bg-gray-100
-                   px-4 py-2.5
-                   text-sm text-gray-800
-                   dark:border-gray-700
-                   dark:bg-gray-800
-                   dark:text-white/90"
+            class="h-11 w-full rounded-lg border border-gray-300 bg-gray-100 px-4 py-2.5 text-sm text-gray-800 dark:border-gray-700 dark:bg-gray-800 dark:text-white/90"
           />
         </div>
       }
 
       <!-- EMPLOYEE (Read-only) -->
-
       @if (selectedEvent) {
         <div class="mt-6">
-          <label
-            class="mb-1.5 block text-sm
-                   font-medium text-gray-700
-                   dark:text-gray-400"
-          >
+          <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">
             Employee
           </label>
 
           <input
             type="text"
-            [value]="
-              selectedEvent.extendedProps.firstName +
-              ' ' +
-              selectedEvent.extendedProps.lastName
-            "
+            name="eventEmployee"
+            [value]="selectedEvent.extendedProps.firstName + ' ' + selectedEvent.extendedProps.lastName"
             disabled
-            class="dark:bg-dark-900 h-11 w-full
-                   rounded-lg border
-                   border-gray-300
-                   bg-gray-100
-                   px-4 py-2.5
-                   text-sm text-gray-800
-                   dark:border-gray-700
-                   dark:bg-gray-800
-                   dark:text-white/90"
+            class="h-11 w-full rounded-lg border border-gray-300 bg-gray-100 px-4 py-2.5 text-sm text-gray-800 dark:border-gray-700 dark:bg-gray-800 dark:text-white/90"
           />
         </div>
       }
 
       <!-- NUMBER OF DAYS (Read-only) -->
-
       @if (selectedEvent) {
         <div class="mt-6">
-          <label
-            class="mb-1.5 block text-sm
-                   font-medium text-gray-700
-                   dark:text-gray-400"
-          >
+          <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">
             Number of Days
           </label>
 
           <input
             type="number"
+            name="eventNumberOfDays"
             [value]="selectedEvent.extendedProps.numberOfDays"
             disabled
-            class="dark:bg-dark-900 h-11 w-full
-                   rounded-lg border
-                   border-gray-300
-                   bg-gray-100
-                   px-4 py-2.5
-                   text-sm text-gray-800
-                   dark:border-gray-700
-                   dark:bg-gray-800
-                   dark:text-white/90"
+            class="h-11 w-full rounded-lg border border-gray-300 bg-gray-100 px-4 py-2.5 text-sm text-gray-800 dark:border-gray-700 dark:bg-gray-800 dark:text-white/90"
           />
         </div>
       }
 
       <!-- FOOTER -->
-
-      <div
-        class="flex items-center gap-3 mt-6
-               modal-footer sm:justify-end"
-      >
+      <div class="flex items-center gap-3 mt-6 modal-footer sm:justify-end">
 
         <!-- CLOSE -->
-
         <button
           (click)="closeModal()"
           type="button"
-          class="flex w-full justify-center
-                 rounded-lg border
-                 border-gray-300
-                 bg-white px-4 py-2.5
-                 text-sm font-medium
-                 text-gray-700
-                 hover:bg-gray-50
-                 dark:border-gray-700
-                 dark:bg-gray-800
-                 dark:text-gray-400
-                 sm:w-auto"
+          class="flex w-full justify-center rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 sm:w-auto"
         >
           Close
         </button>
 
         <!-- DELETE (Only show when editing) -->
-
         @if (selectedEvent) {
           <button
             (click)="deleteEvent()"
             type="button"
-            class="flex w-full justify-center
-                   rounded-lg border
-                   border-red-300
-                   bg-red-50 px-4 py-2.5
-                   text-sm font-medium
-                   text-red-600
-                   hover:bg-red-100
-                   dark:border-red-700
-                   dark:bg-red-900/20
-                   dark:text-red-400
-                   sm:w-auto"
+            class="flex w-full justify-center rounded-lg border border-red-300 bg-red-50 px-4 py-2.5 text-sm font-medium text-red-600 hover:bg-red-100 dark:border-red-700 dark:bg-red-900/20 dark:text-red-400 sm:w-auto"
           >
             Delete
           </button>
         }
 
         <!-- UPDATE / REQUEST -->
-
         <button
           (click)="handleAddOrUpdateEvent()"
           type="button"
-          class="flex w-full justify-center
-                 rounded-lg bg-brand-500
-                 px-4 py-2.5
-                 text-sm font-medium
-                 text-white
-                 hover:bg-brand-600
-                 sm:w-auto"
+          class="flex w-full justify-center rounded-lg bg-brand-500 px-4 py-2.5 text-sm font-medium text-white hover:bg-brand-600 sm:w-auto"
         >
           {{
             selectedEvent
@@ -308,7 +173,6 @@
       </div>
 
     </div>
-
   </app-modal>
 
 </div>
