@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import {
   Component,
   inject,
+  NgZone,
   OnInit,
   ViewChild
 } from '@angular/core';
@@ -66,6 +67,7 @@ export class CalendarComponent implements OnInit {
   @ViewChild('calendar')
   calendarComponent!: FullCalendarComponent;
 
+  private zone = inject(NgZone);
   leaveRequestsService = inject(LeaverequestService);
   leaveAllocationsService = inject(LeaveAllocationsService);
 
@@ -75,7 +77,7 @@ export class CalendarComponent implements OnInit {
   selectedEvent: CalendarEvent | null = null;
   isOpen = false;
 
-  // Form fields
+  // Form fields (Formatted strictly as YYYY-MM-DD for native <input type="date">)
   eventTitle = '';
   eventStartDate = '';
   eventEndDate = '';
@@ -108,7 +110,7 @@ export class CalendarComponent implements OnInit {
         next: (data: LeaveRequest[]) => {
           this.leaveRequests = data;
           this.events = this.mapLeaveRequestsToEvents(data);
-          this.calendarOptions.events = this.events;
+          this.calendarOptions.events = [...this.events];
         },
         error: (error) => {
           console.error('Failed to load leave requests', error);
@@ -185,17 +187,32 @@ export class CalendarComponent implements OnInit {
   }
 
   // ============================================================
+  // FORMAT DATE TO YYYY-MM-DD
+  // ============================================================
+
+  formatToInputDate(dateInput: string | Date): string {
+    if (!dateInput) return '';
+    const date = new Date(dateInput);
+    if (isNaN(date.getTime())) return '';
+    
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  }
+
+  // ============================================================
   // FULLCALENDAR END DATE (Adds 1 day because FullCalendar uses exclusive end date)
   // ============================================================
 
-  getCalendarEndDate(endDate: string): string {
+  getCalendarEndDate(endDate: string | Date): string {
     if (!endDate) {
-      return endDate;
+      return '';
     }
 
     const date = new Date(endDate);
     date.setDate(date.getDate() + 1);
-    return date.toISOString().split('T')[0];
+    return this.formatToInputDate(date);
   }
 
   // ============================================================
@@ -203,21 +220,22 @@ export class CalendarComponent implements OnInit {
   // ============================================================
 
   removeOneDay(dateString: string): string {
+    if (!dateString) return '';
     const date = new Date(dateString);
     date.setDate(date.getDate() - 1);
-    return date.toISOString().split('T')[0];
+    return this.formatToInputDate(date);
   }
 
   // ============================================================
-  // TO DATE (Convert string to Date)
+  // TO DATE (Convert string YYYY-MM-DD to Date object)
   // ============================================================
 
   toDate(dateString: string): Date {
     const parts = dateString.split('-');
     return new Date(
-      parseInt(parts[0]),
-      parseInt(parts[1]) - 1,
-      parseInt(parts[2])
+      parseInt(parts[0], 10),
+      parseInt(parts[1], 10) - 1,
+      parseInt(parts[2], 10)
     );
   }
 
@@ -238,10 +256,16 @@ export class CalendarComponent implements OnInit {
       editable: false,
       events: this.events,
       select: (info: DateSelectArg) => {
-        this.handleDateSelect(info);
+        // Run inside Angular zone to update bindings immediately
+        this.zone.run(() => {
+          this.handleDateSelect(info);
+        });
       },
       eventClick: (info: EventClickArg) => {
-        this.handleEventClick(info);
+        // Run inside Angular zone to update bindings immediately
+        this.zone.run(() => {
+          this.handleEventClick(info);
+        });
       },
       eventContent: (arg) => {
         return this.renderEventContent(arg);
@@ -255,12 +279,12 @@ export class CalendarComponent implements OnInit {
 
   handleDateSelect(selectInfo: DateSelectArg): void {
     this.resetModalFields();
-    this.eventStartDate = selectInfo.startStr;
+    this.eventStartDate = this.formatToInputDate(selectInfo.startStr);
 
     if (selectInfo.endStr) {
       this.eventEndDate = this.removeOneDay(selectInfo.endStr);
     } else {
-      this.eventEndDate = selectInfo.startStr;
+      this.eventEndDate = this.eventStartDate;
     }
 
     this.openModal();
@@ -293,11 +317,22 @@ export class CalendarComponent implements OnInit {
     // Populate form fields
     this.selectedLeaveTypeId = event.extendedProps['leaveTypeId'] || 0;
     this.eventTitle = event.title;
-    this.eventStartDate = event.startStr;
-    this.eventEndDate = event.endStr ? this.removeOneDay(event.endStr) : event.startStr;
+    this.eventStartDate = this.formatToInputDate(event.startStr);
+    this.eventEndDate = event.endStr ? this.removeOneDay(event.endStr) : this.eventStartDate;
     this.eventLevel = event.extendedProps['calendar'];
 
     this.openModal();
+  }
+
+  // ============================================================
+  // OPEN NATIVE PICKER ON CLICK
+  // ============================================================
+
+  openDatePicker(event: MouseEvent): void {
+    const inputEl = event.target as HTMLInputElement;
+    if (inputEl && typeof inputEl.showPicker === 'function') {
+      inputEl.showPicker();
+    }
   }
 
   // ============================================================
@@ -397,6 +432,17 @@ export class CalendarComponent implements OnInit {
       this.selectedEvent.id
     );
 
+    this.leaveRequestsService
+      .delete(leaveRequestId)
+      .subscribe({
+        next: () => {
+          this.loadLeaveRequests();
+          this.closeModal();
+        },
+        error: (error) => {
+          console.error('Failed to delete leave request', error);
+        }
+      });
   }
 
   // ============================================================
