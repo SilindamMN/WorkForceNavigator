@@ -7,14 +7,11 @@
   <!-- CALENDAR -->
 
   <div class="custom-calendar">
-
     <full-calendar
       #calendar
       [options]="calendarOptions">
     </full-calendar>
-
   </div>
-
 
   <!-- MODAL -->
 
@@ -32,7 +29,6 @@
       <!-- HEADER -->
 
       <div>
-
         <h5
           class="mb-2 font-semibold text-gray-800
                  modal-title text-theme-xl
@@ -47,18 +43,15 @@
         >
           {{
             selectedEvent
-              ? 'View or update this leave request'
+              ? 'Update this leave request'
               : 'Submit a new leave request'
           }}
         </p>
-
       </div>
-
 
       <!-- LEAVE TYPE -->
 
       <div class="mt-8">
-
         <label
           class="mb-1.5 block text-sm
                  font-medium text-gray-700
@@ -67,55 +60,32 @@
           Leave Type
         </label>
 
-        @if (selectedEvent) {
-
-          <input
-            id="event-title"
-            type="text"
-            [(ngModel)]="eventTitle"
-            disabled
-            class="dark:bg-dark-900 h-11 w-full
-                   rounded-lg border border-gray-300
-                   bg-gray-100 px-4 py-2.5
-                   text-sm text-gray-800
-                   dark:border-gray-700
-                   dark:bg-gray-800
-                   dark:text-white/90"
-          />
-
-        } @else {
-
-          <select
-            id="event-leave-type"
-            [(ngModel)]="selectedLeaveTypeId"
-            class="dark:bg-dark-900 h-11 w-full
-                   rounded-lg border border-gray-300
-                   bg-transparent px-4 py-2.5
-                   text-sm text-gray-800
-                   shadow-theme-xs
-                   focus:border-brand-300
-                   focus:outline-hidden
-                   focus:ring-3
-                   focus:ring-brand-500/10
-                   dark:border-gray-700
-                   dark:bg-gray-900
-                   dark:text-white/90"
-          >
-            <option [ngValue]="0" disabled>Select leave type</option>
-            @for (type of leaveTypes; track type.leaveTypeId) {
-              <option [ngValue]="type.leaveTypeId">{{ type.leaveName }}</option>
-            }
-          </select>
-
-        }
-
+        <select
+          id="event-leave-type"
+          [(ngModel)]="selectedLeaveTypeId"
+          class="dark:bg-dark-900 h-11 w-full
+                 rounded-lg border border-gray-300
+                 bg-transparent px-4 py-2.5
+                 text-sm text-gray-800
+                 shadow-theme-xs
+                 focus:border-brand-300
+                 focus:outline-hidden
+                 focus:ring-3
+                 focus:ring-brand-500/10
+                 dark:border-gray-700
+                 dark:bg-gray-900
+                 dark:text-white/90"
+        >
+          <option [ngValue]="0" disabled>Select leave type</option>
+          @for (type of leaveTypes; track type.leaveTypeId) {
+            <option [ngValue]="type.leaveTypeId">{{ type.leaveName }}</option>
+          }
+        </select>
       </div>
-
 
       <!-- START DATE -->
 
       <div class="mt-6">
-
         <label
           class="mb-1.5 block text-sm
                  font-medium text-gray-700
@@ -142,14 +112,11 @@
                  dark:bg-gray-900
                  dark:text-white/90"
         />
-
       </div>
-
 
       <!-- END DATE -->
 
       <div class="mt-6">
-
         <label
           class="mb-1.5 block text-sm
                  font-medium text-gray-700
@@ -176,16 +143,12 @@
                  dark:bg-gray-900
                  dark:text-white/90"
         />
-
       </div>
 
-
-      <!-- STATUS -->
+      <!-- STATUS (Read-only) -->
 
       @if (selectedEvent) {
-
         <div class="mt-6">
-
           <label
             class="mb-1.5 block text-sm
                    font-medium text-gray-700
@@ -208,18 +171,13 @@
                    dark:bg-gray-800
                    dark:text-white/90"
           />
-
         </div>
-
       }
 
-
-      <!-- EMPLOYEE -->
+      <!-- EMPLOYEE (Read-only) -->
 
       @if (selectedEvent) {
-
         <div class="mt-6">
-
           <label
             class="mb-1.5 block text-sm
                    font-medium text-gray-700
@@ -246,18 +204,13 @@
                    dark:bg-gray-800
                    dark:text-white/90"
           />
-
         </div>
-
       }
 
-
-      <!-- NUMBER OF DAYS -->
+      <!-- NUMBER OF DAYS (Read-only) -->
 
       @if (selectedEvent) {
-
         <div class="mt-6">
-
           <label
             class="mb-1.5 block text-sm
                    font-medium text-gray-700
@@ -280,11 +233,8 @@
                    dark:bg-gray-800
                    dark:text-white/90"
           />
-
         </div>
-
       }
-
 
       <!-- FOOTER -->
 
@@ -313,6 +263,27 @@
           Close
         </button>
 
+        <!-- DELETE (Only show when editing) -->
+
+        @if (selectedEvent) {
+          <button
+            (click)="deleteEvent()"
+            type="button"
+            class="flex w-full justify-center
+                   rounded-lg border
+                   border-red-300
+                   bg-red-50 px-4 py-2.5
+                   text-sm font-medium
+                   text-red-600
+                   hover:bg-red-100
+                   dark:border-red-700
+                   dark:bg-red-900/20
+                   dark:text-red-400
+                   sm:w-auto"
+          >
+            Delete
+          </button>
+        }
 
         <!-- UPDATE / REQUEST -->
 
