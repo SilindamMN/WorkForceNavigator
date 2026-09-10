@@ -1,0 +1,820 @@
+<div class="space-y-6">
+
+  <!-- ========================================= -->
+  <!-- PERSONAL INFORMATION -->
+  <!-- ========================================= -->
+
+  <div
+    class="rounded-2xl border border-gray-200
+           bg-white p-6
+           dark:border-gray-800
+           dark:bg-white/[0.03]"
+  >
+
+    <div class="mb-6 flex items-center justify-between">
+
+      <h2
+        class="text-lg font-semibold
+               text-gray-800
+               dark:text-white"
+      >
+        Personal Information
+      </h2>
+
+      <button
+        type="button"
+        (click)="openEdit('personal')"
+        class="rounded-lg border border-gray-300
+               px-4 py-2 text-sm font-medium
+               text-gray-700
+               hover:bg-gray-50
+               dark:border-gray-700
+               dark:text-gray-300
+               dark:hover:bg-white/[0.05]"
+      >
+        Edit
+      </button>
+
+    </div>
+
+
+    <div
+      class="grid grid-cols-1 gap-6
+             md:grid-cols-2
+             lg:grid-cols-3"
+    >
+
+      <!-- First Name -->
+
+      <div>
+
+        <p class="text-sm text-gray-500 dark:text-gray-400">
+          First Name
+        </p>
+
+        <p class="mt-1 font-medium text-gray-800 dark:text-white">
+          {{ user?.firstName || '-' }}
+        </p>
+
+      </div>
+
+
+      <!-- Last Name -->
+
+      <div>
+
+        <p class="text-sm text-gray-500 dark:text-gray-400">
+          Last Name
+        </p>
+
+        <p class="mt-1 font-medium text-gray-800 dark:text-white">
+          {{ user?.lastName || '-' }}
+        </p>
+
+      </div>
+
+
+      <!-- Username -->
+
+      <div>
+
+        <p class="text-sm text-gray-500 dark:text-gray-400">
+          Username
+        </p>
+
+        <p class="mt-1 font-medium text-gray-800 dark:text-white">
+          {{ user?.username || '-' }}
+        </p>
+
+      </div>
+
+
+      <!-- Email -->
+
+      <div>
+
+        <p class="text-sm text-gray-500 dark:text-gray-400">
+          Email
+        </p>
+
+        <p class="mt-1 font-medium text-gray-800 dark:text-white">
+          {{ user?.email || '-' }}
+        </p>
+
+      </div>
+
+
+      <!-- Phone -->
+
+      <div>
+
+        <p class="text-sm text-gray-500 dark:text-gray-400">
+          Phone Number
+        </p>
+
+        <p class="mt-1 font-medium text-gray-800 dark:text-white">
+          {{ user?.phoneNumber || '-' }}
+        </p>
+
+      </div>
+
+
+      <!-- Gender -->
+
+      <div>
+
+        <p class="text-sm text-gray-500 dark:text-gray-400">
+          Gender
+        </p>
+
+        <p class="mt-1 font-medium text-gray-800 dark:text-white">
+          {{ user?.gender || '-' }}
+        </p>
+
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <!-- ========================================= -->
+  <!-- EMPLOYMENT INFORMATION -->
+  <!-- ========================================= -->
+
+  <div
+    class="rounded-2xl border border-gray-200
+           bg-white p-6
+           dark:border-gray-800
+           dark:bg-white/[0.03]"
+  >
+
+    <div class="mb-6 flex items-center justify-between">
+
+      <h2
+        class="text-lg font-semibold
+               text-gray-800
+               dark:text-white"
+      >
+        Employment Information
+      </h2>
+
+      <button
+        type="button"
+        (click)="openEdit('employment')"
+        class="rounded-lg border border-gray-300
+               px-4 py-2 text-sm font-medium
+               text-gray-700
+               hover:bg-gray-50
+               dark:border-gray-700
+               dark:text-gray-300
+               dark:hover:bg-white/[0.05]"
+      >
+        Edit
+      </button>
+
+    </div>
+
+
+    <div
+      class="grid grid-cols-1 gap-6
+             md:grid-cols-2
+             lg:grid-cols-3"
+    >
+
+      <!-- Department -->
+
+      <div>
+
+        <p class="text-sm text-gray-500 dark:text-gray-400">
+          Department
+        </p>
+
+        <p class="mt-1 font-medium text-gray-800 dark:text-white">
+          {{ user?.departmentName || '-' }}
+        </p>
+
+      </div>
+
+
+      <!-- Job Title -->
+
+      <div>
+
+        <p class="text-sm text-gray-500 dark:text-gray-400">
+          Job Title
+        </p>
+
+        <p class="mt-1 font-medium text-gray-800 dark:text-white">
+          {{ user?.jobTitleName || '-' }}
+        </p>
+
+      </div>
+
+
+      <!-- Seniority -->
+
+      <div>
+
+        <p class="text-sm text-gray-500 dark:text-gray-400">
+          Seniority
+        </p>
+
+        <p class="mt-1 font-medium text-gray-800 dark:text-white">
+          {{ user?.seniority || '-' }}
+        </p>
+
+      </div>
+
+
+      <!-- Team -->
+
+      <div>
+
+        <p class="text-sm text-gray-500 dark:text-gray-400">
+          Team
+        </p>
+
+        <p class="mt-1 font-medium text-gray-800 dark:text-white">
+          {{ user?.teamName || '-' }}
+        </p>
+
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <!-- ========================================= -->
+  <!-- ACCOUNT INFORMATION -->
+  <!-- ========================================= -->
+
+  <div
+    class="rounded-2xl border border-gray-200
+           bg-white p-6
+           dark:border-gray-800
+           dark:bg-white/[0.03]"
+  >
+
+    <div class="mb-6 flex items-center justify-between">
+
+      <h2
+        class="text-lg font-semibold
+               text-gray-800
+               dark:text-white"
+      >
+        Account Information
+      </h2>
+
+      <button
+        type="button"
+        (click)="openEdit('account')"
+        class="rounded-lg border border-gray-300
+               px-4 py-2 text-sm font-medium
+               text-gray-700
+               hover:bg-gray-50
+               dark:border-gray-700
+               dark:text-gray-300
+               dark:hover:bg-white/[0.05]"
+      >
+        Edit
+      </button>
+
+    </div>
+
+
+    <div
+      class="grid grid-cols-1 gap-6
+             md:grid-cols-2"
+    >
+
+      <!-- User ID -->
+
+      <div>
+
+        <p class="text-sm text-gray-500 dark:text-gray-400">
+          User ID
+        </p>
+
+        <p class="mt-1 font-medium text-gray-800 dark:text-white">
+          {{ user?.id || '-' }}
+        </p>
+
+      </div>
+
+
+      <!-- Created -->
+
+      <div>
+
+        <p class="text-sm text-gray-500 dark:text-gray-400">
+          Account Created
+        </p>
+
+        <p class="mt-1 font-medium text-gray-800 dark:text-white">
+          {{ user?.createdAt
+            ? (user.createdAt | date:'mediumDate')
+            : '-'
+          }}
+        </p>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
+
+
+<!-- ========================================= -->
+<!-- GENERIC MODAL -->
+<!-- ========================================= -->
+
+<app-modal
+  [isOpen]="isModalOpen"
+  [className]="'max-w-2xl'"
+  [showCloseButton]="true"
+  (close)="closeModal()"
+>
+
+  <!-- ========================================= -->
+  <!-- MODAL HEADER -->
+  <!-- ========================================= -->
+
+  <div
+    class="border-b border-gray-200
+           px-6 py-5
+           dark:border-gray-800"
+  >
+
+    <h3
+      class="text-lg font-semibold
+             text-gray-800
+             dark:text-white"
+    >
+
+      <span *ngIf="editSection === 'personal'">
+        Edit Personal Information
+      </span>
+
+      <span *ngIf="editSection === 'employment'">
+        Edit Employment Information
+      </span>
+
+      <span *ngIf="editSection === 'account'">
+        Edit Account Information
+      </span>
+
+    </h3>
+
+  </div>
+
+
+  <!-- ========================================= -->
+  <!-- MODAL BODY -->
+  <!-- ========================================= -->
+
+  <div class="px-6 py-6">
+
+
+    <!-- ========================================= -->
+    <!-- PERSONAL -->
+    <!-- ========================================= -->
+
+    <div
+      *ngIf="editSection === 'personal'"
+      class="grid grid-cols-1 gap-5 md:grid-cols-2"
+    >
+
+      <!-- First Name -->
+
+      <div>
+
+        <label
+          class="mb-2 block text-sm font-medium
+                 text-gray-700
+                 dark:text-gray-300"
+        >
+          First Name
+        </label>
+
+        <input
+          type="text"
+          [(ngModel)]="editUser.firstName"
+          class="w-full rounded-lg border
+                 border-gray-300 bg-white
+                 px-4 py-2.5
+                 text-sm text-gray-800
+                 outline-none
+                 focus:border-blue-500
+                 dark:border-gray-700
+                 dark:bg-gray-800
+                 dark:text-white"
+        />
+
+      </div>
+
+
+      <!-- Last Name -->
+
+      <div>
+
+        <label
+          class="mb-2 block text-sm font-medium
+                 text-gray-700
+                 dark:text-gray-300"
+        >
+          Last Name
+        </label>
+
+        <input
+          type="text"
+          [(ngModel)]="editUser.lastName"
+          class="w-full rounded-lg border
+                 border-gray-300 bg-white
+                 px-4 py-2.5
+                 text-sm text-gray-800
+                 outline-none
+                 focus:border-blue-500
+                 dark:border-gray-700
+                 dark:bg-gray-800
+                 dark:text-white"
+        />
+
+      </div>
+
+
+      <!-- Email -->
+
+      <div>
+
+        <label
+          class="mb-2 block text-sm font-medium
+                 text-gray-700
+                 dark:text-gray-300"
+        >
+          Email
+        </label>
+
+        <input
+          type="email"
+          [(ngModel)]="editUser.email"
+          class="w-full rounded-lg border
+                 border-gray-300 bg-white
+                 px-4 py-2.5
+                 text-sm text-gray-800
+                 outline-none
+                 focus:border-blue-500
+                 dark:border-gray-700
+                 dark:bg-gray-800
+                 dark:text-white"
+        />
+
+      </div>
+
+
+      <!-- Phone -->
+
+      <div>
+
+        <label
+          class="mb-2 block text-sm font-medium
+                 text-gray-700
+                 dark:text-gray-300"
+        >
+          Phone Number
+        </label>
+
+        <input
+          type="text"
+          [(ngModel)]="editUser.phoneNumber"
+          class="w-full rounded-lg border
+                 border-gray-300 bg-white
+                 px-4 py-2.5
+                 text-sm text-gray-800
+                 outline-none
+                 focus:border-blue-500
+                 dark:border-gray-700
+                 dark:bg-gray-800
+                 dark:text-white"
+        />
+
+      </div>
+
+
+      <!-- Gender -->
+
+      <div>
+
+        <label
+          class="mb-2 block text-sm font-medium
+                 text-gray-700
+                 dark:text-gray-300"
+        >
+          Gender
+        </label>
+
+        <select
+          [(ngModel)]="editUser.gender"
+          class="w-full rounded-lg border
+                 border-gray-300 bg-white
+                 px-4 py-2.5
+                 text-sm text-gray-800
+                 outline-none
+                 focus:border-blue-500
+                 dark:border-gray-700
+                 dark:bg-gray-800
+                 dark:text-white"
+        >
+
+          <option value="">
+            Select Gender
+          </option>
+
+          <option value="Male">
+            Male
+          </option>
+
+          <option value="Female">
+            Female
+          </option>
+
+        </select>
+
+      </div>
+
+
+      <!-- Username -->
+
+      <div>
+
+        <label
+          class="mb-2 block text-sm font-medium
+                 text-gray-700
+                 dark:text-gray-300"
+        >
+          Username
+        </label>
+
+        <input
+          type="text"
+          [(ngModel)]="editUser.username"
+          class="w-full rounded-lg border
+                 border-gray-300 bg-white
+                 px-4 py-2.5
+                 text-sm text-gray-800
+                 outline-none
+                 focus:border-blue-500
+                 dark:border-gray-700
+                 dark:bg-gray-800
+                 dark:text-white"
+        />
+
+      </div>
+
+    </div>
+
+
+    <!-- ========================================= -->
+    <!-- EMPLOYMENT -->
+    <!-- ========================================= -->
+
+    <div
+      *ngIf="editSection === 'employment'"
+      class="space-y-5"
+    >
+
+      <!-- Department -->
+
+      <div>
+
+        <label
+          class="mb-2 block text-sm font-medium
+                 text-gray-700
+                 dark:text-gray-300"
+        >
+          Department
+        </label>
+
+        <input
+          type="text"
+          [(ngModel)]="editUser.departmentName"
+          class="w-full rounded-lg border
+                 border-gray-300 bg-white
+                 px-4 py-2.5
+                 text-sm text-gray-800
+                 outline-none
+                 focus:border-blue-500
+                 dark:border-gray-700
+                 dark:bg-gray-800
+                 dark:text-white"
+        />
+
+      </div>
+
+
+      <!-- Job Title -->
+
+      <div>
+
+        <label
+          class="mb-2 block text-sm font-medium
+                 text-gray-700
+                 dark:text-gray-300"
+        >
+          Job Title
+        </label>
+
+        <input
+          type="text"
+          [(ngModel)]="editUser.jobTitleName"
+          class="w-full rounded-lg border
+                 border-gray-300 bg-white
+                 px-4 py-2.5
+                 text-sm text-gray-800
+                 outline-none
+                 focus:border-blue-500
+                 dark:border-gray-700
+                 dark:bg-gray-800
+                 dark:text-white"
+        />
+
+      </div>
+
+
+      <!-- Seniority -->
+
+      <div>
+
+        <label
+          class="mb-2 block text-sm font-medium
+                 text-gray-700
+                 dark:text-gray-300"
+        >
+          Seniority
+        </label>
+
+        <input
+          type="text"
+          [(ngModel)]="editUser.seniority"
+          class="w-full rounded-lg border
+                 border-gray-300 bg-white
+                 px-4 py-2.5
+                 text-sm text-gray-800
+                 outline-none
+                 focus:border-blue-500
+                 dark:border-gray-700
+                 dark:bg-gray-800
+                 dark:text-white"
+        />
+
+      </div>
+
+
+      <!-- Team -->
+
+      <div>
+
+        <label
+          class="mb-2 block text-sm font-medium
+                 text-gray-700
+                 dark:text-gray-300"
+        >
+          Team
+        </label>
+
+        <input
+          type="text"
+          [(ngModel)]="editUser.teamName"
+          class="w-full rounded-lg border
+                 border-gray-300 bg-white
+                 px-4 py-2.5
+                 text-sm text-gray-800
+                 outline-none
+                 focus:border-blue-500
+                 dark:border-gray-700
+                 dark:bg-gray-800
+                 dark:text-white"
+        />
+
+      </div>
+
+    </div>
+
+
+    <!-- ========================================= -->
+    <!-- ACCOUNT -->
+    <!-- ========================================= -->
+
+    <div
+      *ngIf="editSection === 'account'"
+      class="space-y-5"
+    >
+
+      <!-- User ID -->
+
+      <div>
+
+        <label
+          class="mb-2 block text-sm font-medium
+                 text-gray-700
+                 dark:text-gray-300"
+        >
+          User ID
+        </label>
+
+        <input
+          type="text"
+          [value]="editUser.id"
+          disabled
+          class="w-full rounded-lg border
+                 border-gray-300 bg-gray-100
+                 px-4 py-2.5
+                 text-sm text-gray-500
+                 dark:border-gray-700
+                 dark:bg-gray-800
+                 dark:text-gray-400"
+        />
+
+      </div>
+
+
+      <!-- Account Created -->
+
+      <div>
+
+        <label
+          class="mb-2 block text-sm font-medium
+                 text-gray-700
+                 dark:text-gray-300"
+        >
+          Account Created
+        </label>
+
+        <input
+          type="text"
+          [value]="editUser.createdAt
+            ? (editUser.createdAt | date:'mediumDate')
+            : '-'"
+          disabled
+          class="w-full rounded-lg border
+                 border-gray-300 bg-gray-100
+                 px-4 py-2.5
+                 text-sm text-gray-500
+                 dark:border-gray-700
+                 dark:bg-gray-800
+                 dark:text-gray-400"
+        />
+
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <!-- ========================================= -->
+  <!-- MODAL FOOTER -->
+  <!-- ========================================= -->
+
+  <div
+    class="flex justify-end gap-3
+           border-t border-gray-200
+           px-6 py-4
+           dark:border-gray-800"
+  >
+
+    <button
+      type="button"
+      (click)="closeModal()"
+      class="rounded-lg border
+             border-gray-300
+             px-4 py-2
+             text-sm font-medium
+             text-gray-700
+             hover:bg-gray-50
+             dark:border-gray-700
+             dark:text-gray-300
+             dark:hover:bg-white/[0.05]"
+    >
+      Cancel
+    </button>
+
+    <button
+      *ngIf="editSection !== 'account'"
+      type="button"
+      (click)="saveChanges()"
+      class="rounded-lg bg-blue-600
+             px-4 py-2
+             text-sm font-medium
+             text-white
+             hover:bg-blue-700"
+    >
+      Save Changes
+    </button>
+
+  </div>
+
+</app-modal>

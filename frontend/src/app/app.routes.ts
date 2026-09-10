@@ -21,6 +21,9 @@ import { SignUpComponent } from './pages/auth-pages/sign-up/sign-up.component';
 import { UsersComponent } from './pages/users/users.component';
 import { AuthGuard } from './AuthGuards/auth.guard';
 import { TimesheetComponent } from './pages/timesheet/timesheet.component';
+import { ProjectsComponent } from './pages/projects/projects.component';
+import { TeamsComponent } from './pages/teams/teams.component';
+import { UserProfileComponent } from './pages/userprofile/userprofile.component';
 
 export const routes: Routes = [
   {
@@ -40,6 +43,9 @@ export const routes: Routes = [
       { path: 'form-elements', component: FormElementsComponent, title: 'Angular Form Elements Dashboard | TailAdmin - Angular Admin Dashboard Template' },
       { path: 'basic-tables', component: BasicTablesComponent, title: 'Angular Basic Tables Dashboard | TailAdmin - Angular Admin Dashboard Template' },
       { path: 'users', component: UsersComponent, title: 'Angular Users Dashboard | TailAdmin - Angular Admin Dashboard Template' },
+      { path: 'projects', component: ProjectsComponent, title: 'Angular Projects Dashboard | TailAdmin - Angular Admin Dashboard Template' },
+      { path: 'teams', component: TeamsComponent, title: 'Angular Teams Dashboard | TailAdmin - Angular Admin Dashboard Template' },
+      { path: 'userprofile', component: UserProfileComponent, title: 'Angular User Profile Dashboard | TailAdmin - Angular Admin Dashboard Template' },
       { path: 'blank', component: BlankComponent, title: 'Angular Blank Dashboard | TailAdmin - Angular Admin Dashboard Template' },
       { path: 'invoice', component: InvoicesComponent, title: 'Angular Invoice Details Dashboard | TailAdmin - Angular Admin Dashboard Template' },
       { path: 'line-chart', component: LineChartComponent, title: 'Angular Line Chart Dashboard | TailAdmin - Angular Admin Dashboard Template' },
