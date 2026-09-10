@@ -20,6 +20,7 @@ import { SignInComponent } from './pages/auth-pages/sign-in/sign-in.component';
 import { SignUpComponent } from './pages/auth-pages/sign-up/sign-up.component';
 import { UsersComponent } from './pages/users/users.component';
 import { AuthGuard } from './AuthGuards/auth.guard';
+import { TimesheetComponent } from './pages/timesheet/timesheet.component';
 
 export const routes: Routes = [
   {
@@ -34,6 +35,7 @@ export const routes: Routes = [
         title: 'Angular Ecommerce Dashboard | TailAdmin - Angular Admin Dashboard Template',
       },
       { path: 'calendar', component: CalendarComponent, title: 'Angular Calender | TailAdmin - Angular Admin Dashboard Template' },
+      { path: 'timesheet', component: TimesheetComponent, title: 'Angular Timesheet | TailAdmin - Angular Admin Dashboard Template' },
       { path: 'profile', component: ProfileComponent, title: 'Angular Profile Dashboard | TailAdmin - Angular Admin Dashboard Template' },
       { path: 'form-elements', component: FormElementsComponent, title: 'Angular Form Elements Dashboard | TailAdmin - Angular Admin Dashboard Template' },
       { path: 'basic-tables', component: BasicTablesComponent, title: 'Angular Basic Tables Dashboard | TailAdmin - Angular Admin Dashboard Template' },
