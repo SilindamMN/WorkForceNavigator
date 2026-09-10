@@ -43,7 +43,7 @@ export class TimesheetComponent implements OnInit {
 
   isOpen = false;
   selectedEntry: TimesheetEntry | null = null;
-
+  weekOffSet = 0;
   entryDate = '';
   entryDescription = '';
   entryHours = 1;
@@ -55,7 +55,7 @@ export class TimesheetComponent implements OnInit {
 
   ngOnInit(): void {
     this.username = this.getLoggedInUsername();
-
+    this.loadTimesheets();
     this.goToCurrentWeek();
     this.loadProjects();
   }
@@ -127,6 +127,13 @@ export class TimesheetComponent implements OnInit {
     return '';
   }
 
+loadTimesheets(): void {
+  this.timesheetService
+    .getTimesheetSummary(this.weekOffSet)
+    .subscribe(data => {
+      this.timesheets = data;
+    });
+}
   getUsernameFromToken(token: string): string {
     try {
       const parts = token.split('.');
