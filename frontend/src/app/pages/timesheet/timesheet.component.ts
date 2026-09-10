@@ -1,25 +1,18 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-
-import { ModalComponent } from '../../shared/components/ui/modal/modal.component';
-
-
-// ============================================================
-// TIMESHEET ENTRY
-// ============================================================
+import { TimesheetSummary, Timesheet } from '../../models/timesheet';
+import { ProjectsService } from '../../shared/services/projects.service';
+import { TimesheetService } from '../../shared/services/timesheet.service';
 
 export interface TimesheetEntry {
   id: number;
   date: string;
   description: string;
   hours: number;
+  projectId: number;
+  projectName: string;
 }
-
-
-// ============================================================
-// WEEK DAY
-// ============================================================
 
 export interface WeekDay {
   dayName: string;
@@ -28,164 +21,189 @@ export interface WeekDay {
   dateString: string;
 }
 
-
-// ============================================================
-// COMPONENT
-// ============================================================
-
 @Component({
   selector: 'app-timesheet',
   standalone: true,
   imports: [
     CommonModule,
-    FormsModule,
-    ModalComponent
+    FormsModule
   ],
-  templateUrl: './timesheet.component.html',
-  styles: ``
+  templateUrl: './timesheet.component.html'
 })
 export class TimesheetComponent implements OnInit {
 
-  // ============================================================
-  // WEEK
-  // ============================================================
+  private timesheetService = inject(TimesheetService);
+  private projectsService = inject(ProjectsService);
 
   currentWeekStart!: Date;
-
   weekDays: WeekDay[] = [];
 
-
-  // ============================================================
-  // TIMESHEET ENTRIES
-  // ============================================================
-
   entries: TimesheetEntry[] = [];
-
-  private nextId = 1;
-
-
-  // ============================================================
-  // MODAL
-  // ============================================================
+  timesheets: TimesheetSummary[] = [];
 
   isOpen = false;
-
   selectedEntry: TimesheetEntry | null = null;
 
-
-  // ============================================================
-  // FORM
-  // ============================================================
-
   entryDate = '';
-
   entryDescription = '';
-
   entryHours = 1;
+  selectedProjectId = 0;
 
+  projects: any[] = [];
 
-  // ============================================================
-  // INIT
-  // ============================================================
+  username = '';
 
   ngOnInit(): void {
+    this.username = this.getLoggedInUsername();
 
     this.goToCurrentWeek();
-
-    this.loadSampleData();
-
+    this.loadProjects();
   }
 
+  getLoggedInUsername(): string {
+    const possibleKeys = [
+      'username',
+      'userName',
+      'currentUser',
+      'user',
+      'authUser',
+      'current_user',
+      'auth_user'
+    ];
 
-  // ============================================================
-  // CURRENT WEEK
-  // ============================================================
+    for (const key of possibleKeys) {
+      const value = localStorage.getItem(key);
+
+      if (!value) {
+        continue;
+      }
+
+      try {
+        const parsed = JSON.parse(value);
+
+        if (typeof parsed === 'string' && parsed.trim()) {
+          return parsed.trim();
+        }
+
+        if (parsed?.username) {
+          return String(parsed.username);
+        }
+
+        if (parsed?.userName) {
+          return String(parsed.userName);
+        }
+
+        if (parsed?.email) {
+          return String(parsed.email);
+        }
+      } catch {
+        if (value.trim()) {
+          return value.trim();
+        }
+      }
+    }
+
+    const tokenKeys = [
+      'token',
+      'accessToken',
+      'jwt',
+      'authToken'
+    ];
+
+    for (const key of tokenKeys) {
+      const token = localStorage.getItem(key);
+
+      if (!token) {
+        continue;
+      }
+
+      const username = this.getUsernameFromToken(token);
+
+      if (username) {
+        return username;
+      }
+    }
+
+    return '';
+  }
+
+  getUsernameFromToken(token: string): string {
+    try {
+      const parts = token.split('.');
+
+      if (parts.length !== 3) {
+        return '';
+      }
+
+      const payload = parts[1]
+        .replace(/-/g, '+')
+        .replace(/_/g, '/');
+
+      const decoded = decodeURIComponent(
+        atob(payload)
+          .split('')
+          .map(char =>
+            `%${('00' + char.charCodeAt(0).toString(16)).slice(-2)}`
+          )
+          .join('')
+      );
+
+      const claims = JSON.parse(decoded);
+
+      return String(
+        claims.username ??
+        claims.userName ??
+        claims.unique_name ??
+        claims['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name'] ??
+        ''
+      );
+    } catch {
+      return '';
+    }
+  }
 
   goToCurrentWeek(): void {
-
-    const today = new Date();
-
-    this.currentWeekStart = this.getMonday(today);
-
+    this.currentWeekStart = this.getMonday(new Date());
     this.generateWeekDays();
-
+    this.loadWeekEntries();
   }
-
-
-  // ============================================================
-  // PREVIOUS WEEK
-  // ============================================================
 
   previousWeek(): void {
+    const date = new Date(this.currentWeekStart);
 
-    const date = new Date(
-      this.currentWeekStart
-    );
-
-    date.setDate(
-      date.getDate() - 7
-    );
+    date.setDate(date.getDate() - 7);
 
     this.currentWeekStart = date;
 
     this.generateWeekDays();
-
+    this.loadWeekEntries();
   }
-
-
-  // ============================================================
-  // NEXT WEEK
-  // ============================================================
 
   nextWeek(): void {
+    const date = new Date(this.currentWeekStart);
 
-    const date = new Date(
-      this.currentWeekStart
-    );
-
-    date.setDate(
-      date.getDate() + 7
-    );
+    date.setDate(date.getDate() + 7);
 
     this.currentWeekStart = date;
 
     this.generateWeekDays();
-
+    this.loadWeekEntries();
   }
 
-
-  // ============================================================
-  // GET MONDAY
-  // ============================================================
-
   getMonday(date: Date): Date {
-
     const result = new Date(date);
 
     result.setHours(0, 0, 0, 0);
 
     const day = result.getDay();
+    const difference = day === 0 ? -6 : 1 - day;
 
-    const difference =
-      day === 0
-        ? -6
-        : 1 - day;
-
-    result.setDate(
-      result.getDate() + difference
-    );
+    result.setDate(result.getDate() + difference);
 
     return result;
-
   }
 
-
-  // ============================================================
-  // GENERATE MONDAY - FRIDAY
-  // ============================================================
-
   generateWeekDays(): void {
-
     this.weekDays = [];
 
     const dayNames = [
@@ -197,549 +215,366 @@ export class TimesheetComponent implements OnInit {
     ];
 
     for (let i = 0; i < 5; i++) {
+      const date = new Date(this.currentWeekStart);
 
-      const date = new Date(
-        this.currentWeekStart
-      );
-
-      date.setDate(
-        date.getDate() + i
-      );
+      date.setDate(date.getDate() + i);
 
       this.weekDays.push({
-
         dayName: dayNames[i],
-
         dayNumber: date.getDate(),
-
-        monthName:
-          date.toLocaleDateString(
-            'en-ZA',
-            {
-              month: 'short',
-              year: 'numeric'
-            }
-          ),
-
-        dateString:
-          this.formatDate(date)
-
+        monthName: date.toLocaleDateString('en-ZA', {
+          month: 'short',
+          year: 'numeric'
+        }),
+        dateString: this.formatDate(date)
       });
-
     }
-
   }
-
-
-  // ============================================================
-  // FORMAT DATE
-  // ============================================================
 
   formatDate(date: Date): string {
-
-    const year =
-      date.getFullYear();
-
-    const month =
-      String(
-        date.getMonth() + 1
-      ).padStart(2, '0');
-
-    const day =
-      String(
-        date.getDate()
-      ).padStart(2, '0');
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
 
     return `${year}-${month}-${day}`;
-
   }
 
-
-  // ============================================================
-  // WEEK RANGE
-  // ============================================================
-
   formatWeekRange(): string {
-
     if (!this.currentWeekStart) {
       return '';
     }
 
-    const monday =
-      new Date(
-        this.currentWeekStart
-      );
+    const monday = new Date(this.currentWeekStart);
+    const friday = new Date(this.currentWeekStart);
 
-    const friday =
-      new Date(
-        this.currentWeekStart
-      );
+    friday.setDate(friday.getDate() + 4);
 
-    friday.setDate(
-      friday.getDate() + 4
-    );
+    const mondayText = monday.toLocaleDateString('en-ZA', {
+      day: '2-digit',
+      month: 'short',
+      year: 'numeric'
+    });
 
-    const mondayText =
-      monday.toLocaleDateString(
-        'en-ZA',
-        {
-          day: '2-digit',
-          month: 'short',
-          year: 'numeric'
-        }
-      );
-
-    const fridayText =
-      friday.toLocaleDateString(
-        'en-ZA',
-        {
-          day: '2-digit',
-          month: 'short',
-          year: 'numeric'
-        }
-      );
+    const fridayText = friday.toLocaleDateString('en-ZA', {
+      day: '2-digit',
+      month: 'short',
+      year: 'numeric'
+    });
 
     return `${mondayText} - ${fridayText}`;
-
   }
 
-
-  // ============================================================
-  // GET ENTRIES FOR DAY
-  // ============================================================
-
-  getEntriesForDay(
-    dateString: string
-  ): TimesheetEntry[] {
-
-    return this.entries
-      .filter(
-        entry =>
-          entry.date === dateString
-      );
-
+  getEntriesForDay(dateString: string): TimesheetEntry[] {
+    return this.entries.filter(entry => entry.date === dateString);
   }
 
-
-  // ============================================================
-  // DAY TOTAL
-  // ============================================================
-
-  getDayTotal(
-    dateString: string
-  ): number {
-
-    return this.getEntriesForDay(
-      dateString
-    ).reduce(
-      (total, entry) =>
-        total + Number(entry.hours),
-      0
-    );
-
+  getDayTotal(dateString: string): number {
+    return this.getEntriesForDay(dateString)
+      .reduce((total, entry) => total + entry.hours, 0);
   }
-
-
-  // ============================================================
-  // WEEK TOTAL
-  // ============================================================
 
   getWeekTotal(): number {
-
-    return this.weekDays.reduce(
-      (total, day) =>
-        total +
-        this.getDayTotal(
-          day.dateString
-        ),
-      0
-    );
-
+    return this.weekDays
+      .reduce((total, day) => total + this.getDayTotal(day.dateString), 0);
   }
 
-
-  // ============================================================
-  // SHORT DESCRIPTION
-  // ============================================================
-
-  getShortDescription(
-    description: string
-  ): string {
-
+  getShortDescription(description: string): string {
     const maxLength = 100;
 
-    if (
-      description.length <= maxLength
-    ) {
+    if (description.length <= maxLength) {
       return description;
     }
 
-    return (
-      description.substring(
-        0,
-        maxLength
-      ) + '...'
+    return description.substring(0, maxLength) + '...';
+  }
+
+  loadProjects(): void {
+    if (!this.username) {
+      console.error('No logged-in username was found.');
+      this.projects = [];
+      return;
+    }
+
+    this.projectsService
+      .getUserProjectByUserName(this.username)
+      .subscribe({
+        next: (response: any) => {
+          if (Array.isArray(response)) {
+            this.projects = response;
+          } else if (Array.isArray(response?.data)) {
+            this.projects = response.data;
+          } else if (Array.isArray(response?.projects)) {
+            this.projects = response.projects;
+          } else if (Array.isArray(response?.result)) {
+            this.projects = response.result;
+          } else if (Array.isArray(response?.items)) {
+            this.projects = response.items;
+          } else if (response?.projectName) {
+            this.projects = [response];
+          } else {
+            this.projects = [];
+          }
+
+          console.log('Logged in username:', this.username);
+          console.log('Projects:', this.projects);
+        },
+        error: error => {
+          console.error('Error loading projects:', error);
+          this.projects = [];
+        }
+      });
+  }
+
+  getProjectId(project: any): number {
+    return Number(
+      project?.projectId ??
+      project?.id ??
+      project?.ProjectId ??
+      project?.Id ??
+      0
+    );
+  }
+
+  getProjectName(projectId: number): string {
+    const project = this.projects.find(
+      item => this.getProjectId(item) === Number(projectId)
     );
 
+    return String(
+      project?.projectName ??
+      project?.ProjectName ??
+      ''
+    );
   }
 
+  loadWeekEntries(): void {
+    this.entries = [];
 
-  // ============================================================
-  // ADD ENTRY
-  // ============================================================
+    for (const day of this.weekDays) {
+      this.timesheetService
+        .getTimesheetDetails(day.dateString)
+        .subscribe({
+          next: (data: Timesheet[]) => {
+            const dayEntries: TimesheetEntry[] = data.map(
+              (timesheet: Timesheet) => ({
+                id: timesheet.id,
+                date: this.formatApiDate(timesheet.timesheetDate),
+                description: timesheet.description,
+                hours: Number(timesheet.timeSpent),
+                projectId: Number(timesheet.projectId),
+                projectName:
+                  this.getProjectName(Number(timesheet.projectId)) ||
+                  timesheet.projectNames
+              })
+            );
 
-  openAddModal(
-    date: string
-  ): void {
+            this.entries = [
+              ...this.entries.filter(
+                entry => entry.date !== day.dateString
+              ),
+              ...dayEntries
+            ];
+          },
+          error: error => {
+            console.error(
+              `Error loading timesheets for ${day.dateString}:`,
+              error
+            );
+          }
+        });
+    }
+  }
 
-    this.resetModalFields();
+  formatApiDate(value: Date | string): string {
+    if (!value) {
+      return '';
+    }
 
+    const valueString = String(value);
+
+    if (/^\d{4}-\d{2}-\d{2}$/.test(valueString)) {
+      return valueString;
+    }
+
+    const match = valueString.match(/^(\d{4})-(\d{2})-(\d{2})/);
+
+    if (match) {
+      return `${match[1]}-${match[2]}-${match[3]}`;
+    }
+
+    const date = new Date(valueString);
+
+    return [
+      date.getFullYear(),
+      String(date.getMonth() + 1).padStart(2, '0'),
+      String(date.getDate()).padStart(2, '0')
+    ].join('-');
+  }
+
+  createLocalDate(dateString: string): Date {
+    const [year, month, day] = dateString.split('-').map(Number);
+
+    return new Date(
+      year,
+      month - 1,
+      day,
+      12,
+      0,
+      0,
+      0
+    );
+  }
+
+  openAddModal(date: string): void {
+    this.selectedEntry = null;
     this.entryDate = date;
-
+    this.entryDescription = '';
     this.entryHours = 1;
-
+    this.selectedProjectId = 0;
     this.isOpen = true;
-
   }
 
-
-  // ============================================================
-  // EDIT ENTRY
-  // ============================================================
-
-  openEditModal(
-    entry: TimesheetEntry
-  ): void {
-
+  openEditModal(entry: TimesheetEntry): void {
     this.selectedEntry = entry;
-
-    this.entryDate =
-      entry.date;
-
-    this.entryDescription =
-      entry.description;
-
-    this.entryHours =
-      entry.hours;
-
+    this.entryDate = entry.date;
+    this.entryDescription = entry.description;
+    this.entryHours = entry.hours;
+    this.selectedProjectId = entry.projectId;
     this.isOpen = true;
-
   }
-
-
-  // ============================================================
-  // ADD / UPDATE
-  // ============================================================
 
   handleAddOrUpdateEntry(): void {
-
     if (!this.entryDate) {
-
-      console.error(
-        'Please select a date'
-      );
-
+      alert('Please select a date.');
       return;
-
     }
 
-
-    if (
-      !this.entryDescription.trim()
-    ) {
-
-      console.error(
-        'Please enter a description'
-      );
-
+    if (!this.entryDescription.trim()) {
+      alert('Please enter a description.');
       return;
-
     }
 
-
-    if (
-      !this.entryHours ||
-      this.entryHours <= 0
-    ) {
-
-      console.error(
-        'Please enter valid hours'
-      );
-
+    if (!this.entryHours || Number(this.entryHours) <= 0) {
+      alert('Please enter valid hours.');
       return;
-
     }
 
+    if (!this.selectedProjectId || Number(this.selectedProjectId) <= 0) {
+      alert('Please select a project.');
+      return;
+    }
+
+    if (!this.username) {
+      alert('Unable to determine the logged-in user.');
+      return;
+    }
 
     if (this.selectedEntry) {
-
       this.updateEntry();
-
     } else {
-
       this.createEntry();
-
     }
-
   }
-
-
-  // ============================================================
-  // CREATE
-  // ============================================================
 
   createEntry(): void {
+    const date = this.createLocalDate(this.entryDate);
 
-    const newEntry: TimesheetEntry = {
-
-      id: this.nextId++,
-
-      date: this.entryDate,
-
-      description:
-        this.entryDescription.trim(),
-
-      hours:
-        Number(this.entryHours)
-
+    const timesheet: Timesheet = {
+      id: 0,
+      timesheetDate: date,
+      dayName: date.toLocaleDateString('en-ZA', {
+        weekday: 'long'
+      }),
+      username: this.username,
+      description: this.entryDescription.trim(),
+      timeSpent: Number(this.entryHours),
+      projectId: Number(this.selectedProjectId),
+      projectNames: this.getProjectName(
+        Number(this.selectedProjectId)
+      )
     };
 
+    console.log('Creating timesheet:', timesheet);
 
-    this.entries.push(
-      newEntry
-    );
-
-    this.closeModal();
-
+    this.timesheetService
+      .create(timesheet, 'create')
+      .subscribe({
+        next: () => {
+          this.closeModal();
+          this.loadWeekEntries();
+        },
+        error: error => {
+          console.error('Create timesheet failed:', error);
+          alert('Failed to create timesheet entry.');
+        }
+      });
   }
-
-
-  // ============================================================
-  // UPDATE
-  // ============================================================
 
   updateEntry(): void {
-
     if (!this.selectedEntry) {
       return;
     }
 
+    const date = this.createLocalDate(this.entryDate);
 
-    this.selectedEntry.date =
-      this.entryDate;
+    const timesheet: Timesheet = {
+      id: this.selectedEntry.id,
+      timesheetDate: date,
+      dayName: date.toLocaleDateString('en-ZA', {
+        weekday: 'long'
+      }),
+      username: this.username,
+      description: this.entryDescription.trim(),
+      timeSpent: Number(this.entryHours),
+      projectId: Number(this.selectedProjectId),
+      projectNames: this.getProjectName(
+        Number(this.selectedProjectId)
+      )
+    };
 
-    this.selectedEntry.description =
-      this.entryDescription.trim();
+    console.log('Updating timesheet:', timesheet);
 
-    this.selectedEntry.hours =
-      Number(this.entryHours);
-
-
-    this.closeModal();
-
+    this.timesheetService
+      .update(timesheet)
+      .subscribe({
+        next: () => {
+          this.closeModal();
+          this.loadWeekEntries();
+        },
+        error: error => {
+          console.error('Update timesheet failed:', error);
+          alert('Failed to update timesheet entry.');
+        }
+      });
   }
-
-
-  // ============================================================
-  // DELETE
-  // ============================================================
 
   deleteEntry(): void {
-
     if (!this.selectedEntry) {
       return;
     }
 
+    const id = this.selectedEntry.id;
 
-    this.entries =
-      this.entries.filter(
-        entry =>
-          entry.id !==
-          this.selectedEntry!.id
-      );
-
-
-    this.closeModal();
-
+    this.timesheetService
+      .delete(id)
+      .subscribe({
+        next: () => {
+          this.closeModal();
+          this.loadWeekEntries();
+        },
+        error: error => {
+          console.error('Delete timesheet failed:', error);
+          alert('Failed to delete timesheet entry.');
+        }
+      });
   }
-
-
-  // ============================================================
-  // DATE PICKER
-  // ============================================================
-
-  openDatePicker(
-    event: MouseEvent
-  ): void {
-
-    const inputEl =
-      event.target as HTMLInputElement;
-
-    if (
-      inputEl &&
-      typeof inputEl.showPicker === 'function'
-    ) {
-
-      inputEl.showPicker();
-
-    }
-
-  }
-
-
-  // ============================================================
-  // RESET MODAL
-  // ============================================================
-
-  resetModalFields(): void {
-
-    this.selectedEntry = null;
-
-    this.entryDate = '';
-
-    this.entryDescription = '';
-
-    this.entryHours = 1;
-
-  }
-
-
-  // ============================================================
-  // CLOSE MODAL
-  // ============================================================
 
   closeModal(): void {
-
     this.isOpen = false;
-
-    this.resetModalFields();
-
+    this.selectedEntry = null;
+    this.entryDate = '';
+    this.entryDescription = '';
+    this.entryHours = 1;
+    this.selectedProjectId = 0;
   }
-
-
-  // ============================================================
-  // SAMPLE DATA
-  // REMOVE WHEN API IS CONNECTED
-  // ============================================================
-
-  loadSampleData(): void {
-
-    this.entries = [
-
-      // MONDAY
-      {
-        id: this.nextId++,
-        date: this.getWeekDate(0),
-        description:
-          'Worked on the user management API and fixed authentication validation issues.',
-        hours: 3
-      },
-
-      {
-        id: this.nextId++,
-        date: this.getWeekDate(0),
-        description:
-          'Updated Angular forms and fixed date binding issues.',
-        hours: 2
-      },
-
-      {
-        id: this.nextId++,
-        date: this.getWeekDate(0),
-        description:
-          'Tested the leave request functionality and fixed issues found during testing.',
-        hours: 1
-      },
-
-      {
-        id: this.nextId++,
-        date: this.getWeekDate(0),
-        description:
-          'Reviewed code and prepared changes for deployment.',
-        hours: 2
-      },
-
-
-      // TUESDAY
-      {
-        id: this.nextId++,
-        date: this.getWeekDate(1),
-        description:
-          'Implemented timesheet functionality and worked on the weekly UI.',
-        hours: 3
-      },
-
-      {
-        id: this.nextId++,
-        date: this.getWeekDate(1),
-        description:
-          'Fixed responsive layout issues and tested the application.',
-        hours: 2
-      },
-
-
-      // WEDNESDAY
-      {
-        id: this.nextId++,
-        date: this.getWeekDate(2),
-        description:
-          'Worked on API integration and database queries.',
-        hours: 3
-      },
-
-      {
-        id: this.nextId++,
-        date: this.getWeekDate(2),
-        description:
-          'Performed manual testing and fixed bugs.',
-        hours: 2
-      },
-
-
-      // THURSDAY
-      {
-        id: this.nextId++,
-        date: this.getWeekDate(3),
-        description:
-          'Worked with the team to review requirements and implement requested changes.',
-        hours: 4
-      },
-
-
-      // FRIDAY
-      {
-        id: this.nextId++,
-        date: this.getWeekDate(4),
-        description:
-          'Completed testing and prepared the completed functionality for review.',
-        hours: 3
-      }
-
-    ];
-
-  }
-
-
-  // ============================================================
-  // GET DATE FROM CURRENT WEEK
-  // ============================================================
-
-  getWeekDate(
-    dayOffset: number
-  ): string {
-
-    const date =
-      new Date(
-        this.currentWeekStart
-      );
-
-    date.setDate(
-      date.getDate() +
-      dayOffset
-    );
-
-    return this.formatDate(date);
-
-  }
-
 }
